@@ -47,4 +47,4 @@ Heute habe ich die allgemeine Main-Loop und den Anfang der Klasse Game implement
 ## 05.05.2021
 Heute habe ich mit der Hilfe von Pixel Edit einen ersten Entwurf eines Spielcharakters entwickelt. Diesen habe ich anschließend versucht in meine Anwendung mit einzubinden. Dazu habe ich die Klasse TextureManager definiert, welche die statische Methode LoadTexture besitzt. Diese soll dazu dienen, dass weitere Texturen in Zukunft schnell und einfach geladen werden können. Um meinen Spieler zu laden habe die soeben genannte Funktion in der init Funktion von Game aufgerufen. Damit die Texture gerendert wird, wird die Funktion renderCopy verwendet. Außerdem habe ich dieser Funktion ein SDL_Rect als "Destination-Rechteck" mitgegeben. Dadurch kann ich in meiner update-Funktion die Postion meiner Figur ändern, sodass sie jetzt immer wieder von links nach rechts durch das Fenster läuft. 
 
-![Image](https://github.com/CodingJosh42/GameProgramming/blob/main/Game%20Programming/Game%20Programming/assets/player.png)
+<img src="https://github.com/CodingJosh42/GameProgramming/blob/main/Game%20Programming/Game%20Programming/assets/player.png" width="200" height="200" />
