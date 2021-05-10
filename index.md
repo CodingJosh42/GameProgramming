@@ -14,4 +14,4 @@ Heute habe ich mit der Hilfe von Pixel Edit einen ersten Entwurf eines Spielchar
 ## 10.05.2021
 Heute habe ich die Klasse GameObject erstellt. Mit der Hilfe dieser Klasse wird die Logik eines Spielobjektes gebündelt. Dadurch können später viele Objekte einfach erstellt werden und z.B. in einem Vektor abgespeichert werden. Die Klasse gameObject beinhaltet die Funktion update() und render(). Diese beiden Funktionen können dann in der Game Klasse in den jeweiligen Funktionen aufgerufen werden. Sind nun alle Objekte in einem Vektor gespeichert kann man über die Liste iterieren und für alle Objekte die Funktionen ausführen. Dem Konstruktor der Klasse kann man den Path zu der jeweiligen Texture und die Startposition des Objektes mitgeben. Des Weiteren habe ich einen ersten Entwurf einer Tilemap erstellt. 
 
-<img src="https://github.com/CodingJosh42/GameProgramming/blob/gh-pages/tilemap.PNG" alt="Tilemap" width="800" height="640" />
+<img src="tilemap.PNG" alt="Tilemap" width="800" height="640" />
