@@ -3,8 +3,8 @@
 
 using namespace std;
 
-GameObject::GameObject(const char* texture, SDL_Renderer* renderer, int x, int y, void(*move) (int* xpos, int* ypos) ) : renderer(renderer), xpos{ x }, ypos{ y }, move(move) {
-	GameObject::texture = TextureManager::LoadTexture(texture, renderer);
+GameObject::GameObject(const char* texture, int x, int y, void(*move) (int* xpos, int* ypos) ) :  xpos{ x }, ypos{ y }, move(move) {
+	GameObject::texture = TextureManager::LoadTexture(texture);
 }
 
 GameObject::~GameObject() {
@@ -28,5 +28,5 @@ void GameObject::update() {
 
 }
 void GameObject::render() {
-	SDL_RenderCopy(renderer, texture, &src, &dest);
+	SDL_RenderCopy(Game::renderer, texture, &src, &dest);
 }

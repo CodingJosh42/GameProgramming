@@ -2,11 +2,12 @@
 #include "TextureManager.h"
 #include "GameObject.h"
 #include <vector>
-
+#include "Map.h"
 using namespace std;
 
 
 vector<GameObject*> objects;
+Map* map;
 
 int maxWidth = 0;
 int maxHeight = 0;
@@ -34,6 +35,8 @@ Game::~Game() {
 
 }
 
+SDL_Renderer* Game::renderer = nullptr;
+
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
 
 	int flags = 0;
@@ -59,9 +62,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 	// Player
-	objects.push_back(new GameObject("assets/player.png", renderer, 0, maxHeight - 128, movePlayer));
+	objects.push_back(new GameObject("assets/player.png", 0, maxHeight - 128, movePlayer));
 	// Enemy
-	objects.push_back(new GameObject("assets/enemy.png", renderer, maxWidth - 128, 0, moveEnemy));
+	objects.push_back(new GameObject("assets/enemy.png", maxWidth - 128, maxHeight - 128, moveEnemy));
+	map = new Map();
 }
 
 void Game::update() {
@@ -73,6 +77,7 @@ void Game::update() {
 void Game::render() {
 	SDL_RenderClear(renderer);
 	// #TODO stuff to render
+	map->drawMap();
 	for (int i = 0; i < objects.size(); i++) {
 		objects[i]->render();
 	}

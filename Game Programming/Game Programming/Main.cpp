@@ -12,7 +12,7 @@ int main(int argc, char* args[]) {
     Uint32 framestart;
     int frametime;
 
-    game->init("TENET", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 400, false);
+    game->init("TENET", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
     while (game->running())
     {
         framestart = SDL_GetTicks();
