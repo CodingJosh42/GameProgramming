@@ -1,12 +1,30 @@
 #include "Game.h"
 #include "TextureManager.h"
+#include "GameObject.h"
+#include <vector>
 
 using namespace std;
 
-SDL_Texture* playerTex;
-SDL_Rect srcR, destR;
-int move = 0;
+
+vector<GameObject*> objects;
+
 int maxWidth = 0;
+int maxHeight = 0;
+
+void movePlayer(int* xpos, int* ypos) {
+	(*xpos)++;
+	if (*xpos >= maxWidth) {
+		*xpos = -128;
+	}
+}
+
+void moveEnemy(int* xpos, int* ypos) {
+	(*xpos)--;
+	if (*xpos <= -128) {
+		*xpos = maxWidth + 64;
+	}
+}
+
 
 Game::Game() {
 
@@ -27,6 +45,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 		maxWidth = width;
+		maxHeight = height;
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if (renderer) {
 			// SDL_SetRenderDrawColor(renderer, 0, 191, 255, 255);
@@ -39,25 +58,24 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
-	playerTex = TextureManager::LoadTexture("assets/player.png", renderer);
-
+	// Player
+	objects.push_back(new GameObject("assets/player.png", renderer, 0, maxHeight - 128, movePlayer));
+	// Enemy
+	objects.push_back(new GameObject("assets/enemy.png", renderer, maxWidth - 128, 0, moveEnemy));
 }
 
 void Game::update() {
-	move++;
-	destR.h = 128;
-	destR.w = 128;
-	
-	destR.x = move;
-	if (move >= maxWidth) {
-		move = -128;
+	for (int i = 0; i < objects.size(); i++) {
+		objects[i]->update();
 	}
 }
 
 void Game::render() {
 	SDL_RenderClear(renderer);
 	// #TODO stuff to render
-	SDL_RenderCopy(renderer, playerTex, NULL, &destR);
+	for (int i = 0; i < objects.size(); i++) {
+		objects[i]->render();
+	}
 	SDL_RenderPresent(renderer);
 }
 
@@ -83,3 +101,5 @@ void Game::handleEvents() {
 bool Game::running() {
 	return isRunning;
 }
+
+
