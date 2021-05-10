@@ -1,41 +1,3 @@
-## Welcome to GitHub Pages
-
-You can use the [editor on GitHub](https://github.com/CodingJosh42/GameProgramming/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/CodingJosh42/GameProgramming/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
-
 # Entwicklungsblog
 
 ## 20.04.2021
@@ -48,3 +10,6 @@ Heute habe ich die allgemeine Main-Loop und den Anfang der Klasse Game implement
 Heute habe ich mit der Hilfe von Pixel Edit einen ersten Entwurf eines Spielcharakters entwickelt. Diesen habe ich anschließend versucht in meine Anwendung mit einzubinden. Dazu habe ich die Klasse TextureManager definiert, welche die statische Methode LoadTexture besitzt. Diese soll dazu dienen, dass weitere Texturen in Zukunft schnell und einfach geladen werden können. Um meinen Spieler zu laden habe die soeben genannte Funktion in der init Funktion von Game aufgerufen. Damit die Texture gerendert wird, wird die Funktion renderCopy verwendet. Außerdem habe ich dieser Funktion ein SDL_Rect als "Destination-Rechteck" mitgegeben. Dadurch kann ich in meiner update-Funktion die Postion meiner Figur ändern, sodass sie jetzt immer wieder von links nach rechts durch das Fenster läuft. 
 
 <img src="https://github.com/CodingJosh42/GameProgramming/blob/main/Game%20Programming/Game%20Programming/assets/player.png" alt="Figur" width="200" height="200" />
+
+## 10.05.2021
+Heute habe ich die Klasse GameObject erstellt. Mit der Hilfe dieser Klasse wird die Logik eines Spielobjektes gebündelt. Dadurch können später viele Objekte einfach erstellt werden und z.B. in einem Vektor abgespeichert werden. Die Klasse gameObject beinhaltet die Funktion update() und render(). Diese beiden Funktionen können dann in der Game Klasse in den jeweiligen Funktionen aufgerufen werden. Sind nun alle Objekte in einem Vektor gespeichert kann man über die Liste iterieren und für alle Objekte die Funktionen ausführen. Dem Konstruktor der Klasse kann man den Path zu der jeweiligen Texture und die Startposition des Objektes mitgeben. Des Weiteren habe ich einen ersten Entwurf einer Tilemap erstellt. 
