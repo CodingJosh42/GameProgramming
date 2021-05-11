@@ -52,6 +52,14 @@ public:
 		componentArray = array<Component*, MAXCOMPONENTS>();
 	}
 
+	~Entity() {
+		for (size_t i = 0; i < components.size(); i++) {
+			Component* component = components[i];
+			components.erase(components.begin() + i);
+			delete component;
+		}
+	}
+
 	void update() {
 		for (size_t i = 0; i < components.size(); i++) {
 
@@ -79,6 +87,7 @@ public:
 	}
 
 	template<typename T, typename... Targs>
+	// forwad needs &&
 	T& addComponent(Targs&&... params) {
 		T* component = new T(forward<Targs>(params)...);
 		component->entity = this;
@@ -104,21 +113,31 @@ private:
 	vector<Entity*> entities;
 public:
 	
+	/**
+	* Calls update function of entities
+	*/
 	void update() {
 		for (size_t i = 0; i < entities.size(); i++) {
 			entities[i]->update();
 		}
 	}
+	/**
+	* Calls draw function of entities
+	*/
 	void draw() {
 		for (size_t i = 0; i < entities.size(); i++) {
 			entities[i]->draw();
 		}
 	}
-
+	/**
+	* Checks if every entity is still active, if not remove it from list
+	*/
 	void refresh() {
 		for (size_t i = 0; i < entities.size(); i++) {
 			if (!(entities[i]->isActive())) {
+				Entity* entity = entities[i];
 				entities.erase(entities.begin() + i);
+				delete entity;
 			}
 		}
 		
