@@ -148,12 +148,17 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ESC.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Pictures\player.png" />

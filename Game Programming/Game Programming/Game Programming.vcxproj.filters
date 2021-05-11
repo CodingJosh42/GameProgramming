@@ -16,6 +16,9 @@
     <Filter Include="assets">
       <UniqueIdentifier>{2c92e2b5-d394-4ae4-8b68-3a62d7fb58a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\ESC">
+      <UniqueIdentifier>{4b95725b-cea4-42fc-b0e4-78f8afb6014c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -33,6 +36,9 @@
     <ClCompile Include="Map.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Vector2D.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -46,6 +52,18 @@
     </ClInclude>
     <ClInclude Include="Map.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2D.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="ESC.h">
+      <Filter>Headerdateien\ESC</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Headerdateien\ESC</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>Headerdateien\ESC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

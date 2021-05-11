@@ -3,23 +3,30 @@
 #include "GameObject.h"
 #include <vector>
 #include "Map.h"
+#include "ESC.h"
+#include "TransformComponent.h"
+#include "SpriteComponent.h"
+
 using namespace std;
 
 
-vector<GameObject*> objects;
 Map* map;
+Manager manager;
+
+Entity* player = manager.addEntity();
+Entity* enemy = manager.addEntity();
 
 int maxWidth = 0;
 int maxHeight = 0;
 
-void movePlayer(int* xpos, int* ypos) {
+void movePlayer(float* xpos, float* ypos) {
 	(*xpos)++;
 	if (*xpos >= maxWidth) {
 		*xpos = -128;
 	}
 }
 
-void moveEnemy(int* xpos, int* ypos) {
+void moveEnemy(float* xpos, float* ypos) {
 	(*xpos)--;
 	if (*xpos <= -128) {
 		*xpos = maxWidth + 64;
@@ -61,26 +68,27 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
-	// Player
-	objects.push_back(new GameObject("assets/player.png", 0, maxHeight - 128, movePlayer));
-	// Enemy
-	objects.push_back(new GameObject("assets/enemy.png", maxWidth - 128, maxHeight - 128, moveEnemy));
+
+	player->addComponent<TransformComponent>(0, maxHeight - 128, movePlayer);
+	player->addComponent<SpriteComponent>("assets/player.png");
+
+	enemy->addComponent<TransformComponent>(maxWidth - 128, maxHeight - 128, moveEnemy);
+	enemy->addComponent<SpriteComponent>("assets/enemy.png");
+
 	map = new Map();
 }
 
 void Game::update() {
-	for (int i = 0; i < objects.size(); i++) {
-		objects[i]->update();
-	}
+	manager.refresh();
+	manager.update();
 }
 
 void Game::render() {
 	SDL_RenderClear(renderer);
-	// #TODO stuff to render
+
 	map->drawMap();
-	for (int i = 0; i < objects.size(); i++) {
-		objects[i]->render();
-	}
+	manager.draw();
+
 	SDL_RenderPresent(renderer);
 }
 
