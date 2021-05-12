@@ -1,12 +1,12 @@
-#include "Game.h"
-#include "TextureManager.h"
-#include "GameObject.h"
+#include "../include/Game.h"
+#include "../include/TextureManager.h"
+#include "../include/GameObject.h"
 #include <vector>
-#include "Map.h"
-#include "ESC.h"
-#include "TransformComponent.h"
-#include "SpriteComponent.h"
-#include "KeyboardController.h"
+#include "../include/Map.h"
+#include "../include/ESC.h"
+#include "../include/TransformComponent.h"
+#include "../include/SpriteComponent.h"
+#include "../include/KeyboardController.h"
 
 using namespace std;
 

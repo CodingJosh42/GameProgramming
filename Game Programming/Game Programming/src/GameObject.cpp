@@ -1,5 +1,5 @@
-#include "GameObject.h"
-#include "TextureManager.h"
+#include "../include/GameObject.h"
+#include "../include/TextureManager.h"
 
 using namespace std;
 
