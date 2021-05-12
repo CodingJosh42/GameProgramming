@@ -65,6 +65,9 @@
     <ClInclude Include="SpriteComponent.h">
       <Filter>Headerdateien\ESC</Filter>
     </ClInclude>
+    <ClInclude Include="KeyboardController.h">
+      <Filter>Headerdateien\ESC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Pictures\player.png">

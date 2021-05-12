@@ -19,6 +19,7 @@ public:
 
 	bool running();
 
+	static SDL_Event event;
 	static SDL_Renderer* renderer;
 
 private:

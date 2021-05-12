@@ -6,6 +6,7 @@
 #include "ESC.h"
 #include "TransformComponent.h"
 #include "SpriteComponent.h"
+#include "KeyboardController.h"
 
 using namespace std;
 
@@ -15,6 +16,8 @@ Manager manager;
 
 Entity* player = manager.addEntity();
 Entity* enemy = manager.addEntity();
+SDL_Event Game::event;
+
 
 int maxWidth = 0;
 int maxHeight = 0;
@@ -69,10 +72,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 
-	player->addComponent<TransformComponent>(0, maxHeight - 128, movePlayer);
+	player->addComponent<TransformComponent>(0, maxHeight - 128);
 	player->addComponent<SpriteComponent>("assets/player.png");
+	player->addComponent<KeyboardController>(maxHeight);
 
-	enemy->addComponent<TransformComponent>(maxWidth - 128, maxHeight - 128, moveEnemy);
+	enemy->addComponent<TransformComponent>(maxWidth - 128, maxHeight - 128);
 	enemy->addComponent<SpriteComponent>("assets/enemy.png");
 
 	map = new Map();
@@ -100,7 +104,6 @@ void Game::clean() {
 
 void Game::handleEvents() {
 	// Get the next event
-	SDL_Event event;
 	SDL_PollEvent(&event);
 	switch(event.type) {
 		case SDL_QUIT:
