@@ -144,7 +144,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
@@ -153,7 +152,6 @@
   <ItemGroup>
     <ClInclude Include="include\ESC.h" />
     <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\KeyboardController.h" />
     <ClInclude Include="include\Map.h" />
     <ClInclude Include="include\SpriteComponent.h" />

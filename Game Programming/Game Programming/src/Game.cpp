@@ -1,6 +1,5 @@
 #include "../include/Game.h"
 #include "../include/TextureManager.h"
-#include "../include/GameObject.h"
 #include <vector>
 #include "../include/Map.h"
 #include "../include/ESC.h"

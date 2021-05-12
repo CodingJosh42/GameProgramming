@@ -30,9 +30,6 @@
     <ClCompile Include="src\TextureManager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObject.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="src\Map.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -45,9 +42,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="include\TextureManager.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GameObject.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="include\Map.h">
