@@ -6,6 +6,9 @@
 #include "../include/TransformComponent.h"
 #include "../include/SpriteComponent.h"
 #include "../include/KeyboardController.h"
+#include "../include/Collision.h"
+#include "../include/ColliderComponent.h"
+
 
 using namespace std;
 
@@ -74,9 +77,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player->addComponent<TransformComponent>(0, maxHeight - 128);
 	player->addComponent<SpriteComponent>("assets/player.png");
 	player->addComponent<KeyboardController>(maxHeight);
+	player->addComponent<ColliderComponent>("Player");
 
 	enemy->addComponent<TransformComponent>(maxWidth - 128, maxHeight - 128);
 	enemy->addComponent<SpriteComponent>("assets/enemy.png");
+	enemy->addComponent<ColliderComponent>("Enemy");
 
 	map = new Map();
 }
@@ -84,6 +89,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 void Game::update() {
 	manager.refresh();
 	manager.update();
+	float direction = 0.0f;
+	if ((direction = Collision::AABB_direction(player->getComponent<ColliderComponent>(), enemy->getComponent<ColliderComponent>())) != 0.0f) {
+		// Bounce back
+		player->getComponent<TransformComponent>().velocity.x = direction;
+	}
 }
 
 void Game::render() {

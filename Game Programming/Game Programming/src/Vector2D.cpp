@@ -51,6 +51,14 @@ Vector2D& operator/(Vector2D& vec1, const Vector2D& vec2) {
 }
 
 
+Vector2D& operator*(Vector2D& vec1, const float other) {
+	vec1.x *= other;
+	vec1.y *= other;
+
+	return vec1;
+}
+
+
 
 Vector2D& Vector2D::operator+=(const Vector2D& other) {
 	return add(other);

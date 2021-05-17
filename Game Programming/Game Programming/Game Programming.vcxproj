@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Map.cpp" />
@@ -150,6 +151,8 @@
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ColliderComponent.h" />
+    <ClInclude Include="include\Collision.h" />
     <ClInclude Include="include\ESC.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\KeyboardController.h" />

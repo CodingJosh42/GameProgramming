@@ -47,7 +47,12 @@ Map::Map() {
 	dest.h = 32;
 }
 Map::~Map() {
-
+	SDL_DestroyTexture(dirt);
+	SDL_DestroyTexture(grass);
+	SDL_DestroyTexture(water);
+	SDL_DestroyTexture(metal);
+	SDL_DestroyTexture(sky);
+	SDL_DestroyTexture(cloud);
 }
 
 void Map::loadMap(int loadedMap[20][25]) {

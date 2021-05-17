@@ -18,6 +18,10 @@ public:
 		setTexture(path);
 	}
 
+	~SpriteComponent() {
+		SDL_DestroyTexture(texture);
+	}
+
 	void setTexture(const char* path) {
 		texture = TextureManager::LoadTexture(path);
 	}
@@ -28,13 +32,13 @@ public:
 
 		src.x = 0;
 		src.y = 0;
-		src.w = 64;
-		src.h = 64;
+		src.w = position->width * 2;
+		src.h = position->height * 2;
 
 		dest.x = (int) position->position.x;
 		dest.y = (int) position->position.y;
-		dest.w = src.w * 2;
-		dest.h = src.h * 2;
+		dest.w = position->width * position->scale;
+		dest.h = position->height * position->scale;
 	}
 
 	void update() override {
