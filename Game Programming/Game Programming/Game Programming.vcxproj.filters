@@ -71,5 +71,8 @@
     <ClInclude Include="include\Collision.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\TileComponent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -159,6 +159,7 @@
     <ClInclude Include="include\Map.h" />
     <ClInclude Include="include\SpriteComponent.h" />
     <ClInclude Include="include\TextureManager.h" />
+    <ClInclude Include="include\TileComponent.h" />
     <ClInclude Include="include\TransformComponent.h" />
     <ClInclude Include="include\Vector2D.h" />
   </ItemGroup>

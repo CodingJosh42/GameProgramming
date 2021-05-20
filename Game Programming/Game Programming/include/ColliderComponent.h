@@ -1,10 +1,13 @@
 #ifndef COLLIDER
 #define COLLIDER
 
+#include "Game.h"
 #include "ESC.h"
 #include <SDL.h>
 #include <string>
 #include "TransformComponent.h"
+
+
 using namespace std;
 
 class ColliderComponent : public Component {
@@ -20,7 +23,9 @@ public:
 		if (!entity->hasComponent<TransformComponent>()) {
 			entity->addComponent<TransformComponent>();
 		}
+
 		position = &(entity->getComponent<TransformComponent>());
+		Game::colliders.push_back(this);
 	}
 
 	void update() override {

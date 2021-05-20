@@ -20,6 +20,8 @@ Entity* player = manager.addEntity();
 Entity* enemy = manager.addEntity();
 SDL_Event Game::event;
 
+vector<ColliderComponent*> Game::colliders;
+
 
 int maxWidth = 0;
 int maxHeight = 0;
