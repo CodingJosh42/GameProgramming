@@ -26,6 +26,10 @@ public:
 		texture = TextureManager::LoadTexture(path);
 	}
 
+	void setTexture(SDL_Texture* texture) {
+		this->texture = texture;
+	}
+
 	void init() override {
 
 		position = &entity->getComponent<TransformComponent>();

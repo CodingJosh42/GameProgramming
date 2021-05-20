@@ -7,10 +7,16 @@
 #include <SDL.h>
 
 class KeyboardController : public Component {
+private:
+	SDL_Texture* playerRight;
+	SDL_Texture* playerLeft;
+	SDL_Texture* playerRightCrouching;
+	SDL_Texture* playerLeftCrouching;
 public:
 	TransformComponent* position;
 	SpriteComponent* sprite;
 	int maxHeight = 0;
+
 	
 	KeyboardController(int maxHeight) : maxHeight{ maxHeight } {
 	}
@@ -18,7 +24,18 @@ public:
 	void init() override {
 		position = &(entity->getComponent<TransformComponent>());
 		sprite = &(entity->getComponent<SpriteComponent>());
-		
+
+		playerRight = TextureManager::LoadTexture("assets/player.png");
+		playerRightCrouching = TextureManager::LoadTexture("assets/crouching.png");
+		playerLeft = TextureManager::LoadTexture("assets/playerLeft.png");
+		playerLeftCrouching = TextureManager::LoadTexture("assets/crouchingLeft.png");
+	}
+
+	~KeyboardController() {
+		SDL_DestroyTexture(playerRight);
+		SDL_DestroyTexture(playerLeft);
+		SDL_DestroyTexture(playerRightCrouching);
+		SDL_DestroyTexture(playerLeftCrouching);
 	}
 
 	void update() override {
@@ -31,6 +48,18 @@ public:
 			position->velocity.y = 0;
 		}
 
+
+		const Uint8* keystate = SDL_GetKeyboardState(NULL);
+
+		//continuous-response keys
+		if (keystate[SDL_SCANCODE_D])
+		{
+			position->velocity.x = 1;
+		}
+		if (keystate[SDL_SCANCODE_A])
+		{
+			position->velocity.x = -1;
+		}
 		
 
 
@@ -41,24 +70,6 @@ public:
 				if (position->position.y >= maxHeight -128 && position->speed > 1) {
 					position->velocity.y = -3;
 				}
-				break;
-			case SDLK_d:
-				if (position->speed > 1) {
-					sprite->setTexture("assets/player.png");
-				}
-				else {
-					sprite->setTexture("assets/crouching.png");
-				}
-				position->velocity.x = 1;
-				break;
-			case SDLK_a:
-				if (position->speed > 1) {
-					sprite->setTexture("assets/playerLeft.png");
-				}
-				else {
-					sprite->setTexture("assets/crouchingLeft.png");
-				}
-				position->velocity.x = -1;
 				break;
 			case SDLK_LCTRL:
 				if (position->position.y >= maxHeight - 128) {
@@ -75,6 +86,22 @@ public:
 				break;
 			}
 		}
+
+
+		if (position->speed > 1 && position->velocity.x == 1) {
+			sprite->setTexture(playerRight);
+		}
+		else if (position->speed <= 1 && position->velocity.x == 1){
+			sprite->setTexture(playerRightCrouching);
+		}
+
+		if (position->speed > 1 && position->velocity.x == -1) {
+			sprite->setTexture(playerLeft);
+		}
+		else if (position->speed <= 1 && position->velocity.x == -1) {
+			sprite->setTexture(playerLeftCrouching);
+		}
+
 		
 
 		if (Game::event.type == SDL_KEYUP) {
@@ -108,17 +135,6 @@ public:
 			}
 		}
 
-		const Uint8* keystate = SDL_GetKeyboardState(NULL);
-
-		//continuous-response keys
-		if (keystate[SDL_SCANCODE_D])
-		{
-			position->velocity.x = 1;
-		}
-		if (keystate[SDL_SCANCODE_A])
-		{
-			position->velocity.x = -1;
-		}
 
 		
 	}
