@@ -4,6 +4,7 @@
 #include "ESC.h"
 #include "TransformComponent.h"
 #include "SpriteComponent.h"
+#include <iostream>
 
 class TileComponent : public Component {
 public:
@@ -13,6 +14,7 @@ public:
 	SDL_Rect dest;
 	int tileId;
 	const char* path;
+	const char* tag;
 
 	TileComponent() = default;
 
@@ -22,24 +24,30 @@ public:
 		dest.w = w;
 		dest.h = h;
 
-		switch (tileId) {
+		switch (id) {
 		case 0:
-			path = "assets/sky";
+			path = "assets/sky.png";
+			tag = "sky";
 			break;
 		case 1:
-			path = "assets/grass";
+			path = "assets/grass.png";
+			tag = "grass";
 			break;
 		case 2:
-			path = "assets/water";
+			path = "assets/water.png";
+			tag = "water";
 			break;
 		case 3:
-			path = "assets/metal";
+			path = "assets/metal.png";
+			tag = "metal";
 			break;
 		case 4:
-			path = "assets/dirt";
+			path = "assets/dirt.png";
+			tag = "dirt";
 			break;
 		case 5:
-			path = "assets/cloud";
+			path = "assets/cloud.png";
+			tag = "cloud";
 			break;
 		default:
 			break;

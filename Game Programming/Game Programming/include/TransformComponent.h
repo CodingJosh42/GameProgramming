@@ -25,7 +25,7 @@ public:
 	}
 
 	TransformComponent(int x, int y, int width, int height, int scale) : width{ width }, height{ height }, scale{ scale } {
-		position = Vector2D(float(x), float(y));
+		position = Vector2D((float)x, (float)y);
 
 	}
 

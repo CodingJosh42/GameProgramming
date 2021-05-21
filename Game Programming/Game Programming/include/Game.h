@@ -5,6 +5,7 @@
 #include <SDL_image.h>
 #include <vector>
 class ColliderComponent;
+class Manager;
 
 using namespace std;
 
@@ -23,6 +24,7 @@ public:
 
 	bool running();
 
+	static Manager manager;
 	static SDL_Event event;
 	static SDL_Renderer* renderer;
 	static vector<ColliderComponent*> colliders;

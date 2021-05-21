@@ -8,19 +8,22 @@
 #include "../include/KeyboardController.h"
 #include "../include/Collision.h"
 #include "../include/ColliderComponent.h"
+#include "../include/TileComponent.h"
 
 
 using namespace std;
 
 
-Map* map;
-Manager manager;
 
-Entity* player = manager.addEntity();
-Entity* enemy = manager.addEntity();
+Manager Game::manager;
+vector<ColliderComponent*> Game::colliders;
+
+
+Entity* player;
+Entity* enemy;
 SDL_Event Game::event;
 
-vector<ColliderComponent*> Game::colliders;
+
 
 
 int maxWidth = 0;
@@ -75,7 +78,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
-
+	Map map;
+	player = Game::manager.addEntity();
+	enemy = Game::manager.addEntity();
 	player->addComponent<TransformComponent>(0, maxHeight - 128);
 	player->addComponent<SpriteComponent>("assets/player.png");
 	player->addComponent<KeyboardController>(maxHeight);
@@ -84,8 +89,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	enemy->addComponent<TransformComponent>(maxWidth - 128, maxHeight - 128);
 	enemy->addComponent<SpriteComponent>("assets/enemy.png");
 	enemy->addComponent<ColliderComponent>("Enemy");
-
-	map = new Map();
+	
 }
 
 void Game::update() {
@@ -101,7 +105,7 @@ void Game::update() {
 void Game::render() {
 	SDL_RenderClear(renderer);
 
-	map->drawMap();
+	// map->drawMap();
 	manager.draw();
 
 	SDL_RenderPresent(renderer);
