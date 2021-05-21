@@ -7,10 +7,12 @@
 #include <iostream>
 
 #define MAXCOMPONENTS 32
+#define MAXGROUPS 32
 
 using namespace std;
 class Entity;
 class Component;
+class Manager;
 
 // inline -> could be faster than normal function
 inline size_t getComponentTypeID() {
@@ -40,9 +42,10 @@ class Entity {
 
 private:
 	bool active;
-	
+
 	vector<Component*> components;
 	bitset<MAXCOMPONENTS> componentBitset;
+	bitset<MAXGROUPS> groupBitset;
 	array<Component*, MAXCOMPONENTS> componentArray;
 
 public:
@@ -105,12 +108,22 @@ public:
 		return *static_cast<T*>(componentArray[getComponentTypeID<T>()]);
 	}
 
+	bool hasGroup(size_t group) {
+		return groupBitset[group];
+	}
+
+	void addGroup(size_t group);
+
+	void delGroup(size_t group) {
+		groupBitset[group] = false;
+	}
 };
 
 
 class Manager {
 private:
 	vector<Entity*> entities;
+	array<vector<Entity*>, MAXGROUPS> groupedEntities;
 public:
 	
 	/**
@@ -133,6 +146,17 @@ public:
 	* Checks if every entity is still active, if not remove it from list
 	*/
 	void refresh() {
+		// Check Groups
+		for (size_t i = 0; i < MAXGROUPS; i++) {
+			vector<Entity*> vEntities = groupedEntities[i];
+			for (size_t j = 0; j < vEntities.size(); j++) {
+				if ( !(vEntities[j]->isActive()) || !(vEntities[j]->hasGroup(i)) )  {
+					Entity* entity = vEntities[j];
+					vEntities.erase(vEntities.begin() + j);
+				}
+			}
+		}
+		// Check Entities
 		for (size_t i = 0; i < entities.size(); i++) {
 			if (!(entities[i]->isActive())) {
 				Entity* entity = entities[i];
@@ -147,6 +171,14 @@ public:
 		Entity* entity = new Entity();
 		entities.push_back(entity);
 		return entity;
+	}
+
+	void addToGroup(Entity* entity, size_t group) {
+		groupedEntities[group].push_back(entity);
+	}
+
+	vector<Entity*>& getGroup(size_t group) {
+		return groupedEntities[group];
 	}
 };
 

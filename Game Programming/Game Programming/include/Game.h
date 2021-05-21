@@ -12,6 +12,13 @@ using namespace std;
 class Game {
 
 public:
+	enum groupLabels : size_t {
+		groupTile,
+		groupPlayer,
+		groupEnemy,
+		groupColliders
+	};
+
 	Game();
 	~Game();
 

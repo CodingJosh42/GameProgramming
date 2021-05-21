@@ -44,6 +44,7 @@ void Map::loadMap(int loadedMap[20][25]) {
 			tile->addComponent<TileComponent>(col * 32, row * 32, 32, 32, id);
 			TileComponent* tc = &tile->getComponent<TileComponent>();
 			tile->addComponent<ColliderComponent>(tc->tag);
+			tile->addGroup(Game::groupTile);
 		}
 	}
 }
