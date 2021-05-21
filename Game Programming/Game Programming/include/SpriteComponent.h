@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include "TextureManager.h"
 #include "TransformComponent.h"
+#include <iostream>
 
 class SpriteComponent : public Component {
 private:
@@ -12,10 +13,12 @@ private:
 	TransformComponent* position;
 	SDL_Rect src;
 	SDL_Rect dest;
+	const char* path;
 public:
 	SpriteComponent() = default;
 	SpriteComponent(const char* path) {
 		setTexture(path);
+		this->path = path;
 	}
 
 	~SpriteComponent() {
@@ -37,7 +40,7 @@ public:
 		src.x = 0;
 		src.y = 0;
 		src.w = position->width * 2;
-		src.h = position->height * 2;
+		src.h = position->height * 2 ;
 
 		dest.x = (int) position->position.x;
 		dest.y = (int) position->position.y;

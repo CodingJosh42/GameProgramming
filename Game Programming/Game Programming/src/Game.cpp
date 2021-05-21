@@ -8,19 +8,19 @@
 #include "../include/KeyboardController.h"
 #include "../include/Collision.h"
 #include "../include/ColliderComponent.h"
+#include "../include/TileComponent.h"
 
 
 using namespace std;
 
 
-Map* map;
-Manager manager;
 
-Entity* player = manager.addEntity();
-Entity* enemy = manager.addEntity();
-SDL_Event Game::event;
-
+Manager Game::manager;
 vector<ColliderComponent*> Game::colliders;
+
+Entity* player = Game::manager.addEntity();;
+Entity* enemy = Game::manager.addEntity();;
+SDL_Event Game::event;
 
 
 int maxWidth = 0;
@@ -75,17 +75,19 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
-
+	Map map;
+	
 	player->addComponent<TransformComponent>(0, maxHeight - 128);
 	player->addComponent<SpriteComponent>("assets/player.png");
 	player->addComponent<KeyboardController>(maxHeight);
 	player->addComponent<ColliderComponent>("Player");
+	player->addGroup(groupPlayer);
 
 	enemy->addComponent<TransformComponent>(maxWidth - 128, maxHeight - 128);
 	enemy->addComponent<SpriteComponent>("assets/enemy.png");
 	enemy->addComponent<ColliderComponent>("Enemy");
-
-	map = new Map();
+	enemy->addGroup(groupEnemy);
+	
 }
 
 void Game::update() {
@@ -98,11 +100,24 @@ void Game::update() {
 	}
 }
 
+
+
 void Game::render() {
 	SDL_RenderClear(renderer);
+	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTile);
+	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
+	vector<Entity*> enemys = Game::manager.getGroup(Game::groupEnemy);
 
-	map->drawMap();
-	manager.draw();
+	for (size_t i = 0; i < tiles.size(); i++) {
+		tiles[i]->draw();
+	}
+	for (size_t i = 0; i < players.size(); i++) {
+		players[i]->draw();
+	}
+	for (size_t i = 0; i < enemys.size(); i++) {
+		enemys[i]->draw();
+	}
+	// map->drawMap();
 
 	SDL_RenderPresent(renderer);
 }

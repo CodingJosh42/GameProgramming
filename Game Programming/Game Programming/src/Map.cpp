@@ -1,5 +1,10 @@
 #include "../include/Map.h"
 #include "../include/TextureManager.h"
+#include "../include/TileComponent.h"
+#include "../include/Game.h"
+#include "../include/ESC.h"
+#include "../include/ColliderComponent.h"
+
 
 int lvl1[20][25] = {
 	{0,5,0,0,0,5,0,0,0,5,0,0,0,5,0,0,0,5,0,0,0,5,0,0,0},
@@ -25,75 +30,21 @@ int lvl1[20][25] = {
 };
 
 Map::Map() {
-	dirt = TextureManager::LoadTexture("assets/dirt.png");
-	grass = TextureManager::LoadTexture("assets/grass.png");
-	water = TextureManager::LoadTexture("assets/water.png");
-	metal = TextureManager::LoadTexture("assets/metal.png");
-	sky = TextureManager::LoadTexture("assets/sky.png");
-	cloud = TextureManager::LoadTexture("assets/cloud.png");
 
 	loadMap(lvl1);
 
-	src.x = 0;
-	src.y = 0;
-
-	src.w = 32;
-	src.h = 32;
-
-	dest.x = 0;
-	dest.y = 0;
-
-	dest.w = 32;
-	dest.h = 32;
 }
-Map::~Map() {
-	SDL_DestroyTexture(dirt);
-	SDL_DestroyTexture(grass);
-	SDL_DestroyTexture(water);
-	SDL_DestroyTexture(metal);
-	SDL_DestroyTexture(sky);
-	SDL_DestroyTexture(cloud);
-}
+
 
 void Map::loadMap(int loadedMap[20][25]) {
 	for (int row = 0; row < 20; row++) {
 		for (int col = 0; col < 25; col++) {
-			map[row][col] = loadedMap[row][col];
-		}
-	}
-}
-void Map::drawMap() {
-	int type = 0;
-
-	for (int row = 0; row < 20; row++) {
-		for (int col = 0; col < 25; col++) {
-
-			dest.x = col * 32;
-			dest.y = row * 32;
-			type = map[row][col];
-
-			switch (type) {
-			case 0:
-				TextureManager::DrawTexture(sky, src, dest);
-				break;
-			case 1:
-				TextureManager::DrawTexture(grass, src, dest);
-				break;
-			case 2:
-				TextureManager::DrawTexture(water, src, dest);
-				break;
-			case 3:
-				TextureManager::DrawTexture(metal, src, dest);
-				break;
-			case 4:
-				TextureManager::DrawTexture(dirt, src, dest);
-				break;
-			case 5:
-				TextureManager::DrawTexture(cloud, src, dest);
-				break;
-			default:
-				break;
-			}
+			int id = loadedMap[row][col];
+			Entity* tile = Game::manager.addEntity();
+			tile->addComponent<TileComponent>(col * 32, row * 32, 32, 32, id);
+			TileComponent* tc = &tile->getComponent<TileComponent>();
+			tile->addComponent<ColliderComponent>(tc->tag);
+			tile->addGroup(Game::groupTile);
 		}
 	}
 }

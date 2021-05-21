@@ -5,12 +5,20 @@
 #include <SDL_image.h>
 #include <vector>
 class ColliderComponent;
+class Manager;
 
 using namespace std;
 
 class Game {
 
 public:
+	enum groupLabels : size_t {
+		groupTile,
+		groupPlayer,
+		groupEnemy,
+		groupColliders
+	};
+
 	Game();
 	~Game();
 
@@ -23,6 +31,7 @@ public:
 
 	bool running();
 
+	static Manager manager;
 	static SDL_Event event;
 	static SDL_Renderer* renderer;
 	static vector<ColliderComponent*> colliders;
