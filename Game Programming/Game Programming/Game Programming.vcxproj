@@ -152,6 +152,7 @@
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Animation.h" />
     <ClInclude Include="include\ColliderComponent.h" />
     <ClInclude Include="include\Collision.h" />
     <ClInclude Include="include\ESC.h" />

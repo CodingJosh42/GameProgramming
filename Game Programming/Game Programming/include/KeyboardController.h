@@ -8,10 +8,11 @@
 
 class KeyboardController : public Component {
 private:
-	SDL_Texture* playerRight;
-	SDL_Texture* playerLeft;
-	SDL_Texture* playerRightCrouching;
-	SDL_Texture* playerLeftCrouching;
+	SDL_Texture* player;
+	SDL_Texture* playerCrouching;
+	SDL_Texture* playerFlying;
+	bool flying = false;
+
 public:
 	TransformComponent* position;
 	SpriteComponent* sprite;
@@ -25,17 +26,15 @@ public:
 		position = &(entity->getComponent<TransformComponent>());
 		sprite = &(entity->getComponent<SpriteComponent>());
 
-		playerRight = TextureManager::LoadTexture("assets/player.png");
-		playerRightCrouching = TextureManager::LoadTexture("assets/crouching.png");
-		playerLeft = TextureManager::LoadTexture("assets/playerLeft.png");
-		playerLeftCrouching = TextureManager::LoadTexture("assets/crouchingLeft.png");
+		playerFlying = TextureManager::LoadTexture("assets/player.png");
+		player = TextureManager::LoadTexture("assets/animation_player.png");
+		playerCrouching = TextureManager::LoadTexture("assets/crouching.png");
 	}
 
 	~KeyboardController() {
-		SDL_DestroyTexture(playerRight);
-		SDL_DestroyTexture(playerLeft);
-		SDL_DestroyTexture(playerRightCrouching);
-		SDL_DestroyTexture(playerLeftCrouching);
+		SDL_DestroyTexture(player);
+		SDL_DestroyTexture(playerCrouching);
+		SDL_DestroyTexture(playerFlying);
 	}
 
 	void update() override {
@@ -43,9 +42,11 @@ public:
 		// Add Gravity
 		if (position->position.y <= maxHeight - 300) {
 			position->velocity.y = 3;
+			flying = true;
 		}
 		else if(position->position.y >= maxHeight - 128){
 			position->velocity.y = 0;
+			flying = false;
 		}
 
 
@@ -60,24 +61,46 @@ public:
 		{
 			position->velocity.x = -1;
 		}
+
+
+		catch_KeyDown();
+
+		catch_KeyUp();
+
+		updateTextures();
+
 		
+	}
 
-
+	/**
+	* Checks Key Down events
+	*
+	*/
+	void catch_KeyDown()
+	{
 		if (Game::event.type == SDL_KEYDOWN) {
 			switch (Game::event.key.keysym.sym) {
 			case SDLK_w:
 				// Only Jump if on the Ground
-				if (position->position.y >= maxHeight -128 && position->speed > 1) {
+				if (position->position.y >= maxHeight - 128 && position->speed > 1) {
 					position->velocity.y = -3;
+					sprite->setAnimation("jumping");
+					flying = true;
+					if (position->velocity.x == -1) {
+						sprite->flip = SDL_FLIP_HORIZONTAL;
+					}
+					else {
+						sprite->flip = SDL_FLIP_NONE;
+					}
 				}
 				break;
 			case SDLK_LCTRL:
 				if (position->position.y >= maxHeight - 128) {
 					if (position->velocity.x == -1) {
-						sprite->setTexture("assets/crouchingLeft.png");
+						sprite->flip = SDL_FLIP_HORIZONTAL;
 					}
 					else {
-						sprite->setTexture("assets/crouching.png");
+						sprite->flip = SDL_FLIP_NONE;
 					}
 					position->speed = 1;
 				}
@@ -86,24 +109,15 @@ public:
 				break;
 			}
 		}
+	}
 
 
-		if (position->speed > 1 && position->velocity.x == 1) {
-			sprite->setTexture(playerRight);
-		}
-		else if (position->speed <= 1 && position->velocity.x == 1){
-			sprite->setTexture(playerRightCrouching);
-		}
-
-		if (position->speed > 1 && position->velocity.x == -1) {
-			sprite->setTexture(playerLeft);
-		}
-		else if (position->speed <= 1 && position->velocity.x == -1) {
-			sprite->setTexture(playerLeftCrouching);
-		}
-
-		
-
+	/**
+	* Checks Key Up events
+	* 
+	*/
+	void catch_KeyUp()
+	{
 		if (Game::event.type == SDL_KEYUP) {
 			switch (Game::event.key.keysym.sym) {
 			case SDLK_w:
@@ -121,22 +135,49 @@ public:
 				}
 				break;
 			case SDLK_LCTRL:
-				if (position->velocity.x == -1) {
-					sprite->setTexture("assets/playerLeft.png");
-				}
-				else {
-					sprite->setTexture("assets/player.png");
-
-				}
 				position->speed = 4;
 				break;
 			default:
 				break;
 			}
 		}
+	}
 
+	/**
+	* Updates Textures depending on what buttons are still pressed
+	*
+	*/
+	void updateTextures()
+	{
+		// Update Textures if buttons still pressed
+		if (!flying) {
+			// Crouching
+			if (position->speed <= 1) {
+				sprite->setAnimation("crouching");
+			}
+			else {
 
-		
+				// Standing
+				if (position->velocity.x == 0) {
+					sprite->setAnimation("standing");
+				}
+				//  Walking
+				else {
+					sprite->setAnimation("walking");
+				}
+			}
+
+			// RIGHT
+			if (position->velocity.x == 1) {
+				sprite->flip = SDL_FLIP_NONE;
+			}
+
+			// LEFT
+			if (position->velocity.x == -1) {
+				sprite->flip = SDL_FLIP_HORIZONTAL;
+
+			}
+		}
 	}
 };
 

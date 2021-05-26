@@ -78,12 +78,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	Map map;
 	
 	player->addComponent<TransformComponent>(0, maxHeight - 128);
-	player->addComponent<SpriteComponent>("assets/player.png");
+	player->addComponent<SpriteComponent>("assets/animation_player.png", true);
 	player->addComponent<KeyboardController>(maxHeight);
 	player->addComponent<ColliderComponent>("Player");
 	player->addGroup(groupPlayer);
 
-	enemy->addComponent<TransformComponent>(maxWidth - 128, maxHeight - 128);
+	enemy->addComponent<TransformComponent>(maxWidth - 128, maxHeight - 128, 64, 64, 2);
 	enemy->addComponent<SpriteComponent>("assets/enemy.png");
 	enemy->addComponent<ColliderComponent>("Enemy");
 	enemy->addGroup(groupEnemy);
