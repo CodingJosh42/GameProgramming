@@ -97,11 +97,6 @@ public:
 		delay = animations[name].delay;
 		animationIndex = animations[name].index;
 	}
-
-	void dontAnimate() {
-		animationIndex = 0;
-		animated = false;
-	}
 };
 
 #endif

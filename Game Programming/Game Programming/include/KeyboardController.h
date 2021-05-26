@@ -26,15 +26,11 @@ public:
 		position = &(entity->getComponent<TransformComponent>());
 		sprite = &(entity->getComponent<SpriteComponent>());
 
-		playerFlying = TextureManager::LoadTexture("assets/player.png");
 		player = TextureManager::LoadTexture("assets/animation_player.png");
-		playerCrouching = TextureManager::LoadTexture("assets/crouching.png");
 	}
 
 	~KeyboardController() {
 		SDL_DestroyTexture(player);
-		SDL_DestroyTexture(playerCrouching);
-		SDL_DestroyTexture(playerFlying);
 	}
 
 	void update() override {
