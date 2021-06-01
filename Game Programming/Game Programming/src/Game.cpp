@@ -67,7 +67,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	
 	player->addComponent<TransformComponent>(400, 0);
 	player->addComponent<SpriteComponent>("assets/animation_player.png", true);
-	player->addComponent<KeyboardController>(maxHeight);
+	player->addComponent<KeyboardController>();
 	player->addComponent<ColliderComponent>("Player");
 	player->addGroup(groupPlayer);
 
@@ -81,6 +81,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 void Game::update() {
 	ColliderComponent playerCollider = player->getComponent<ColliderComponent>();
 	TransformComponent position = player->getComponent<TransformComponent>();
+	KeyboardController* keyboard = &player->getComponent<KeyboardController>();
 
 	manager.refresh();
 	manager.update();
@@ -93,13 +94,20 @@ void Game::update() {
 	for (ColliderComponent* collider: colliders) {
 		if (collider->tag == "terrain") {
 			if (Collision::TileCollision(playerCollider, *collider)) {
-				player->getComponent<TransformComponent>().position.y = position.position.y;
+
+				if(!keyboard->ignoreCollision)
+					player->getComponent<TransformComponent>().position.y = position.position.y;
+
+				if ((position.height * position.scale + keyboard->jumpHeight - 32) > collider->collider.y && collider->collider.y >= keyboard->jumpHeight) {
+					player->getComponent<TransformComponent>().position.x = position.position.x;
+					}
+						
 				collision = true;
 			}
 		}
 	}
 
-	player->getComponent<KeyboardController>().collision = collision;
+	keyboard->collision = collision;
 
 
 	camera.x = player->getComponent<TransformComponent>().position.x - 400;

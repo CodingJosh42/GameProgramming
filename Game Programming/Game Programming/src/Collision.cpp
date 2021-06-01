@@ -34,7 +34,7 @@ bool Collision::TileCollision(const ColliderComponent& player, const ColliderCom
 	SDL_Rect B = tile.collider;
 	// Check x axis and y axis
 	if (A.x + A.w >= B.x && B.x + B.w >= A.x &&
-		A.y + A.h >= B.y) {
+		A.y + A.h >= B.y && B.y + B.h >= A.y) {
 		return true;
 	}
 	return false;

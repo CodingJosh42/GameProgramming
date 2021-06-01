@@ -14,16 +14,14 @@ private:
 	
 
 public:
+	// For gravity
 	bool flying = false;
 	bool collision = false;
+	bool ignoreCollision = false;
+	int jumpHeight;
+
 	TransformComponent* position;
 	SpriteComponent* sprite;
-	int maxHeight = 0;
-	int jumpHeight = 640-128;
-
-	
-	KeyboardController(int maxHeight) : maxHeight{ maxHeight } {
-	}
 
 	void init() override {
 		position = &(entity->getComponent<TransformComponent>());
@@ -37,27 +35,32 @@ public:
 	}
 
 	void update() override {
-
-
 		// Add Gravity
+		// Player not jumping
 		if (!flying) {
 			if (!collision) {
-				cout << "Am fallen 1" << endl;
 				position->velocity.y = 3;
 			}
 			else {
+				jumpHeight = position->position.y;
 				position->velocity.y = 0;
 			}
 		}
+		// Player jumping
 		if (flying) {
-			if (position->position.y <= jumpHeight - 200 && !collision) {
-				cout << "Am fallen" << endl;
-				position->velocity.y = 3;
+			// Player can jump 200 pixels
+			if (position->position.y <= jumpHeight - 200) {
+				if (!collision) {
+					position->velocity.y = 3;
+					ignoreCollision = false;
+				}
 			}
-			if (collision) {
-				cout << "Kollision" << endl;
-				position->velocity.y = 0;
-				flying = false;
+			// Player is falling down
+			if (position->velocity.y > 0) {
+				if (collision) {
+					flying = false;
+					position->velocity.y = 0;
+				}
 			}
 		}
 
@@ -99,6 +102,7 @@ public:
 					position->velocity.y = -3;
 					sprite->setAnimation("jumping");
 					flying = true;
+					ignoreCollision = true;
 					jumpHeight = position->position.y;
 
 					if (position->velocity.x == -1) {
@@ -110,7 +114,7 @@ public:
 				}
 				break;
 			case SDLK_LCTRL:
-				if (position->position.y >= maxHeight - 128) {
+				if (collision) {
 					if (position->velocity.x == -1) {
 						sprite->flip = SDL_FLIP_HORIZONTAL;
 					}
