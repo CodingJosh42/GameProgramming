@@ -133,6 +133,9 @@ public:
 			case SDLK_LCTRL:
 				position->speed = 4;
 				break;
+			case SDLK_ESCAPE:
+				Game::isRunning = false;
+				break;
 			default:
 				break;
 			}

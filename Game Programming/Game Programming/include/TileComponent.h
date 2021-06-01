@@ -15,6 +15,7 @@ public:
 	int tileId;
 	const char* path;
 	const char* tag;
+	Vector2D initialPosition;
 
 	TileComponent() = default;
 
@@ -23,6 +24,9 @@ public:
 		dest.y = y;
 		dest.w = w;
 		dest.h = h;
+		initialPosition.x = x;
+		initialPosition.y = y;
+
 
 		switch (id) {
 		case 0:
@@ -60,6 +64,11 @@ public:
 
 		entity->addComponent<SpriteComponent>(path);
 		sprite = &entity->getComponent<SpriteComponent>();
+	}
+
+	void update() override {
+		position->position.x = initialPosition.x - Game::camera.x;
+		position->position.y = initialPosition.y - Game::camera.y;
 	}
 };
 

@@ -17,6 +17,9 @@ using namespace std;
 
 Manager Game::manager;
 vector<ColliderComponent*> Game::colliders;
+bool Game::isRunning = false;
+SDL_Rect Game::camera = { 0,0,800,640 };
+
 
 Entity* player = Game::manager.addEntity();;
 Entity* enemy = Game::manager.addEntity();;
@@ -25,21 +28,6 @@ SDL_Event Game::event;
 
 int maxWidth = 0;
 int maxHeight = 0;
-
-void movePlayer(float* xpos, float* ypos) {
-	(*xpos)++;
-	if (*xpos >= maxWidth) {
-		*xpos = -128;
-	}
-}
-
-void moveEnemy(float* xpos, float* ypos) {
-	(*xpos)--;
-	if (*xpos <= -128) {
-		*xpos = maxWidth + 64;
-	}
-}
-
 
 Game::Game() {
 
@@ -77,7 +65,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	Map map;
 	
-	player->addComponent<TransformComponent>(0, maxHeight - 128);
+	player->addComponent<TransformComponent>(400, maxHeight - 128);
 	player->addComponent<SpriteComponent>("assets/animation_player.png", true);
 	player->addComponent<KeyboardController>(maxHeight);
 	player->addComponent<ColliderComponent>("Player");
@@ -98,6 +86,17 @@ void Game::update() {
 		// Bounce back
 		player->getComponent<TransformComponent>().velocity.x = direction;
 	}
+
+	camera.x = player->getComponent<TransformComponent>().position.x - 400;
+	camera.y = player->getComponent<TransformComponent>().position.y - (maxHeight - 128);
+	if (camera.x < 0)
+		camera.x = 0;
+	if (camera.y < 0)
+		camera.y = 0;
+	if (camera.x > camera.w)
+		camera.x = camera.x;
+	if (camera.y > camera.h)
+		camera.y = camera.h;
 }
 
 

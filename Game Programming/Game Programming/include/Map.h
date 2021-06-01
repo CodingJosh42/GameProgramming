@@ -6,7 +6,7 @@ class Map {
 public:
 	Map();
 
-	void loadMap(int map[20][25]);
+	void loadMap(int map[20][50]);
 
 
 private:

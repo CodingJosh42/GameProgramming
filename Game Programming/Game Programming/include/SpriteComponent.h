@@ -84,8 +84,8 @@ public:
 		}
 		src.y = position->height * animationIndex;
 
-		dest.x = (int)position->position.x;
-		dest.y = (int)position->position.y;
+		dest.x = (int)position->position.x - Game::camera.x;
+		dest.y = (int)position->position.y - Game::camera.y;
 	}
 
 	void draw() override {
