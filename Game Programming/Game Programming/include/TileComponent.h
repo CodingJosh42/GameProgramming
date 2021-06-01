@@ -4,7 +4,7 @@
 #include "ESC.h"
 #include "TransformComponent.h"
 #include "SpriteComponent.h"
-#include <iostream>
+#include "ColliderComponent.h"
 
 class TileComponent : public Component {
 public:
@@ -31,27 +31,27 @@ public:
 		switch (id) {
 		case 0:
 			path = "assets/sky.png";
-			tag = "sky";
+			tag = "";
 			break;
 		case 1:
 			path = "assets/grass.png";
-			tag = "grass";
+			tag = "terrain";
 			break;
 		case 2:
 			path = "assets/water.png";
-			tag = "water";
+			tag = "terrain";
 			break;
 		case 3:
 			path = "assets/metal.png";
-			tag = "metal";
+			tag = "terrain";
 			break;
 		case 4:
 			path = "assets/dirt.png";
-			tag = "dirt";
+			tag = "terrain";
 			break;
 		case 5:
 			path = "assets/cloud.png";
-			tag = "cloud";
+			tag = "";
 			break;
 		default:
 			break;
@@ -64,6 +64,11 @@ public:
 
 		entity->addComponent<SpriteComponent>(path);
 		sprite = &entity->getComponent<SpriteComponent>();
+
+		if (tag == "terrain") {
+			ColliderComponent* collider = &entity->addComponent<ColliderComponent>(tag);
+			Game::colliders.push_back(collider);
+		}
 	}
 
 	void update() override {

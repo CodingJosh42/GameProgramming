@@ -11,12 +11,15 @@ private:
 	SDL_Texture* player;
 	SDL_Texture* playerCrouching;
 	SDL_Texture* playerFlying;
-	bool flying = false;
+	
 
 public:
+	bool flying = false;
+	bool collision = false;
 	TransformComponent* position;
 	SpriteComponent* sprite;
 	int maxHeight = 0;
+	int jumpHeight = 640-128;
 
 	
 	KeyboardController(int maxHeight) : maxHeight{ maxHeight } {
@@ -35,14 +38,27 @@ public:
 
 	void update() override {
 
+
 		// Add Gravity
-		if (position->position.y <= maxHeight - 300) {
-			position->velocity.y = 3;
-			flying = true;
+		if (!flying) {
+			if (!collision) {
+				cout << "Am fallen 1" << endl;
+				position->velocity.y = 3;
+			}
+			else {
+				position->velocity.y = 0;
+			}
 		}
-		else if(position->position.y >= maxHeight - 128){
-			position->velocity.y = 0;
-			flying = false;
+		if (flying) {
+			if (position->position.y <= jumpHeight - 200 && !collision) {
+				cout << "Am fallen" << endl;
+				position->velocity.y = 3;
+			}
+			if (collision) {
+				cout << "Kollision" << endl;
+				position->velocity.y = 0;
+				flying = false;
+			}
 		}
 
 
@@ -63,6 +79,7 @@ public:
 
 		catch_KeyUp();
 
+
 		updateTextures();
 
 		
@@ -78,10 +95,12 @@ public:
 			switch (Game::event.key.keysym.sym) {
 			case SDLK_w:
 				// Only Jump if on the Ground
-				if (position->position.y >= maxHeight - 128 && position->speed > 1) {
+				if (flying == false && position->speed > 1) {
 					position->velocity.y = -3;
 					sprite->setAnimation("jumping");
 					flying = true;
+					jumpHeight = position->position.y;
+
 					if (position->velocity.x == -1) {
 						sprite->flip = SDL_FLIP_HORIZONTAL;
 					}

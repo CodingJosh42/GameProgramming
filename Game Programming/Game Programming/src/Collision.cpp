@@ -28,3 +28,14 @@ float Collision::AABB_direction(const ColliderComponent& c1, const ColliderCompo
 	}
 	return 0.0f;
 }
+
+bool Collision::TileCollision(const ColliderComponent& player, const ColliderComponent& tile) {
+	SDL_Rect A = player.collider;
+	SDL_Rect B = tile.collider;
+	// Check x axis and y axis
+	if (A.x + A.w >= B.x && B.x + B.w >= A.x &&
+		A.y + A.h >= B.y) {
+		return true;
+	}
+	return false;
+}
