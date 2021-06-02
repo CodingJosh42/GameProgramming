@@ -100,7 +100,7 @@ void Game::update() {
 					player->getComponent<TransformComponent>().position.y = position.position.y;
 
 				if ((position.height * position.scale + keyboard->jumpHeight - 32) > collider->collider.y && collider->collider.y >= keyboard->jumpHeight) {
-					player->getComponent<TransformComponent>().velocity.x = Collision::AABB_direction(playerCollider, *collider);
+					player->getComponent<TransformComponent>().position.x = position.position.x;
 					}
 						
 				collision = true;
