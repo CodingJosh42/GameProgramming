@@ -18,7 +18,8 @@ public:
 	bool flying = false;
 	bool collision = false;
 	bool ignoreCollision = false;
-	int jumpHeight;
+	int maxHeight = 640;
+	int jumpHeight = maxHeight;
 
 	TransformComponent* position;
 	SpriteComponent* sprite;
@@ -56,12 +57,16 @@ public:
 				}
 			}
 			// Player is falling down
-			if (position->velocity.y > 0) {
+			if (position->velocity.y > 0 && ignoreCollision == false) {
 				if (collision) {
 					flying = false;
 					position->velocity.y = 0;
 				}
 			}
+		}
+
+		if (position->position.y > maxHeight - 32 - 128) {
+			ignoreCollision = false;
 		}
 
 
@@ -113,6 +118,13 @@ public:
 					}
 				}
 				break;
+			case SDLK_s:
+				if (maxHeight - 32 - 128 > position->position.y) {
+					ignoreCollision = true;
+					flying = true;
+					position->velocity.y = 3;
+				}
+				break;
 			case SDLK_LCTRL:
 				if (collision) {
 					if (position->velocity.x == -1) {
@@ -152,6 +164,9 @@ public:
 				if (position->velocity.x != 1) {
 					position->velocity.x = 0;
 				}
+				break;
+			case SDLK_s:
+				ignoreCollision = false;
 				break;
 			case SDLK_LCTRL:
 				position->speed = 4;

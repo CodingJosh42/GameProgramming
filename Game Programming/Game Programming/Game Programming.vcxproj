@@ -155,6 +155,7 @@
     <ClInclude Include="include\Animation.h" />
     <ClInclude Include="include\ColliderComponent.h" />
     <ClInclude Include="include\Collision.h" />
+    <ClInclude Include="include\EnemyComponent.h" />
     <ClInclude Include="include\ESC.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\KeyboardController.h" />

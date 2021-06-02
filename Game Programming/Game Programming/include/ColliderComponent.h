@@ -16,8 +16,14 @@ public:
 	SDL_Rect collider;
 	string tag;
 	TransformComponent* position;
+	int xOffset = 0;
+	int yOffset = 0;
+	int width;
+	int height;
 
 	ColliderComponent(string tag) : tag {tag} {}
+
+	ColliderComponent(string tag, int Xoffset, int Yoffset, int width, int height) : tag{ tag }, xOffset{ Xoffset }, yOffset{ Yoffset }, width{ width }, height{ height } {}
 
 	void init() override {
 		if (!entity->hasComponent<TransformComponent>()) {
@@ -29,10 +35,17 @@ public:
 	}
 
 	void update() override {
-		collider.x = (int) position->position.x;
-		collider.y = (int) position->position.y;
-		collider.w = position->width * position->scale;
-		collider.h = position->height * position->scale;
+		collider.x = (int)position->position.x + (xOffset * position->scale);
+		collider.y = (int)position->position.y + (yOffset * position->scale);
+		if (xOffset == 0) {
+			width = position->width;
+		}
+		if (yOffset == 0) {
+			height = position->height;
+		}
+		
+		collider.w = width * position->scale;
+		collider.h = height * position->scale;
 	}
 };
 
