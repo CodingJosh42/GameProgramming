@@ -16,6 +16,12 @@ private:
 
 	TransformComponent* position;
 public:
+	/*
+	* Constructor of Component
+	* @param range Range of projectile
+	* @param speed Speed of projectile
+	* @param velocity Direction of projectile
+	*/
 	ProjectileComponent(int range, int speed, Vector2D velocity) : range{ range }, speed{ speed }, velocity{ velocity } {
 
 	}

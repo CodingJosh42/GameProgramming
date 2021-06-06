@@ -14,7 +14,7 @@ public:
 	AssetManager(Manager* manager);
 	~AssetManager();
 
-	void createProjectile(int x, int y, int range, int speed, Vector2D velocity);
+	void createProjectile(Vector2D position, int range, int speed, Vector2D velocity);
 	void addTexture(string id, const char* path);
 	SDL_Texture* getTexture(string id);
 

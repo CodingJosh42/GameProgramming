@@ -29,10 +29,19 @@ public:
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 	
 	SpriteComponent() = default;
+
+	/*
+	* Constructor of SpriteComponent
+	* @param id Id of texture
+	*/
 	SpriteComponent(string id) {
 		setTexture(id);
-
 	}
+	/*
+	* Constructor of Sprite with animation
+	* @param id Id of texture
+	* @param animated If true texture is animated, if false texture is not animated
+	*/
 	SpriteComponent(string id, bool animated) : animated{ animated } {
 		setTexture(id);
 
@@ -49,6 +58,10 @@ public:
 		setAnimation("standing");
 	}
 
+	/*
+	* Loads texture from assetManager
+	* @param id Id of requested texture
+	*/
 	void setTexture(string id) {
 		texture = Game::assetManager->getTexture(id);
 	}
@@ -83,6 +96,10 @@ public:
 		TextureManager::DrawTexture(texture, src, dest, flip);
 	}
 
+	/*
+	* Change animation
+	* @param name Name of animation in list
+	*/
 	void setAnimation(const char* name) {
 		frames = animations[name].frames;
 		delay = animations[name].delay;

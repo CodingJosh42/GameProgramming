@@ -19,6 +19,14 @@ public:
 
 	TileComponent() = default;
 
+	/*
+	* Constructor of tiles
+	* @param x x-coordinate of tile
+	* @param y y-coordinate of tile
+	* @param w width of tile
+	* @param h height of tile
+	* @param id Id of tile
+	*/
 	TileComponent(int x, int y, int w, int h, int id) : tileId{ id } {
 		dest.x = x;
 		dest.y = y;

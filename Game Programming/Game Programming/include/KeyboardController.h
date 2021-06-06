@@ -14,6 +14,8 @@ private:
 	SDL_Texture* playerFlying;
 	Uint32 lastShot = 0;
 	int shootingDelay = 100;
+	int lastDirection = 1;
+
 	/**
 	* Checks Key Down events
 	*
@@ -33,7 +35,7 @@ private:
 				}
 				break;
 			case SDLK_k:
-				shoot(shootingDelay);
+				shoot(shootingDelay, 600, 10);
 				break;
 			case SDLK_LCTRL:
 				crouch();
@@ -44,6 +46,9 @@ private:
 		}
 	}
 
+	/**
+	* Player is crouching if not in the air. Speed is reduced
+	*/
 	void crouch()
 	{
 		if (collision) {
@@ -65,6 +70,9 @@ private:
 		}
 	}
 
+	/*
+	* Player jumps if he is on a tile
+	*/
 	void jump()
 	{
 		// Only Jump if on the Ground
@@ -92,7 +100,13 @@ private:
 		}
 	}
 
-	void shoot(int delay)
+	/**
+	* Player is shooting a projectile
+	* @param delay Delay between the single shots
+	* @param range Range of the projectile
+	* @param speed Speed of the projectile
+	*/
+	void shoot(int delay, int range, int speed)
 	{
 		Uint32 currentTick = SDL_GetTicks();
 		if (currentTick - lastShot > delay) {
@@ -116,7 +130,8 @@ private:
 					xStart = position->position.x + position->width * position->scale;
 				}
 			}
-			Game::assetManager->createProjectile(xStart, position->position.y + position->height / 2 * position->scale, 600, 10, Vector2D(direction, 0));
+			Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
+			Game::assetManager->createProjectile(projetilePos, range, speed, Vector2D(direction, 0));
 			lastShot = currentTick;
 		}
 	}
@@ -205,7 +220,6 @@ public:
 	bool ignoreCollision = false;
 	int maxHeight = 640;
 	int jumpHeight = maxHeight;
-	int lastDirection = 1;
 
 	TransformComponent* position;
 	SpriteComponent* sprite;
@@ -268,7 +282,7 @@ public:
 		}
 		if (keystate[SDL_SCANCODE_K])
 		{
-			shoot(shootingDelay);
+			shoot(shootingDelay, 600, 10);
 		}
 
 		catch_KeyDown();

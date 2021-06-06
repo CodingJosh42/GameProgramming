@@ -21,8 +21,20 @@ public:
 	int width = 0;
 	int height = 0;
 
+	/*
+	* Constructor of Collider.
+	* @param tag Tag of collider
+	*/
 	ColliderComponent(string tag) : tag {tag} {}
 
+	/*
+	* Constructor of Collider.
+	* @param tag Tag of collider
+	* @param Xoffset Offset of hitbox in x-direction
+	* @param Yoffset Offset of hitbox in y-direction
+	* @param widht Width of hitbox. If Xoffset is 0 then width is automatically set to width of transformComponent
+	* @param widht Height of hitbox. If Yoffset is 0 then height is automatically set to height of transformComponent
+	*/
 	ColliderComponent(string tag, int Xoffset, int Yoffset, int width, int height) : tag{ tag }, xOffset{ Xoffset }, yOffset{ Yoffset }, width{ width }, height{ height } {}
 
 	void init() override {

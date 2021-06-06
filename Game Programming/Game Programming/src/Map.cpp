@@ -29,14 +29,19 @@ int lvl1[20][50] = {
 	{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1,2,2,2,1,1,1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1,2,2,2,1,1,1,4,4},
 };
 
+/*
+* Loads a map. Map is array lvl1 at the moment
+*/
 Map::Map() {
 
 	loadMap(lvl1);
 
 }
 
-int scale = 2;
-
+/*
+* Creates tile components
+* @param loadedMap Map of tiles
+*/
 void Map::loadMap(int loadedMap[20][50]) {
 	for (int row = 0; row < 20; row++) {
 		for (int col = 0; col < 50; col++) {

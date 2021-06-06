@@ -40,6 +40,9 @@ Game::~Game() {
 
 SDL_Renderer* Game::renderer = nullptr;
 
+/*
+* Initializes SDL, creates window, loads textures and creates Player and Enemy
+*/
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
 
 	int flags = 0;
@@ -93,6 +96,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	
 }
 
+/*
+* Entities in manager are getting updated. Check for collisions after. Update camera
+*/
 void Game::update() {
 	ColliderComponent playerCollider = player->getComponent<ColliderComponent>();
 	TransformComponent position = player->getComponent<TransformComponent>();
@@ -154,7 +160,9 @@ void Game::update() {
 }
 
 
-
+/*
+* Renders rendergroup in following order: tiles, player, enemys, projectiles
+*/
 void Game::render() {
 	SDL_RenderClear(renderer);
 	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTile);
@@ -178,12 +186,18 @@ void Game::render() {
 	SDL_RenderPresent(renderer);
 }
 
+/*
+* Free resources
+*/
 void Game::clean() {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
 
+/*
+* Handles only quit event at the moment
+*/
 void Game::handleEvents() {
 	// Get the next event
 	SDL_PollEvent(&event);
@@ -196,6 +210,9 @@ void Game::handleEvents() {
 	}
 }
 
+/*
+* Returns if game is still running
+*/ 
 bool Game::running() {
 	return isRunning;
 }

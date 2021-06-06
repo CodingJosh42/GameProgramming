@@ -31,9 +31,21 @@ class Component {
 public:
 	Entity* entity;
 
+	/*
+	* Init Component. Gets called when manager creates entity
+	*/
 	virtual void init() {}
+	/*
+	* Update Component
+	*/
 	virtual void update() {}
+	/*
+	* Draw Component
+	*/
 	virtual void draw() {}
+	/*
+	* Free resources in Component
+	*/
 	virtual ~Component() {}
 
 };
@@ -55,6 +67,9 @@ public:
 		componentArray = array<Component*, MAXCOMPONENTS>();
 	}
 
+	/*
+	* Deletes all components of entity
+	*/
 	~Entity() {
 		for (size_t i = 0; i < components.size(); i++) {
 			Component* component = components[i];
@@ -63,6 +78,9 @@ public:
 		}
 	}
 
+	/*
+	* Updates all components
+	*/
 	void update() {
 		for (size_t i = 0; i < components.size(); i++) {
 
@@ -70,20 +88,32 @@ public:
 		}
 	}
 
+	/*
+	* Draws all components
+	*/
 	void draw() {
 		for (size_t i = 0; i < components.size(); i++) {
 			components[i]->draw();
 		}
 	}
 
+	/*
+	* Returns true if entity is still active
+	*/
 	bool isActive() {
 		return active;
 	}
 
+	/*
+	* Sets active to false
+	*/
 	void destroy() {
 		active = false;
 	}
 
+	/*
+	* Returns true if entity has a specific component
+	*/
 	template<typename T>
 	bool hasComponent() {
 		return componentBitset[getComponentTypeID<T>()];
@@ -91,6 +121,10 @@ public:
 
 	template<typename T, typename... Targs>
 	// forwad needs &&
+	/*
+	* Adds a component to the entity
+	* @param params List of parameters for Component constructor
+	*/
 	T& addComponent(Targs&&... params) {
 		T* component = new T(forward<Targs>(params)...);
 		component->entity = this;
@@ -103,17 +137,29 @@ public:
 		return *component;
 	}
 
+	/*
+	* Returns the requested component
+	*/
 	template<typename T>
 	T& getComponent() {
 		return *static_cast<T*>(componentArray[getComponentTypeID<T>()]);
 	}
 
+	/*
+	* Returns true if entity has group
+	*/
 	bool hasGroup(size_t group) {
 		return groupBitset[group];
 	}
 
+	/*
+	* Adds entity to group
+	*/
 	void addGroup(size_t group);
 
+	/*
+	* Remove group from entity
+	*/
 	void delGroup(size_t group) {
 		groupBitset[group] = false;
 	}
@@ -143,7 +189,8 @@ public:
 		}
 	}
 	/**
-	* Checks if every entity is still active, if not remove it from list
+	* Checks if every entity is still active, if not remove it from list.
+	* Also refresh group vectors
 	*/
 	void refresh() {
 		// Check Groups
@@ -166,16 +213,28 @@ public:
 		
 	}
 
+	/*
+	* Creates entity and adds it to list
+	*/
 	Entity* addEntity() {
 		Entity* entity = new Entity();
 		entities.push_back(entity);
 		return entity;
 	}
 
+	/*
+	* Adds an entity to a group
+	* @param entity Entity to be added
+	* @param group Group which entity should be added to
+	*/
 	void addToGroup(Entity* entity, size_t group) {
 		groupedEntities[group].push_back(entity);
 	}
 
+	/*
+	* Returns list of entities with specific group
+	* @param group Requested group
+	*/
 	vector<Entity*>& getGroup(size_t group) {
 		return groupedEntities[group];
 	}
