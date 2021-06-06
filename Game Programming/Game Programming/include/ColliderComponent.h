@@ -18,8 +18,8 @@ public:
 	TransformComponent* position;
 	int xOffset = 0;
 	int yOffset = 0;
-	int width;
-	int height;
+	int width = 0;
+	int height = 0;
 
 	ColliderComponent(string tag) : tag {tag} {}
 
@@ -31,7 +31,7 @@ public:
 		}
 
 		position = &(entity->getComponent<TransformComponent>());
-		Game::colliders.push_back(this);
+
 	}
 
 	void update() override {

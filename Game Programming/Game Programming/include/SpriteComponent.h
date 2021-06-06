@@ -17,7 +17,6 @@ private:
 	TransformComponent* position;
 	SDL_Rect src;
 	SDL_Rect dest;
-	const char* path;
 
 	// Animation
 	int frames;
@@ -30,13 +29,12 @@ public:
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 	
 	SpriteComponent() = default;
-	SpriteComponent(const char* path) {
-		setTexture(path);
-		this->path = path;
+	SpriteComponent(string id) {
+		setTexture(id);
+
 	}
-	SpriteComponent(const char* path, bool animated) : animated{ animated } {
-		setTexture(path);
-		this->path = path;
+	SpriteComponent(string id, bool animated) : animated{ animated } {
+		setTexture(id);
 
 		Animation standing = Animation(0, 2, 200);
 		Animation walking = Animation(1, 6, 150);
@@ -51,17 +49,10 @@ public:
 		setAnimation("standing");
 	}
 
-	~SpriteComponent() {
-		SDL_DestroyTexture(texture);
+	void setTexture(string id) {
+		texture = Game::assetManager->getTexture(id);
 	}
 
-	void setTexture(const char* path) {
-		texture = TextureManager::LoadTexture(path);
-	}
-
-	void setTexture(SDL_Texture* texture) {
-		this->texture = texture;
-	}
 
 	void init() override {
 

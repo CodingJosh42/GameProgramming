@@ -4,6 +4,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <vector>
+#include "AssetManager.h"
+
 class ColliderComponent;
 class Manager;
 
@@ -16,7 +18,8 @@ public:
 		groupTile,
 		groupPlayer,
 		groupEnemy,
-		groupColliders
+		groupColliders,
+		groupProjectiles
 	};
 
 	Game();
@@ -37,6 +40,7 @@ public:
 	static vector<ColliderComponent*> colliders;
 	static SDL_Rect camera;
 	static bool isRunning;
+	static AssetManager* assetManager;
 
 private:
 	SDL_Window* window;

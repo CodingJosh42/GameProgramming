@@ -5,6 +5,7 @@
 #include "ESC.h"
 #include "TransformComponent.h"
 #include <SDL.h>
+#include "Vector2D.h"
 
 class KeyboardController : public Component {
 private:
@@ -20,6 +21,7 @@ public:
 	bool ignoreCollision = false;
 	int maxHeight = 640;
 	int jumpHeight = maxHeight;
+	int lastDirection = 1;
 
 	TransformComponent* position;
 	SpriteComponent* sprite;
@@ -100,6 +102,8 @@ public:
 	void catch_KeyDown()
 	{
 		if (Game::event.type == SDL_KEYDOWN) {
+			int direction = 0;
+			int xStart = 0;
 			switch (Game::event.key.keysym.sym) {
 			case SDLK_w:
 				// Only Jump if on the Ground
@@ -113,8 +117,16 @@ public:
 					if (position->velocity.x == -1) {
 						sprite->flip = SDL_FLIP_HORIZONTAL;
 					}
-					else {
+					else if (position->velocity.x == 1){
 						sprite->flip = SDL_FLIP_NONE;
+					}
+					else {
+						if (lastDirection == 1) {
+							sprite->flip = SDL_FLIP_NONE;
+						}
+						else {
+							sprite->flip = SDL_FLIP_HORIZONTAL;
+						}
 					}
 				}
 				break;
@@ -125,13 +137,40 @@ public:
 					position->velocity.y = 3;
 				}
 				break;
+			case SDLK_k:
+				if (position->velocity.x == -1) {
+					direction = -1;
+					xStart = position->position.x;
+				}
+				else if (position->velocity.x == 1) {
+					direction = 1;
+					xStart = position->position.x + position->width * position->scale;
+				}
+				else {
+					direction = lastDirection;
+					if (lastDirection == -1) {
+						xStart = position->position.x;
+					}
+					else {
+						xStart = position->position.x + position->width * position->scale;
+					}
+				}
+				Game::assetManager->createProjectile(xStart, position->position.y + position->height / 2 * position->scale, 400, 10, Vector2D(direction,0));
+				break;
 			case SDLK_LCTRL:
 				if (collision) {
 					if (position->velocity.x == -1) {
 						sprite->flip = SDL_FLIP_HORIZONTAL;
 					}
-					else {
+					else if (position->velocity.x == 1){
 						sprite->flip = SDL_FLIP_NONE;
+					} else {
+						if (lastDirection == 1) {
+							sprite->flip = SDL_FLIP_NONE;
+						}
+						else {
+							sprite->flip = SDL_FLIP_HORIZONTAL;
+						}
 					}
 					position->speed = 1;
 				}
@@ -157,12 +196,14 @@ public:
 				// Make movement smooth
 				if (position->velocity.x != -1) {
 					position->velocity.x = 0;
+					lastDirection = 1;
 				}
 				break;
 			case SDLK_a:
 				// Make movement smooth
 				if (position->velocity.x != 1) {
 					position->velocity.x = 0;
+					lastDirection = -1;
 				}
 				break;
 			case SDLK_s:

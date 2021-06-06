@@ -13,7 +13,7 @@ public:
 
 	SDL_Rect dest;
 	int tileId;
-	const char* path;
+	string texId;
 	const char* tag;
 	Vector2D initialPosition;
 
@@ -30,27 +30,27 @@ public:
 
 		switch (id) {
 		case 0:
-			path = "assets/sky.png";
+			texId = "sky";
 			tag = "";
 			break;
 		case 1:
-			path = "assets/grass.png";
+			texId = "grass";
 			tag = "terrain";
 			break;
 		case 2:
-			path = "assets/water.png";
+			texId = "water";
 			tag = "terrain";
 			break;
 		case 3:
-			path = "assets/metal.png";
+			texId = "metal";
 			tag = "terrain";
 			break;
 		case 4:
-			path = "assets/dirt.png";
+			texId = "dirt";
 			tag = "terrain";
 			break;
 		case 5:
-			path = "assets/cloud.png";
+			texId = "cloud";
 			tag = "";
 			break;
 		default:
@@ -62,13 +62,13 @@ public:
 		entity->addComponent<TransformComponent>(dest.x, dest.y, dest.w, dest.h, 1);
 		position = &entity->getComponent<TransformComponent>();
 
-		entity->addComponent<SpriteComponent>(path);
+		entity->addComponent<SpriteComponent>(texId);
 		sprite = &entity->getComponent<SpriteComponent>();
 
 		if (tag == "terrain") {
 			ColliderComponent* collider = &entity->addComponent<ColliderComponent>(tag);
-			Game::colliders.push_back(collider);
 		}
+		entity->addGroup(Game::groupColliders);
 	}
 
 	void update() override {

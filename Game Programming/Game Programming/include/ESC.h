@@ -151,8 +151,8 @@ public:
 			vector<Entity*> vEntities = groupedEntities[i];
 			for (size_t j = 0; j < vEntities.size(); j++) {
 				if ( !(vEntities[j]->isActive()) || !(vEntities[j]->hasGroup(i)) )  {
-					Entity* entity = vEntities[j];
 					vEntities.erase(vEntities.begin() + j);
+					groupedEntities[i] = vEntities;
 				}
 			}
 		}

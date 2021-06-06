@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\ESC.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Animation.h" />
+    <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\ColliderComponent.h" />
     <ClInclude Include="include\Collision.h" />
     <ClInclude Include="include\EnemyComponent.h" />
@@ -160,6 +162,7 @@
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\KeyboardController.h" />
     <ClInclude Include="include\Map.h" />
+    <ClInclude Include="include\ProjectileComponent.h" />
     <ClInclude Include="include\SpriteComponent.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\TileComponent.h" />

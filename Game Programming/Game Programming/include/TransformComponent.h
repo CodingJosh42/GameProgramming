@@ -23,6 +23,8 @@ public:
 		position = Vector2D(float(x), float(y));
 
 	}
+	TransformComponent(Vector2D position, int width, int height, int scale) : position{ position } ,width { width }, height{ height }, scale{ scale } {
+	}
 
 	TransformComponent(int x, int y, int width, int height, int scale) : width{ width }, height{ height }, scale{ scale } {
 		position = Vector2D((float)x, (float)y);
