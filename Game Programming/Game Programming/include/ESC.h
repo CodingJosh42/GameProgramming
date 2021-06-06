@@ -148,11 +148,10 @@ public:
 	void refresh() {
 		// Check Groups
 		for (size_t i = 0; i < MAXGROUPS; i++) {
-			vector<Entity*> vEntities = groupedEntities[i];
-			for (size_t j = 0; j < vEntities.size(); j++) {
-				if ( !(vEntities[j]->isActive()) || !(vEntities[j]->hasGroup(i)) )  {
-					vEntities.erase(vEntities.begin() + j);
-					groupedEntities[i] = vEntities;
+			vector<Entity*>* vEntities = &groupedEntities[i];
+			for (size_t j = 0; j < vEntities->size(); j++) {
+				if ( !((*vEntities)[j]->isActive()) || !((*vEntities)[j]->hasGroup(i)) )  {
+					vEntities->erase(vEntities->begin() + j);
 				}
 			}
 		}
