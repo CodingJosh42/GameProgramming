@@ -5,6 +5,9 @@
 #include "../include/ColliderComponent.h"
 #include "../include/ProjectileComponent.h"
 #include "../include/Game.h"
+#include "../include/KeyboardController.h"
+#include "../include/Stats.h"
+#include "../include/Weapons.h"
 
 #include <iostream>
 AssetManager::AssetManager(Manager* manager) : manager{ manager } {}
@@ -25,6 +28,17 @@ void AssetManager::createProjectile(Vector2D position, int range, int speed, Vec
 	projectile->addComponent<ColliderComponent>("projectile");
 	projectile->addComponent<ProjectileComponent>(range, speed, velocity);
 	projectile->addGroup(Game::groupProjectiles);
+}
+
+void AssetManager::createPlayer() {
+	Entity* player = manager->addEntity();
+	Stats* stats = &player->addComponent<Stats>(3, Weapons::pistol, 4, 1, true);
+	stats->addSecondaryWeapon(Weapons::machineGun);
+	player->addComponent<TransformComponent>(400, 0);
+	player->addComponent<SpriteComponent>("player", true);
+	player->addComponent<KeyboardController>();
+	player->addComponent<ColliderComponent>("Player", 8, 0, 12, 0);
+	player->addGroup(Game::groupPlayer);
 }
 
 /*

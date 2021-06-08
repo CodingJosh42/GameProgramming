@@ -3,6 +3,7 @@
 
 #include "ESC.h"
 #include "Vector2D.h"
+#include "Stats.h"
 
 class TransformComponent : public Component {
 public:
@@ -53,6 +54,13 @@ public:
 	TransformComponent(int x, int y, int width, int height, int scale) : width{ width }, height{ height }, scale{ scale } {
 		position = Vector2D((float)x, (float)y);
 
+	}
+
+	void init() override {
+		if (entity->hasComponent<Stats>()) {
+			Stats stats = entity->getComponent<Stats>();
+			speed = stats.getSpeed();
+		}
 	}
 
 	 void update() override {

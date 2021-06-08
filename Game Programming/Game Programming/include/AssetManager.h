@@ -15,6 +15,7 @@ public:
 	~AssetManager();
 
 	void createProjectile(Vector2D position, int range, int speed, Vector2D velocity);
+	void createPlayer();
 	void addTexture(string id, const char* path);
 	SDL_Texture* getTexture(string id);
 

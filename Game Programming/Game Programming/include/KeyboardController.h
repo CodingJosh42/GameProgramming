@@ -6,15 +6,18 @@
 #include "TransformComponent.h"
 #include <SDL.h>
 #include "Vector2D.h"
-
+#include "Weapons.h"
+#include "Stats.h"
+#include <iostream>
+using namespace std;
 class KeyboardController : public Component {
 private:
-	SDL_Texture* player;
-	SDL_Texture* playerCrouching;
-	SDL_Texture* playerFlying;
+
+	Stats* stats;
 	Uint32 lastShot = 0;
-	int shootingDelay = 100;
 	int lastDirection = 1;
+	bool reloading = false;
+	Uint32 reloadFrame;
 
 	/**
 	* Checks Key Down events
@@ -35,13 +38,44 @@ private:
 				}
 				break;
 			case SDLK_k:
-				shoot(shootingDelay, 600, 10);
+				shoot(stats->getWeapon());
 				break;
 			case SDLK_LCTRL:
 				crouch();
 				break;
+			case SDLK_1:
+				stats->changeWeapon(1);
+				reloading = false;
+				break;
+			case SDLK_2:
+				stats->changeWeapon(2);
+				reloading = false;
+				break;
+			case SDLK_r:
+				if (!reloading) {
+					reload();
+				}
 			default:
 				break;
+			}
+		}
+	}
+
+	/*
+	* Player is reloading his weapon. After reloading time weapon has maxAmmo again
+	*/
+	void reload() {
+		if (!reloading) {
+			reloading = true;
+			reloadFrame = SDL_GetTicks();
+			cout << "start reloading" << endl;
+		}
+		else {
+			Uint32 current = SDL_GetTicks();
+			if (current - reloadFrame >= stats->getWeapon().reloadTime) {
+				stats->getWeapon().reload();
+				reloading = false;
+				cout << "reloading done" << endl;
 			}
 		}
 	}
@@ -66,7 +100,7 @@ private:
 					sprite->flip = SDL_FLIP_HORIZONTAL;
 				}
 			}
-			position->speed = 1;
+			position->speed = stats->getCrouchSpeed();
 		}
 	}
 
@@ -76,7 +110,7 @@ private:
 	void jump()
 	{
 		// Only Jump if on the Ground
-		if (flying == false && position->speed > 1) {
+		if (flying == false && position->speed > stats->getCrouchSpeed()) {
 			position->velocity.y = -3;
 			sprite->setAnimation("jumping");
 			flying = true;
@@ -106,10 +140,12 @@ private:
 	* @param range Range of the projectile
 	* @param speed Speed of the projectile
 	*/
-	void shoot(int delay, int range, int speed)
+	void shoot(Weapon weapon)
 	{
 		Uint32 currentTick = SDL_GetTicks();
-		if (currentTick - lastShot > delay) {
+		if (stats->getWeapon().currentAmmo <= 0) {
+			reload();
+		} else if (currentTick - lastShot > weapon.delay && !reloading) {
 
 			int direction = 0;
 			int xStart = 0;
@@ -131,7 +167,8 @@ private:
 				}
 			}
 			Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
-			Game::assetManager->createProjectile(projetilePos, range, speed, Vector2D(direction, 0));
+			Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction, 0));
+			stats->getWeapon().reduceAmmo();
 			lastShot = currentTick;
 		}
 	}
@@ -165,7 +202,7 @@ private:
 				ignoreCollision = false;
 				break;
 			case SDLK_LCTRL:
-				position->speed = 4;
+				position->speed = stats->getSpeed();
 				break;
 			case SDLK_ESCAPE:
 				Game::isRunning = false;
@@ -185,7 +222,7 @@ private:
 		// Update Textures if buttons still pressed
 		if (!flying) {
 			// Crouching
-			if (position->speed <= 1) {
+			if (position->speed <= stats->getCrouchSpeed()) {
 				sprite->setAnimation("crouching");
 			}
 			else {
@@ -227,12 +264,7 @@ public:
 	void init() override {
 		position = &(entity->getComponent<TransformComponent>());
 		sprite = &(entity->getComponent<SpriteComponent>());
-
-		player = TextureManager::LoadTexture("assets/animation_player.png");
-	}
-
-	~KeyboardController() {
-		SDL_DestroyTexture(player);
+		stats = &entity->getComponent<Stats>();
 	}
 
 	void update() override {
@@ -265,7 +297,7 @@ public:
 			}
 		}
 
-		if (position->position.y > maxHeight - 32 - 128) {
+		if (position->position.y > maxHeight - 32 - position->height * position->scale) {
 			ignoreCollision = false;
 		}
 
@@ -282,7 +314,11 @@ public:
 		}
 		if (keystate[SDL_SCANCODE_K])
 		{
-			shoot(shootingDelay, 600, 10);
+			shoot(stats->getWeapon());
+		}
+
+		if (reloading) {
+			reload();
 		}
 
 		catch_KeyDown();

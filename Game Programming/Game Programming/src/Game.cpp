@@ -11,6 +11,7 @@
 #include "../include/TileComponent.h"
 #include "../include/EnemyComponent.h"
 
+
 using namespace std;
 
 
@@ -22,7 +23,7 @@ bool Game::isRunning = false;
 SDL_Rect Game::camera = { 0,0,800,640 };
 
 
-Entity* player = Game::manager.addEntity();
+Entity* player;
 Entity* enemy = Game::manager.addEntity();
 SDL_Event Game::event;
 
@@ -78,15 +79,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	assetManager->addTexture("projectile", "assets/projectile.png");
 
+	assetManager->addTexture("heart", "assets/heart.png");
+
 
 	Map map;
 
-	
-	player->addComponent<TransformComponent>(400, 0);
-	player->addComponent<SpriteComponent>("player", true);
-	player->addComponent<KeyboardController>();
-	player->addComponent<ColliderComponent>("Player", 8, 0, 12, 0);
-	player->addGroup(groupPlayer);
+	assetManager->createPlayer();
+	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
+	player = players[0];
 
 	enemy->addComponent<TransformComponent>(maxWidth + 128, maxHeight - 128 - 32, 64, 64, 2);
 	enemy->addComponent<SpriteComponent>("enemy");
