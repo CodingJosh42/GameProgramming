@@ -50,6 +50,7 @@ public:
 		else {
 			if (distance.x != 0) {
 				direction.x = distance.x / abs(distance.x);
+				//direction.y = distance.y / abs(distance.y);
 
 			}
 			if (abs(distance.x) > 400) {
@@ -89,7 +90,7 @@ public:
 				xStart = position->position.x + position->width * position->scale;
 			}
 			Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
-			Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x, 0),Game::groupEnemyProjectiles);
+			Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x,0),Game::groupEnemyProjectiles);
 			stats->getWeapon().reduceAmmo();
 			lastShot = currentTick;
 		}
