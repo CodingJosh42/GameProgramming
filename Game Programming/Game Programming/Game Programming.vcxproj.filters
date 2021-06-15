@@ -101,5 +101,8 @@
     <ClInclude Include="include\Weapons.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\WeaponComponent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

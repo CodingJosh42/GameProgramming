@@ -170,6 +170,7 @@
     <ClInclude Include="include\TileComponent.h" />
     <ClInclude Include="include\TransformComponent.h" />
     <ClInclude Include="include\Vector2D.h" />
+    <ClInclude Include="include\WeaponComponent.h" />
     <ClInclude Include="include\Weapons.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

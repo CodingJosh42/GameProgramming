@@ -81,6 +81,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	assetManager->addTexture("heart", "assets/heart.png");
 
+	assetManager->addTexture("pistol", "assets/pistol.png");
+	assetManager->addTexture("machineGun", "assets/machineGun.png");
+
 
 	Map map;
 

@@ -8,6 +8,7 @@
 #include "../include/KeyboardController.h"
 #include "../include/Stats.h"
 #include "../include/Weapons.h"
+#include "../include/WeaponComponent.h"
 
 #include <iostream>
 AssetManager::AssetManager(Manager* manager) : manager{ manager } {}
@@ -35,6 +36,7 @@ void AssetManager::createPlayer() {
 	Stats* stats = &player->addComponent<Stats>(3, Weapons::pistol, 4, 1, true);
 	stats->addSecondaryWeapon(Weapons::machineGun);
 	player->addComponent<TransformComponent>(400, 0);
+	player->addComponent<WeaponComponent>();
 	player->addComponent<SpriteComponent>("player", true);
 	player->addComponent<KeyboardController>();
 	player->addComponent<ColliderComponent>("Player", 8, 0, 12, 0);

@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "ESC.h"
 #include "TransformComponent.h"
+#include "SpriteComponent.h"
 #include <SDL.h>
 #include "Vector2D.h"
 #include "Weapons.h"
@@ -189,6 +190,7 @@ private:
 				if (position->velocity.x != -1) {
 					position->velocity.x = 0;
 					lastDirection = 1;
+					position->lastDirection = 1;
 				}
 				break;
 			case SDLK_a:
@@ -196,6 +198,7 @@ private:
 				if (position->velocity.x != 1) {
 					position->velocity.x = 0;
 					lastDirection = -1;
+					position->lastDirection = -1;
 				}
 				break;
 			case SDLK_s:
