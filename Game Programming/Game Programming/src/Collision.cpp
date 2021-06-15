@@ -7,8 +7,8 @@
 */
 bool Collision::AABB(const SDL_Rect& A, const SDL_Rect& B) {
 	// Check x axis and y axis
-	if (A.x + A.w >= B.x && B.x + B.w >= A.x &&
-		A.y + A.h >= B.y && B.y + B.h >= A.y) {
+	if (A.x + A.w  >= B.x && B.x + B.w >= A.x &&
+		A.y + A.h  >= B.y && B.y + B.h >= A.y) {
 		return true;
 	}
 	return false;
@@ -43,16 +43,3 @@ float Collision::AABB_direction(const ColliderComponent& c1, const ColliderCompo
 	return 0.0f;
 }
 
-/*
-* Equal to AABB at the moment. Goal: Only return true if player is above tile
-*/
-bool Collision::TileCollision(const ColliderComponent& player, const ColliderComponent& tile) {
-	SDL_Rect A = player.collider;
-	SDL_Rect B = tile.collider;
-	// Check x axis and y axis
-	if (A.x + A.w >= B.x && B.x + B.w >= A.x &&
-		A.y + A.h >=B.y && B.y + B.h >= A.y) {
-		return true;
-	}
-	return false;
-}

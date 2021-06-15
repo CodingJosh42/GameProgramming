@@ -255,6 +255,7 @@ public:
 	bool flying = false;
 	bool collision = false;
 	bool ignoreCollision = false;
+	bool xCollision = false;
 	int maxHeight = 640;
 	int jumpHeight = maxHeight;
 
@@ -303,15 +304,20 @@ public:
 
 		const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
-		//continuous-response keys
-		if (keystate[SDL_SCANCODE_D])
-		{
-			position->velocity.x = 1;
-		}
-		if (keystate[SDL_SCANCODE_A])
-		{
-			position->velocity.x = -1;
-		}
+
+			//continuous-response keys
+			if (keystate[SDL_SCANCODE_D])
+			{
+				position->velocity.x = 1;
+			}
+			else if (keystate[SDL_SCANCODE_A])
+			{
+				position->velocity.x = -1;
+			}
+			else {
+				position->velocity.x = 0;
+			}
+
 		if (keystate[SDL_SCANCODE_K])
 		{
 			shoot(stats->getWeapon());
