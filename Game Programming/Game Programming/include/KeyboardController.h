@@ -167,7 +167,7 @@ private:
 				}
 			}
 			Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
-			Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction, 0));
+			Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction, 0), Game::groupPlayerProjectiles);
 			stats->getWeapon().reduceAmmo();
 			lastShot = currentTick;
 		}

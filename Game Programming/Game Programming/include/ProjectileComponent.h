@@ -38,12 +38,7 @@ public:
 
 		if (distance > range) {
 			entity->destroy();
-		} else if (position->position.x > Game::camera.x + Game::camera.w ||
-				 position->position.x < Game::camera.x ||
-				 position->position.y > Game::camera.y + Game::camera.h ||
-				 position->position.y < Game::camera.y) {
-			entity->destroy();
-		}
+		} 
 	}
 };
 

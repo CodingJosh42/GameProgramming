@@ -39,6 +39,7 @@ class Weapons {
 public:
 	static Weapon pistol;
 	static Weapon machineGun;
+	static Weapon easyEnemyGun;
 };
 
 #endif

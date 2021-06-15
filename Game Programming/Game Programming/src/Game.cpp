@@ -17,14 +17,13 @@ using namespace std;
 
 
 Manager Game::manager;
+Entity* Game::player;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 
 bool Game::isRunning = false;
 SDL_Rect Game::camera = { 0,0,800,640 };
 
 
-Entity* player;
-Entity* enemy = Game::manager.addEntity();
 SDL_Event Game::event;
 
 
@@ -88,11 +87,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
 	player = players[0];
 
-	enemy->addComponent<TransformComponent>(maxWidth + 128, maxHeight - 128 - 32, 64, 64, 2);
-	enemy->addComponent<SpriteComponent>("enemy");
-	enemy->addComponent<ColliderComponent>("Enemy");
-	enemy->addComponent<EnemyComponent>();
-	enemy->addGroup(groupEnemy);
+	assetManager->createEasyEnemy();
 	
 }
 
@@ -109,14 +104,16 @@ void Game::update() {
 
 	// Enemy collision
 	float direction = 0.0f;
-	if ((direction = Collision::AABB_direction(player->getComponent<ColliderComponent>(), enemy->getComponent<ColliderComponent>())) != 0.0f) {
-		// Bounce back
-		player->getComponent<TransformComponent>().velocity.x = direction;
+	vector<Entity*> enemys = Game::manager.getGroup(Game::groupEnemy);
+	for (Entity* enemy : enemys) {
+		if ((direction = Collision::AABB_direction(player->getComponent<ColliderComponent>(), enemy->getComponent<ColliderComponent>())) != 0.0f) {
+			// Bounce back
+			player->getComponent<TransformComponent>().velocity.x = direction;
+		}
 	}
 
 	// Tile collision
 	bool keyBoardCollision = false;
-	bool keyBoardxCollision = false;
 	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTile);
 	for (Entity* tile: tiles) {
 		if (tile->getComponent<TileComponent>().tag == "terrain") {
@@ -143,7 +140,6 @@ void Game::update() {
 					else {
 						player->getComponent<TransformComponent>().position.y = position.position.y;
 						keyBoardCollision = true;
-						cout << keyboard->flying << endl;
 					}
 				}
 				if (collision == Collision::BOTTOM) {
@@ -168,18 +164,32 @@ void Game::update() {
 		}
 	}
 	keyboard->collision = keyBoardCollision;
-	keyboard->xCollision = keyBoardxCollision;
+
 
 	// Projectile collision
-	ColliderComponent enemyCollider = enemy->getComponent<ColliderComponent>();
 	
-	vector<Entity*> projectiles = Game::manager.getGroup(Game::groupProjectiles);
+	vector<Entity*> projectiles = Game::manager.getGroup(Game::groupPlayerProjectiles);
 
 	for (Entity* projectile: projectiles) {
-		if (Collision::AABB(enemyCollider, projectile->getComponent<ColliderComponent>()) ) {
-			projectile->destroy();
+		for (Entity* enemy : enemys) {
+			ColliderComponent enemyCollider = enemy->getComponent<ColliderComponent>();
+			if (Collision::AABB(enemyCollider, projectile->getComponent<ColliderComponent>())) {
+				projectile->destroy();
+				Stats* stats = &enemy->getComponent<Stats>();
+				stats->reduceHealth(1);
+			}
 		}
 	}
+
+	vector<Entity*> enemyProjectiles = Game::manager.getGroup(Game::groupEnemyProjectiles);
+
+	for (Entity* projectile : enemyProjectiles) {
+			if (Collision::AABB(playerCollider, projectile->getComponent<ColliderComponent>())) {
+				projectile->destroy();
+				Stats* stats = &player->getComponent<Stats>();
+				stats->reduceHealth(1);
+			}
+		}
 
 	camera.x = player->getComponent<TransformComponent>().position.x - 400;
 	camera.y = player->getComponent<TransformComponent>().position.y - (maxHeight - 128);
@@ -203,7 +213,8 @@ void Game::render() {
 	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTile);
 	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
 	vector<Entity*> enemys = Game::manager.getGroup(Game::groupEnemy);
-	vector<Entity*> projectiles = Game::manager.getGroup(Game::groupProjectiles);
+	vector<Entity*> playerProjectiles = Game::manager.getGroup(Game::groupPlayerProjectiles);
+	vector<Entity*> enemyProjectiles = Game::manager.getGroup(Game::groupEnemyProjectiles);
 
 	for (size_t i = 0; i < tiles.size(); i++) {
 		tiles[i]->draw();
@@ -214,8 +225,11 @@ void Game::render() {
 	for (size_t i = 0; i < enemys.size(); i++) {
 		enemys[i]->draw();
 	}
-	for (size_t i = 0; i < projectiles.size(); i++) {
-		projectiles[i]->draw();
+	for (size_t i = 0; i < playerProjectiles.size(); i++) {
+		playerProjectiles[i]->draw();
+	}
+	for (size_t i = 0; i < enemyProjectiles.size(); i++) {
+		enemyProjectiles[i]->draw();
 	}
 
 	SDL_RenderPresent(renderer);

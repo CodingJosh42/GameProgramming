@@ -8,6 +8,7 @@
 
 class ColliderComponent;
 class Manager;
+class Entity;
 
 using namespace std;
 
@@ -19,8 +20,10 @@ public:
 		groupPlayer,
 		groupEnemy,
 		groupColliders,
-		groupProjectiles
+		groupPlayerProjectiles,
+		groupEnemyProjectiles
 	};
+	static Entity* player;
 
 	Game();
 	~Game();

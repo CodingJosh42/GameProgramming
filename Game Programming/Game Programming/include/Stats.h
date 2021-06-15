@@ -25,6 +25,8 @@ private:
 	int speed;
 	int crouchSpeed;
 	bool drawTex;
+	Uint32 lastDamageFrame = 0;
+	int regenTime = 10000;
 
 public:
 	Stats() = default;
@@ -59,8 +61,13 @@ public:
 	}
 
 	void update() override {
-		currentHealth = counter / 100 % 4;
-		counter++;
+		if (drawTex && currentHealth < maxHealth) {
+			Uint32 currentFrame = SDL_GetTicks();
+			if (currentFrame - lastDamageFrame >= regenTime) {
+				currentHealth++;
+				lastDamageFrame = currentFrame;
+			}
+		}
 	}
 
 	void draw() override {
@@ -97,6 +104,10 @@ public:
 	*/
 	void reduceHealth(int damage) {
 		currentHealth -= damage;
+		if (currentHealth < 0) {
+			currentHealth = 0;
+		}
+		lastDamageFrame = SDL_GetTicks();
 	}
 
 	int getMaxHealth() {

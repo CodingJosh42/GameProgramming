@@ -8,6 +8,7 @@
 #include "../include/KeyboardController.h"
 #include "../include/Stats.h"
 #include "../include/Weapons.h"
+#include "../include/EnemyComponent.h"
 
 #include <iostream>
 AssetManager::AssetManager(Manager* manager) : manager{ manager } {}
@@ -21,13 +22,13 @@ AssetManager::~AssetManager() {}
 * @param speed Speed of projectile
 * @param velocity Direction of projectile
 */
-void AssetManager::createProjectile(Vector2D position, int range, int speed, Vector2D velocity) {
+void AssetManager::createProjectile(Vector2D position, int range, int speed, Vector2D velocity, int group) {
 	Entity* projectile = manager->addEntity();
 	projectile->addComponent<TransformComponent>(position, 32, 32, 1);
 	projectile->addComponent<SpriteComponent>("projectile", false);
 	projectile->addComponent<ColliderComponent>("projectile");
 	projectile->addComponent<ProjectileComponent>(range, speed, velocity);
-	projectile->addGroup(Game::groupProjectiles);
+	projectile->addGroup(group);
 }
 
 void AssetManager::createPlayer() {
@@ -39,6 +40,16 @@ void AssetManager::createPlayer() {
 	player->addComponent<KeyboardController>();
 	player->addComponent<ColliderComponent>("Player", 8, 0, 12, 0);
 	player->addGroup(Game::groupPlayer);
+}
+
+void AssetManager::createEasyEnemy() {
+	Entity* enemy = manager->addEntity();
+	enemy->addComponent<Stats>(1, Weapons::easyEnemyGun, 3, 1, false);
+	enemy->addComponent<TransformComponent>(800, 640 - 128 - 32, 64, 64, 2);
+	enemy->addComponent<SpriteComponent>("enemy");
+	enemy->addComponent<ColliderComponent>("Enemy");
+	enemy->addComponent<EnemyComponent>();
+	enemy->addGroup(Game::groupEnemy);
 }
 
 /*
