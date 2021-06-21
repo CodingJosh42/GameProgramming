@@ -161,6 +161,7 @@
     <ClInclude Include="include\EnemyComponent.h" />
     <ClInclude Include="include\ESC.h" />
     <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\Gravity.h" />
     <ClInclude Include="include\KeyboardController.h" />
     <ClInclude Include="include\Map.h" />
     <ClInclude Include="include\ProjectileComponent.h" />

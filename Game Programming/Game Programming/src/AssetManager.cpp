@@ -9,6 +9,7 @@
 #include "../include/Stats.h"
 #include "../include/Weapons.h"
 #include "../include/EnemyComponent.h"
+#include "../include/Gravity.h"
 
 #include <iostream>
 AssetManager::AssetManager(Manager* manager) : manager{ manager } {}
@@ -45,10 +46,11 @@ void AssetManager::createPlayer() {
 void AssetManager::createEasyEnemy() {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(1, Weapons::easyEnemyGun, 3, 1, false);
-	enemy->addComponent<TransformComponent>(800, 640 - 128 - 32, 64, 64, 2);
+	enemy->addComponent<TransformComponent>(200, 0, 64, 64, 2);
 	enemy->addComponent<SpriteComponent>("enemy");
 	enemy->addComponent<ColliderComponent>("Enemy");
 	enemy->addComponent<EnemyComponent>();
+	enemy->addComponent<GravityComponent>();
 	enemy->addGroup(Game::groupEnemy);
 }
 

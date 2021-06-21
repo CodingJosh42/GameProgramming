@@ -8,6 +8,11 @@
 #include "Vector2D.h"
 #include "Game.h"
 #include <iostream>
+#include <vector>
+#include "ESC.h"
+#include "ColliderComponent.h"
+#include "Collision.h"
+#include "TileComponent.h"
 
 using namespace std;
 
@@ -25,6 +30,8 @@ public:
 	int lastDirection = 1;
 	bool reloading = false;
 	Uint32 reloadFrame;
+
+	
 
 	EnemyComponent() = default;
 
@@ -66,6 +73,8 @@ public:
 		}
 		
 	}
+
+	
 
 	/**
 	* Enemy is shooting a projectile
@@ -114,6 +123,8 @@ public:
 			}
 		}
 	}
+
+	
 };
 
 

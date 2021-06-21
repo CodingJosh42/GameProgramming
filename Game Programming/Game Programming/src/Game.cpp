@@ -133,7 +133,6 @@ void Game::update() {
 						}
 						if (collision == Collision::NONE) {
 							player->getComponent<TransformComponent>().position.y = position.position.y;
-							cout << "TOP" << endl;
 							keyBoardCollision = true;
 						}
 					}
@@ -143,18 +142,15 @@ void Game::update() {
 					}
 				}
 				if (collision == Collision::BOTTOM) {
-					cout << "Bottom" << endl;
 					player->getComponent<TransformComponent>().velocity.y = 1;
 				}
 				
 				if ((position.height * position.scale + keyboard->jumpHeight - 16) > collider.collider.y && collider.collider.y >= keyboard->jumpHeight && !keyboard->flying) {
 					collision = Collision::xCollision(playerCollider, collider);
 					if (collision == Collision::LEFT) {
-						cout << "LEFT" << endl;
 						player->getComponent<TransformComponent>().velocity.x = -1;
 					}
 					if (collision == Collision::RIGHT) {
-						cout << "Right" << endl;
 						player->getComponent<TransformComponent>().velocity.x = 1;
 					}
 					
