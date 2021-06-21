@@ -17,8 +17,7 @@
 using namespace std;
 
 class EnemyComponent : public Component {
-private:
-	Vector2D initialPosition;
+
 public:
 	TransformComponent* position;
 	SpriteComponent* sprite;
@@ -37,8 +36,6 @@ public:
 
 	void init() override {
 		position = &entity->getComponent<TransformComponent>();
-		initialPosition.x = position->position.x;
-		initialPosition.y = position->position.y;
 
 		sprite = &entity->getComponent<SpriteComponent>();
 
@@ -50,7 +47,7 @@ public:
 	void update() override {
 		Vector2D pos = playerPos->position;
 		Vector2D distance = pos - position->position;
-		
+
 		if (stats->getCurrentHealth() <= 0) {
 			entity->destroy();
 		}
@@ -144,12 +141,12 @@ public:
 
 		}
 		// RIGHT
-		if (position->velocity.x == 1) {
+		if (direction.x == 1) {
 			sprite->flip = SDL_FLIP_NONE;
 		}
 
 		// LEFT
-		if (position->velocity.x == -1) {
+		if (direction.x == -1) {
 			sprite->flip = SDL_FLIP_HORIZONTAL;
 
 		}

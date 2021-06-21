@@ -48,7 +48,7 @@ void AssetManager::createEasyEnemy() {
 	enemy->addComponent<Stats>(1, Weapons::easyEnemyGun, 3, 1, false);
 	enemy->addComponent<TransformComponent>(200, 0, 32, 32, 4);
 	Animation standing = Animation(0, 2, 200);
-	Animation walking = Animation(1, 8, 150);
+	Animation walking = Animation(1, 7, 150);
 	Animation jumping = Animation(2, 1, 100);
 
 	map<const char*, Animation> animations;
