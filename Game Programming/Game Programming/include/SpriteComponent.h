@@ -59,6 +59,19 @@ public:
 	}
 
 	/*
+	* Constructor of Sprite with animation
+	* @param id Id of texture
+	* @param animated If true texture is animated, if false texture is not animated
+	*/
+	SpriteComponent(string id, bool animated, map<const char*, Animation>& anims) : animated{ animated } {
+		setTexture(id);
+
+		animations = anims;
+
+		setAnimation("standing");
+	}
+
+	/*
 	* Loads texture from assetManager
 	* @param id Id of requested texture
 	*/

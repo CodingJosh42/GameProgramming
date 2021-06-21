@@ -68,14 +68,12 @@ private:
 		if (!reloading) {
 			reloading = true;
 			reloadFrame = SDL_GetTicks();
-			cout << "start reloading" << endl;
 		}
 		else {
 			Uint32 current = SDL_GetTicks();
 			if (current - reloadFrame >= stats->getWeapon().reloadTime) {
 				stats->getWeapon().reload();
 				reloading = false;
-				cout << "reloading done" << endl;
 			}
 		}
 	}

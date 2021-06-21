@@ -30,7 +30,7 @@ public:
 	int lastDirection = 1;
 	bool reloading = false;
 	Uint32 reloadFrame;
-
+	bool flying = false;
 	
 
 	EnemyComponent() = default;
@@ -57,7 +57,7 @@ public:
 		else {
 			if (distance.x != 0) {
 				direction.x = distance.x / abs(distance.x);
-				//direction.y = distance.y / abs(distance.y);
+				direction.y = distance.y / abs(distance.x);
 
 			}
 			if (abs(distance.x) > 400) {
@@ -71,6 +71,7 @@ public:
 				shoot(stats->getWeapon());
 			}
 		}
+		updateTextures();
 		
 	}
 
@@ -99,7 +100,7 @@ public:
 				xStart = position->position.x + position->width * position->scale;
 			}
 			Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
-			Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x,0),Game::groupEnemyProjectiles);
+			Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x, direction.y),Game::groupEnemyProjectiles);
 			stats->getWeapon().reduceAmmo();
 			lastShot = currentTick;
 		}
@@ -112,18 +113,48 @@ public:
 		if (!reloading) {
 			reloading = true;
 			reloadFrame = SDL_GetTicks();
-			cout << "start reloading" << endl;
 		}
 		else {
 			Uint32 current = SDL_GetTicks();
 			if (current - reloadFrame >= stats->getWeapon().reloadTime) {
 				stats->getWeapon().reload();
 				reloading = false;
-				cout << "reloading done" << endl;
 			}
 		}
 	}
 
+	/**
+	* Updates Textures depending on what buttons are still pressed
+	*
+	*/
+	void updateTextures()
+	{
+		// Update Textures if buttons still pressed
+		if (!flying) {
+			
+
+			// Standing
+			if (position->velocity.x == 0) {
+				sprite->setAnimation("standing");
+			}
+			//  Walking
+			else {
+				sprite->setAnimation("walking");
+			}
+
+		}
+		// RIGHT
+		if (position->velocity.x == 1) {
+			sprite->flip = SDL_FLIP_NONE;
+		}
+
+		// LEFT
+		if (position->velocity.x == -1) {
+			sprite->flip = SDL_FLIP_HORIZONTAL;
+
+		}
+
+	}
 	
 };
 

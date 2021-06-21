@@ -46,9 +46,18 @@ void AssetManager::createPlayer() {
 void AssetManager::createEasyEnemy() {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(1, Weapons::easyEnemyGun, 3, 1, false);
-	enemy->addComponent<TransformComponent>(200, 0, 64, 64, 2);
-	enemy->addComponent<SpriteComponent>("enemy");
-	enemy->addComponent<ColliderComponent>("Enemy");
+	enemy->addComponent<TransformComponent>(200, 0, 32, 32, 4);
+	Animation standing = Animation(0, 2, 200);
+	Animation walking = Animation(1, 8, 150);
+	Animation jumping = Animation(2, 1, 100);
+
+	map<const char*, Animation> animations;
+	animations.emplace("standing", standing);
+	animations.emplace("walking", walking);
+	animations.emplace("jumping", jumping);
+
+	enemy->addComponent<SpriteComponent>("enemy", true, animations);
+	enemy->addComponent<ColliderComponent>("Enemy", 2, 0, 16, 0);
 	enemy->addComponent<EnemyComponent>();
 	enemy->addComponent<GravityComponent>();
 	enemy->addGroup(Game::groupEnemy);

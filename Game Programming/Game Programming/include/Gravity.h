@@ -7,6 +7,7 @@
 #include "TileComponent.h"
 #include "TransformComponent.h"
 #include "Collision.h"
+#include "SpriteComponent.h"
 #include <vector>
 #include <iostream>
 
@@ -20,9 +21,13 @@ public:
 	bool ignoreCollision = false;
 
 	TransformComponent* position;
+	SpriteComponent* sprite;
+	EnemyComponent* enemyComponent;
 
 	void init() override {
 		position = &entity->getComponent<TransformComponent>();
+		sprite = &entity->getComponent<SpriteComponent>();
+		enemyComponent = &entity->getComponent<EnemyComponent>();
 	}
 
 	void update() override {
@@ -71,23 +76,24 @@ public:
 		if (!flying) {
 			position->velocity.y = -3;
 			flying = true;
+			enemyComponent->flying = true;
 			jumpHeight = position->position.y;
 			ignoreCollision = true;
-			// sprite->setAnimation("jumping");
+			sprite->setAnimation("jumping");
 
 			if (position->velocity.x == -1) {
-				// sprite->flip = SDL_FLIP_HORIZONTAL;
+				sprite->flip = SDL_FLIP_HORIZONTAL;
 			}
 			else if (position->velocity.x == 1) {
-				// sprite->flip = SDL_FLIP_NONE;
+				sprite->flip = SDL_FLIP_NONE;
 			}
 			else {
-				/*if (lastDirection == 1) {
-					// sprite->flip = SDL_FLIP_NONE;
+				if (enemyComponent->direction.x == 1) {
+					sprite->flip = SDL_FLIP_NONE;
 				}
 				else {
-					// sprite->flip = SDL_FLIP_HORIZONTAL;
-				} */
+					sprite->flip = SDL_FLIP_HORIZONTAL;
+				}
 			}
 		}
 	}
@@ -115,6 +121,7 @@ public:
 			if (position->velocity.y > 0 && ignoreCollision == false) {
 				if (collision) {
 					flying = false;
+					enemyComponent->flying = false;
 					position->velocity.y = 0;
 				}
 			}
