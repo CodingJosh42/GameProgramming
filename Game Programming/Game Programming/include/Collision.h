@@ -43,8 +43,8 @@ public:
 		SDL_Rect B = tile.collider;
 		// Check x axis and y axis
 		CollisionType retVal = NONE;
-		if (A.x + A.w - 1 >= B.x && B.x + B.w >= A.x &&
-			A.y + A.h - 1 >= B.y && B.y + B.h  >= A.y) {
+		if (A.x + A.w  >= B.x && B.x + B.w >= A.x &&
+			A.y + A.h  >= B.y && B.y + B.h  >= A.y) {
 
 			if (A.x < B.x) {
 				retVal = LEFT;

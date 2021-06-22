@@ -44,17 +44,19 @@ public:
 
 		position = &(entity->getComponent<TransformComponent>());
 
-	}
-
-	void update() override {
-		collider.x = (int)position->position.x + (xOffset * position->scale);
-		collider.y = (int)position->position.y + (yOffset * position->scale);
 		if (xOffset == 0) {
 			width = position->width;
 		}
 		if (yOffset == 0) {
 			height = position->height;
 		}
+
+	}
+
+	void update() override {
+		collider.x = (int)position->position.x + (xOffset * position->scale);
+		collider.y = (int)position->position.y + (yOffset * position->scale);
+		
 		
 		collider.w = width * position->scale;
 		collider.h = height * position->scale;

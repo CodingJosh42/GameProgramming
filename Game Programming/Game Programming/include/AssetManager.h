@@ -15,6 +15,7 @@ public:
 	~AssetManager();
 
 	void createProjectile(Vector2D position, int range, int speed, Vector2D velocity, int group);
+	void createSniperProjectile(Vector2D position, int range, int speed, Vector2D velocity, int group);
 	void createPlayer();
 	void createEasyEnemy();
 	void addTexture(string id, const char* path);

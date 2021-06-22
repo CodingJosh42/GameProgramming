@@ -145,7 +145,7 @@ void Game::update() {
 					player->getComponent<TransformComponent>().velocity.y = 1;
 				}
 				
-				if ((position.height * position.scale + keyboard->jumpHeight - 16) > collider.collider.y && collider.collider.y >= keyboard->jumpHeight && !keyboard->flying) {
+				if ((position.height * position.scale + keyboard->jumpHeight - 16) > collider.collider.y  && !keyboard->flying) {
 					collision = Collision::xCollision(playerCollider, collider);
 					if (collision == Collision::LEFT) {
 						player->getComponent<TransformComponent>().velocity.x = -1;

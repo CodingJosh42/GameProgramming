@@ -48,7 +48,7 @@ public:
 		Animation standing = Animation(0, 2, 200);
 		Animation walking = Animation(1, 6, 150);
 		Animation jumping = Animation(2, 1, 100);
-		Animation crouching = Animation(3, 2, 500);
+		Animation crouching = Animation(3, 6, 200);
 
 		animations.emplace("standing", standing);
 		animations.emplace("walking", walking);

@@ -10,6 +10,7 @@
 #include "../include/Weapons.h"
 #include "../include/EnemyComponent.h"
 #include "../include/Gravity.h"
+#include "../include/EasyEnemy.h"
 
 #include <iostream>
 AssetManager::AssetManager(Manager* manager) : manager{ manager } {}
@@ -25,8 +26,24 @@ AssetManager::~AssetManager() {}
 */
 void AssetManager::createProjectile(Vector2D position, int range, int speed, Vector2D velocity, int group) {
 	Entity* projectile = manager->addEntity();
-	projectile->addComponent<TransformComponent>(position, 32, 32, 1);
+	projectile->addComponent<TransformComponent>(position, 8, 8, 2);
 	projectile->addComponent<SpriteComponent>("projectile", false);
+	projectile->addComponent<ColliderComponent>("projectile");
+	projectile->addComponent<ProjectileComponent>(range, speed, velocity);
+	projectile->addGroup(group);
+}
+
+/*
+* Creates a sniper projectile with given values
+* @param position Start of projectile
+* @param range Range of projectile
+* @param speed Speed of projectile
+* @param velocity Direction of projectile
+*/
+void AssetManager::createSniperProjectile(Vector2D position, int range, int speed, Vector2D velocity, int group) {
+	Entity* projectile = manager->addEntity();
+	projectile->addComponent<TransformComponent>(position, 16, 16, 1);
+	projectile->addComponent<SpriteComponent>("sniperProjectile", false);
 	projectile->addComponent<ColliderComponent>("projectile");
 	projectile->addComponent<ProjectileComponent>(range, speed, velocity);
 	projectile->addGroup(group);
@@ -38,15 +55,15 @@ void AssetManager::createPlayer() {
 	stats->addSecondaryWeapon(Weapons::machineGun);
 	player->addComponent<TransformComponent>(400, 0);
 	player->addComponent<SpriteComponent>("player", true);
-	player->addComponent<KeyboardController>();
 	player->addComponent<ColliderComponent>("Player", 8, 0, 12, 0);
+	player->addComponent<KeyboardController>();
 	player->addGroup(Game::groupPlayer);
 }
 
 void AssetManager::createEasyEnemy() {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(1, Weapons::easyEnemyGun, 3, 1, false);
-	enemy->addComponent<TransformComponent>(200, 0, 32, 32, 4);
+	enemy->addComponent<TransformComponent>(1000, 500, 32, 32, 4);
 	Animation standing = Animation(0, 2, 200);
 	Animation walking = Animation(1, 7, 150);
 	Animation jumping = Animation(2, 1, 100);
@@ -58,7 +75,7 @@ void AssetManager::createEasyEnemy() {
 
 	enemy->addComponent<SpriteComponent>("enemy", true, animations);
 	enemy->addComponent<ColliderComponent>("Enemy", 2, 0, 16, 0);
-	enemy->addComponent<EnemyComponent>();
+	enemy->addComponent<EnemyComponent>(EnemyComponent::EASY);
 	enemy->addComponent<GravityComponent>();
 	enemy->addGroup(Game::groupEnemy);
 }

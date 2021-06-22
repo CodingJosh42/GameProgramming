@@ -9,6 +9,8 @@
 #include "Weapons.h"
 #include "Stats.h"
 #include <iostream>
+#include "ColliderComponent.h"
+
 using namespace std;
 class KeyboardController : public Component {
 private:
@@ -18,6 +20,8 @@ private:
 	int lastDirection = 1;
 	bool reloading = false;
 	Uint32 reloadFrame;
+	ColliderComponent* collider;
+	int initHeight;
 
 	/**
 	* Checks Key Down events
@@ -99,6 +103,8 @@ private:
 				}
 			}
 			position->speed = stats->getCrouchSpeed();
+			collider->height = 22;
+			collider->yOffset = 10;
 		}
 	}
 
@@ -201,6 +207,8 @@ private:
 				break;
 			case SDLK_LCTRL:
 				position->speed = stats->getSpeed();
+				collider->height = initHeight;
+				collider->yOffset = 0;
 				break;
 			case SDLK_ESCAPE:
 				Game::isRunning = false;
@@ -264,6 +272,8 @@ public:
 		position = &(entity->getComponent<TransformComponent>());
 		sprite = &(entity->getComponent<SpriteComponent>());
 		stats = &entity->getComponent<Stats>();
+		collider = &entity->getComponent<ColliderComponent>();
+		initHeight = collider->height;
 	}
 
 	void update() override {
