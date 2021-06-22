@@ -33,3 +33,15 @@ void TextureManager::DrawTexture(SDL_Texture* texture, SDL_Rect src, SDL_Rect de
 void TextureManager::DrawTexture(SDL_Texture* texture, SDL_Rect src, SDL_Rect dest, SDL_RendererFlip flip) {
 	SDL_RenderCopyEx(Game::renderer, texture, &src, &dest, NULL, NULL, flip);
 }
+
+/*
+* Draws texture to screen with additional flip flag
+* @param texture Texture that should be drawn
+* @param src Source rect of texture
+* @param dest Destination rect of texture
+* @param flip Set flag if image needs to be flipped
+* @param angle Set angle to rotate texture
+*/
+void TextureManager::DrawTexture(SDL_Texture* texture, SDL_Rect src, SDL_Rect dest, SDL_RendererFlip flip, double angle) {
+	SDL_RenderCopyEx(Game::renderer, texture, &src, &dest, angle, NULL, flip);
+}

@@ -10,7 +10,6 @@
 #include "../include/Weapons.h"
 #include "../include/EnemyComponent.h"
 #include "../include/Gravity.h"
-#include "../include/EasyEnemy.h"
 
 #include <iostream>
 AssetManager::AssetManager(Manager* manager) : manager{ manager } {}
@@ -42,8 +41,16 @@ void AssetManager::createProjectile(Vector2D position, int range, int speed, Vec
 */
 void AssetManager::createSniperProjectile(Vector2D position, int range, int speed, Vector2D velocity, int group) {
 	Entity* projectile = manager->addEntity();
-	projectile->addComponent<TransformComponent>(position, 16, 16, 1);
-	projectile->addComponent<SpriteComponent>("sniperProjectile", false);
+	projectile->addComponent<TransformComponent>(position, 16, 8, 2);
+	SpriteComponent* sprite = &projectile->addComponent<SpriteComponent>("sniperProjectile", false);
+	double flip = 1.0;
+	if (velocity.x == -1) {
+		sprite->flip = SDL_FLIP_HORIZONTAL;
+		flip = -1.0;
+	}
+	if (velocity.y != 0) {
+		sprite->angle = flip * atan(velocity.y) * 180 / M_PI;;
+	}
 	projectile->addComponent<ColliderComponent>("projectile");
 	projectile->addComponent<ProjectileComponent>(range, speed, velocity);
 	projectile->addGroup(group);
@@ -73,9 +80,29 @@ void AssetManager::createEasyEnemy() {
 	animations.emplace("walking", walking);
 	animations.emplace("jumping", jumping);
 
-	enemy->addComponent<SpriteComponent>("enemy", true, animations);
+	enemy->addComponent<SpriteComponent>("easyEnemy", true, animations);
 	enemy->addComponent<ColliderComponent>("Enemy", 2, 0, 16, 0);
 	enemy->addComponent<EnemyComponent>(EnemyComponent::EASY);
+	enemy->addComponent<GravityComponent>();
+	enemy->addGroup(Game::groupEnemy);
+}
+
+void AssetManager::createSniperEnemy() {
+	Entity* enemy = manager->addEntity();
+	enemy->addComponent<Stats>(4, Weapons::sniperEnemyGun, 2, 1, false);
+	enemy->addComponent<TransformComponent>(1000, 500, 32, 32, 4);
+	Animation standing = Animation(0, 2, 200);
+	Animation walking = Animation(1, 7, 150);
+	Animation jumping = Animation(2, 1, 100);
+
+	map<const char*, Animation> animations;
+	animations.emplace("standing", standing);
+	animations.emplace("walking", walking);
+	animations.emplace("jumping", jumping);
+
+	enemy->addComponent<SpriteComponent>("sniper", true, animations);
+	enemy->addComponent<ColliderComponent>("Enemy", 2, 0, 16, 0);
+	enemy->addComponent<EnemyComponent>(EnemyComponent::SNIPER);
 	enemy->addComponent<GravityComponent>();
 	enemy->addGroup(Game::groupEnemy);
 }

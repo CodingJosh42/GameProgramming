@@ -104,11 +104,5 @@
     <ClInclude Include="include\Gravity.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\Enemy.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EasyEnemy.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

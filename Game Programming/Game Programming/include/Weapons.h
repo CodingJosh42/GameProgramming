@@ -40,6 +40,7 @@ public:
 	static Weapon pistol;
 	static Weapon machineGun;
 	static Weapon easyEnemyGun;
+	static Weapon sniperEnemyGun;
 };
 
 #endif

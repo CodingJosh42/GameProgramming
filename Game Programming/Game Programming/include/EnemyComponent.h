@@ -13,18 +13,29 @@
 #include "ColliderComponent.h"
 #include "Collision.h"
 #include "TileComponent.h"
-#include "Enemy.h"
-#include "EasyEnemy.h"
+
 
 using namespace std;
 
 class EnemyComponent : public Component {
+private:
+	Uint32 lastShot = 0;
+	int lastDirection = 1;
+	int lastX;
+	bool reloading = false;
+	Uint32 reloadFrame;
 
-public:
+
+	Stats* stats;
 	TransformComponent* position;
 	SpriteComponent* sprite;
 	TransformComponent* playerPos;
-	Stats* stats;
+
+	Vector2D initialPosition;
+	
+	int range;
+
+public:
 	Vector2D direction;
 
 	typedef enum EnemyType {
@@ -32,23 +43,16 @@ public:
 		SNIPER
 	} EnemyType;
 
+
 	bool flying = false;
-	Enemy* enemyType;
+	EnemyType type;
 	
 
 	EnemyComponent() = default;
 
-	EnemyComponent(EnemyType type) {
-		switch (type) {
-		case EASY:
-			this->enemyType = new EasyEnemy();
-		}
-		
+	EnemyComponent(EnemyType type) : type{ type } {
 	};
 
-	~EnemyComponent() {
-		delete enemyType;
-	}
 
 	void init() override {
 		position = &entity->getComponent<TransformComponent>();
@@ -58,8 +62,7 @@ public:
 		playerPos = &Game::player->getComponent<TransformComponent>();
 
 		stats = &entity->getComponent<Stats>();
-
-		enemyType->init(stats, position);
+		range = stats->getWeapon().range;
 	}
 
 	void update() override {
@@ -74,15 +77,84 @@ public:
 				direction.y = distance.y / abs(distance.x);
 
 			}
-			enemyType->movement(distance, direction);
+			if (abs(distance.x) > range) {
+				position->velocity.x = direction.x;
+			}
+			if (abs(distance.x) < range - 50) {
+				position->velocity.x = 0;
+				lastX = Game::camera.x;
+				initialPosition = position->position;
+			}
+
+			if (abs(distance.x) < range) {
+				shoot(stats->getWeapon());
+			}
+			if (position->velocity.x == 0) {
+				if (lastX != Game::camera.x) {
+					position->position.x = initialPosition.x + (lastX - Game::camera.x);
+				}
+			}
 		}
 		
 		updateTextures();
 		
 	}
 
-	
+	/**
+	* Enemy is shooting a projectile
+	* @param delay Delay between the single shots
+	* @param range Range of the projectile
+	* @param speed Speed of the projectile
+	*/
+	void shoot(Weapon weapon)
+	{
+		Uint32 currentTick = SDL_GetTicks();
+		if (stats->getWeapon().currentAmmo <= 0) {
+			reload();
+		}
+		else if (currentTick - lastShot > weapon.delay && !reloading) {
 
+			int xStart = 0;
+
+			if (direction.x == -1) {
+				xStart = position->position.x;
+			}
+			else {
+				xStart = position->position.x + position->width * position->scale;
+			}
+			Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
+			switch (type) {
+			case EASY:
+				Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x, direction.y), Game::groupEnemyProjectiles);
+				break;
+			case SNIPER:
+				Game::assetManager->createSniperProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x, direction.y), Game::groupEnemyProjectiles);
+				break;
+			default:
+				break;
+			}
+			
+			stats->getWeapon().reduceAmmo();
+			lastShot = currentTick;
+		}
+	}
+
+	/*
+	* Enemy is reloading his weapon. After reloading time weapon has maxAmmo again
+	*/
+	void reload() {
+		if (!reloading) {
+			reloading = true;
+			reloadFrame = SDL_GetTicks();
+		}
+		else {
+			Uint32 current = SDL_GetTicks();
+			if (current - reloadFrame >= stats->getWeapon().reloadTime) {
+				stats->getWeapon().reload();
+				reloading = false;
+			}
+		}
+	}
 
 	/**
 	* Updates Textures depending on what buttons are still pressed

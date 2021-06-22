@@ -67,7 +67,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 	assetManager->addTexture("player", "assets/animation_player.png");
-	assetManager->addTexture("enemy", "assets/easyEnemy.png");
+	assetManager->addTexture("easyEnemy", "assets/easyEnemy.png");
+	assetManager->addTexture("sniper", "assets/sniper.png");
 
 	assetManager->addTexture("sky", "assets/sky.png");
 	assetManager->addTexture("grass", "assets/grass.png");
@@ -77,8 +78,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assetManager->addTexture("cloud", "assets/cloud.png");
 
 	assetManager->addTexture("projectile", "assets/projectile.png");
+	assetManager->addTexture("sniperProjectile", "assets/sniperProjectile.png");
 
 	assetManager->addTexture("heart", "assets/heart.png");
+	
 
 
 	Map map;
@@ -88,7 +91,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player = players[0];
 
 	assetManager->createEasyEnemy();
-	
+	assetManager->createSniperEnemy();
 }
 
 /*

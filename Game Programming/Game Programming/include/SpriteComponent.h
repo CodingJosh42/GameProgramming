@@ -27,6 +27,7 @@ private:
 public:
 	bool animated = false;
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
+	double angle = 0;
 	
 	SpriteComponent() = default;
 
@@ -106,7 +107,7 @@ public:
 	}
 
 	void draw() override {
-		TextureManager::DrawTexture(texture, src, dest, flip);
+		TextureManager::DrawTexture(texture, src, dest, flip, angle);
 	}
 
 	/*
