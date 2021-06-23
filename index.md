@@ -60,12 +60,12 @@ Heute habe ich versucht die Tilecollision wieder etwas zu verbessern. Dazu habe 
 ## 21.06.2021
 Am 21.06. habe ich mich mit der Schwerkraft und den Animationen für den Enemy gekümmert. Dazu habe ich eine GravityComponent erstellt. In dieser Component wird stets überprüft, ob der Collider des Enemys mit den Tiles kollidiert. Falls der Enemy eine Top Kollision wahrnimmt, wird dafür gesorgt, dass die Entity nicht weiter fällt (falls dies der Fall war). Außerdem müssen die Gegner dem Spieler folgen können, falls irgendwo auf der Map Hindernisse sind. Der Enemy soll allerdings nicht durch Hindernisse hindurchlaufen können und muss deshalb eine Strategie besitzen um Hindernissen auszuweichen. Bisher besteht die Strategie daraus, dass der Enemy springt, sobald er eine Left oder Right Kollision zurückgemeldet bekommt. Das Prinzip der Schwerkraft und der Sprünge des Enemys sind allerdings im Kern die gleichen wie beim Spieler. Für die Animationen habe ich wieder ein Spritesheet erstellt. Außerdem habe ich die SpriteComponent ein wenig erweitert, damit Animationen nicht nur für den Spieler nutzbar sind.
 
-<img src="assets/easyEnemy.png" alt="easyEnemy" width="800" height="640" />
+<img src="assets/easyEnemy.png" alt="easyEnemy" width="512" height="192" />
 
 ## 22.06.2021
 Heute habe ich versucht einen weiteren Gegnertyp zu erstellen. Dieser Gegner soll ein Sniper sein. Zuerst habe ich wieder ein Spritesheet für diesen Gegnertyp erstellt. Des Weiteren habe ich auch neue Bilder für die Projektile erstellt. Der Sniper soll z.B. ein besonderes Projektil abfeuern. Im nächsten Schritt habe ich überlegt, wie ich die unterschiedlichen Gegnertypen und deren Bewegungen implementiere. Ich habe überlegt für jeden Typ eine Klasse zu erstellen, welche von der Klasse Enemy ableiten. Diese wird dann der EnemyComponent übergeben, welche dann eine Movement Funktion nutzt. Allerdings habe ich gemerkt, dass sich zumindest bei meinen ersten zwei Gegnertypen wenig beim Movement unterscheidet (bis auf die Reichweite). Deshalb habe ich dieses System vorerst wieder entfernt und bisherige hardcoded Zahlen durch Variablen aus bereits bekannten Komponenten ersetzt (Reichweite). Außerdem habe ich einen switch verwendet um die unterschiedlichen Projektile abzufeuern. Es kann allerdings sein, dass ich das zuvor erwähnte Klassensystem wieder verwende, wenn die nächsten Gegnertypen kommen und sich vielleicht mehr unterscheiden.
 
-<img src="assets/sniper.png" alt="easyEnemy" width="800" height="640" />
+<img src="assets/sniper.png" alt="easyEnemy" width="512" height="192" />
 <div>
 <img src="assets/projectile.png" alt="easyEnemy" width="64" height="64" />
 <img src="assets/sniperProjectile.png" alt="easyEnemy" width="128" height="64" marginLeft="20px" />
