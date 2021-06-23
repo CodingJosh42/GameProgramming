@@ -68,5 +68,5 @@ Heute habe ich versucht einen weiteren Gegnertyp zu erstellen. Dieser Gegner sol
 <img src="assets/sniper.png" alt="easyEnemy" width="800" height="640" />
 <div>
 <img src="assets/projectile.png" alt="easyEnemy" width="64" height="64" />
-<img src="assets/sniperProjectile.png" alt="easyEnemy" width="128" height="64" />
+<img src="assets/sniperProjectile.png" alt="easyEnemy" width="128" height="64" marginLeft="20px" />
  </div>
