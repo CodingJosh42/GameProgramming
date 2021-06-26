@@ -63,6 +63,8 @@ public:
 
 		stats = &entity->getComponent<Stats>();
 		range = stats->getWeapon().range;
+
+		initialPosition = position->position;
 	}
 
 	void update() override {
@@ -81,9 +83,11 @@ public:
 				position->velocity.x = direction.x;
 			}
 			if (abs(distance.x) < range - 50) {
-				position->velocity.x = 0;
-				lastX = Game::camera.x;
-				initialPosition = position->position;
+				if (position->velocity.x != 0) {
+					position->velocity.x = 0;
+					lastX = Game::camera.x;
+					initialPosition = position->position;
+				}
 			}
 
 			if (abs(distance.x) < range) {

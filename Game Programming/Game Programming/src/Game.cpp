@@ -139,7 +139,6 @@ void Game::update() {
 		if (tile->getComponent<TileComponent>().tag == "terrain") {
 			ColliderComponent collider = tile->getComponent<ColliderComponent>();
 
-			// keyboard->jumpHeight + position.height * position.scale - 32
 			if (Collision::AABB(playerCollider, collider) ) {
 				Collision::CollisionType collision = Collision::yCollision(playerCollider, collider);
 				if (collision == Collision::TOP) {

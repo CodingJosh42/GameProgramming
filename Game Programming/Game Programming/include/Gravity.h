@@ -48,10 +48,26 @@ public:
 				ColliderComponent collider = tile->getComponent<ColliderComponent>();
 				if (Collision::AABB(enemyCollider, collider)) {
 					Collision::CollisionType collision = Collision::yCollision(enemyCollider, collider);
+
 					if (collision == Collision::TOP) {
-						tempCollision = true;
+						if (flying && collider.collider.y < position->position.y + position->height * position->scale - 16) {
+							collision = Collision::xCollision(enemyCollider, collider);
+							if (collision == Collision::LEFT) {
+								position->velocity.x = -1;
+							}
+							if (collision == Collision::RIGHT) {
+								position->velocity.x = 1;
+							}
+							if (collision == Collision::NONE) {
+								tempCollision = true;
+							}
+						}
+						else {
+							tempCollision = true;
+						}
 					}
-					if (collider.collider.y < position->position.y + position->height * position->scale - 32) {
+
+					if (collider.collider.y < position->position.y + position->height * position->scale - 16) {
 
 						collision = Collision::xCollision(enemyCollider, collider);
 						if (collision == Collision::LEFT) {
