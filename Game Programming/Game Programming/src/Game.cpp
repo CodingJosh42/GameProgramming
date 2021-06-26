@@ -89,8 +89,9 @@ void Game::addTextures() {
 	// Fonts
 	assetManager->addFont("arial", "assets/arial.ttf", 32);
 
-	// Textures
-	assetManager->addTexture("player", "assets/animation_player.png");
+	// Player and enemys
+	assetManager->addTexture("playerPistol", "assets/animation_player.png");
+	assetManager->addTexture("playerMachineGun", "assets/player_machinegun.png");
 	assetManager->addTexture("easyEnemy", "assets/easyEnemy.png");
 	assetManager->addTexture("sniper", "assets/sniper.png");
 

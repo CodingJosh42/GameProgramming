@@ -49,11 +49,13 @@ private:
 				break;
 			case SDLK_1:
 				stats->changeWeapon(1);
+				sprite->setTexture("playerPistol");
 				reloading = false;
 				break;
 			case SDLK_2:
 				stats->changeWeapon(2);
 				reloading = false;
+				sprite->setTexture("playerMachineGun");
 				break;
 			case SDLK_r:
 				if (!reloading) {
