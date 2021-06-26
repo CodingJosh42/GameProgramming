@@ -187,6 +187,7 @@ private:
 		if (Game::event.type == SDL_KEYUP) {
 			switch (Game::event.key.keysym.sym) {
 			case SDLK_w:
+				// TODO
 				break;
 			case SDLK_d:
 				// Make movement smooth
@@ -263,7 +264,7 @@ public:
 	bool ignoreCollision = false;
 	bool xCollision = false;
 	int maxHeight = 640;
-	int jumpHeight = maxHeight;
+	int jumpHeight = maxHeight - 128;
 
 	TransformComponent* position;
 	SpriteComponent* sprite;

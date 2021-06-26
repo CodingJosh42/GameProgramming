@@ -6,6 +6,7 @@
 #include <SDL.h>
 #include "ESC.h"
 #include "Vector2D.h"
+#include <SDL_ttf.h>
 
 using namespace std;
 
@@ -19,12 +20,17 @@ public:
 	void createPlayer();
 	void createEasyEnemy();
 	void createSniperEnemy();
+
 	void addTexture(string id, const char* path);
 	SDL_Texture* getTexture(string id);
+
+	void addFont(string id, const char* path, int fontSize);
+	TTF_Font* getFont(string id);
 
 private:
 	Manager* manager;
 	map<string, SDL_Texture*> textureList;
+	map<string, TTF_Font*> fontList;
 };
 
 #endif

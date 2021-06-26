@@ -10,7 +10,7 @@
 #include "../include/ColliderComponent.h"
 #include "../include/TileComponent.h"
 #include "../include/EnemyComponent.h"
-
+#include <SDL_ttf.h>
 
 using namespace std;
 
@@ -56,20 +56,45 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		maxWidth = width;
 		maxHeight = height;
 		renderer = SDL_CreateRenderer(window, -1, 0);
-		if (renderer) {
-			// SDL_SetRenderDrawColor(renderer, 0, 191, 255, 255);
-			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-		}
 
 		isRunning = true;
 	}
 	else {
 		isRunning = false;
 	}
+
+	if (TTF_Init() == -1) {
+		cout << "Error => TTF not initialized" << endl;
+	}
+
+	// Textures
+	addTextures();
+
+	Map map;
+
+	// Player
+	assetManager->createPlayer();
+	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
+	player = players[0];
+
+	// Enemys
+	assetManager->createEasyEnemy();
+	assetManager->createSniperEnemy();
+}
+
+/**
+* Add all necassary textures to the assetManager
+*/
+void Game::addTextures() {
+	// Fonts
+	assetManager->addFont("arial", "assets/arial.ttf", 32);
+
+	// Textures
 	assetManager->addTexture("player", "assets/animation_player.png");
 	assetManager->addTexture("easyEnemy", "assets/easyEnemy.png");
 	assetManager->addTexture("sniper", "assets/sniper.png");
 
+	// Tiles
 	assetManager->addTexture("sky", "assets/sky.png");
 	assetManager->addTexture("grass", "assets/grass.png");
 	assetManager->addTexture("water", "assets/water.png");
@@ -77,21 +102,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	assetManager->addTexture("dirt", "assets/dirt.png");
 	assetManager->addTexture("cloud", "assets/cloud.png");
 
+	// Projectiles
 	assetManager->addTexture("projectile", "assets/projectile.png");
 	assetManager->addTexture("sniperProjectile", "assets/sniperProjectile.png");
 
+	// HUD
 	assetManager->addTexture("heart", "assets/heart.png");
-	
-
-
-	Map map;
-
-	assetManager->createPlayer();
-	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
-	player = players[0];
-
-	assetManager->createEasyEnemy();
-	assetManager->createSniperEnemy();
+	assetManager->addTexture("ammo", "assets/ammo.png");
 }
 
 /*
@@ -126,7 +143,7 @@ void Game::update() {
 			if (Collision::AABB(playerCollider, collider) ) {
 				Collision::CollisionType collision = Collision::yCollision(playerCollider, collider);
 				if (collision == Collision::TOP) {
-					if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale -32) {
+					if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - 16) {
 						collision = Collision::xCollision(playerCollider, collider);
 						if (collision == Collision::LEFT) {
 							player->getComponent<TransformComponent>().velocity.x = -1;
@@ -137,10 +154,12 @@ void Game::update() {
 						if (collision == Collision::NONE) {
 							player->getComponent<TransformComponent>().position.y = position.position.y;
 							keyBoardCollision = true;
+							keyboard->ignoreCollision = false;
 						}
 					}
 					else {
 						player->getComponent<TransformComponent>().position.y = position.position.y;
+						keyboard->ignoreCollision = false;
 						keyBoardCollision = true;
 					}
 				}

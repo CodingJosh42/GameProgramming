@@ -13,6 +13,8 @@ class Entity;
 using namespace std;
 
 class Game {
+private:
+	void addTextures();
 
 public:
 	enum groupLabels : size_t {

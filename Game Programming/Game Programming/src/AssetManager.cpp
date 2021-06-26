@@ -12,9 +12,32 @@
 #include "../include/Gravity.h"
 
 #include <iostream>
+
+/*
+* Constructor
+*/
 AssetManager::AssetManager(Manager* manager) : manager{ manager } {}
 
-AssetManager::~AssetManager() {}
+/*
+* Destructor. Destroys every texture and font in list
+*/
+AssetManager::~AssetManager() {
+	// Clear texture list
+	map<string, SDL_Texture*>::iterator it;
+	for (it = textureList.begin(); it != textureList.end(); it++)
+	{
+		SDL_DestroyTexture(it->second);
+	}
+	textureList.clear();
+
+	// Clear font list
+	map<string, TTF_Font*>::iterator fit;
+	for (fit = fontList.begin(); fit != fontList.end(); fit++)
+	{
+		TTF_CloseFont(fit->second);
+	}
+	fontList.clear();
+}
 
 /*
 * Creates a projectile with given values
@@ -56,6 +79,9 @@ void AssetManager::createSniperProjectile(Vector2D position, int range, int spee
 	projectile->addGroup(group);
 }
 
+/*
+* Creates the player entity
+*/
 void AssetManager::createPlayer() {
 	Entity* player = manager->addEntity();
 	Stats* stats = &player->addComponent<Stats>(3, Weapons::pistol, 4, 1, true);
@@ -67,14 +93,18 @@ void AssetManager::createPlayer() {
 	player->addGroup(Game::groupPlayer);
 }
 
+/*
+* Creates an easy-enemy-entity
+*/
 void AssetManager::createEasyEnemy() {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(1, Weapons::easyEnemyGun, 3, 1, false);
 	enemy->addComponent<TransformComponent>(1000, 500, 32, 32, 4);
+	// Animations
 	Animation standing = Animation(0, 2, 200);
 	Animation walking = Animation(1, 7, 150);
 	Animation jumping = Animation(2, 1, 100);
-
+	// Animation map
 	map<const char*, Animation> animations;
 	animations.emplace("standing", standing);
 	animations.emplace("walking", walking);
@@ -87,14 +117,18 @@ void AssetManager::createEasyEnemy() {
 	enemy->addGroup(Game::groupEnemy);
 }
 
+/*
+* Creates a sniper-enemy-entity
+*/
 void AssetManager::createSniperEnemy() {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(4, Weapons::sniperEnemyGun, 2, 1, false);
 	enemy->addComponent<TransformComponent>(1000, 500, 32, 32, 4);
+	// Animations
 	Animation standing = Animation(0, 2, 200);
 	Animation walking = Animation(1, 7, 150);
 	Animation jumping = Animation(2, 1, 100);
-
+	// Animation map
 	map<const char*, Animation> animations;
 	animations.emplace("standing", standing);
 	animations.emplace("walking", walking);
@@ -124,4 +158,26 @@ void AssetManager::addTexture(string id, const char* path) {
 */
 SDL_Texture* AssetManager::getTexture(string id) {
 	return textureList[id];
+}
+
+/*
+* Loads a font and adds it to the list of fonts
+* @param id Id of font
+* @param path Path of asset
+* @param fontSize Size of font
+*/
+
+void AssetManager::addFont(string id, const char* path, int fontSize) {
+	TTF_Font* font = TTF_OpenFont(path, fontSize);
+	fontList.emplace(id, font);
+}
+
+
+/*
+* Returns a specific font from the list
+* @param id Id of font that should be returned
+* @return Returns the requested font
+*/
+TTF_Font* AssetManager::getFont(string id) {
+	return fontList[id];
 }

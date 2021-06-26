@@ -7,15 +7,26 @@
 #include <SDL.h>
 #include "Game.h"
 #include "TextureManager.h"
+#include "UILabel.h"
+#include <string>
+#include <sstream>
+#include <iostream>
+
+using namespace std;
 
 class Stats : public Component {
 private:
 	// Health display
 	SDL_Rect src;
 	SDL_Rect dest;
-	SDL_Texture* texture;
+	SDL_Texture* healthbar;
 	int counter = 0;
 
+	// Ammo display
+	SDL_Rect ammoSrc;
+	SDL_Rect ammoDest;
+	UILabel displayAmmo;
+	SDL_Texture* ammoSymbol;
 
 	int maxHealth;
 	int currentHealth;
@@ -56,16 +67,42 @@ public:
 			dest.w = 3 * 32;
 			dest.h = 32;
 
-			texture = Game::assetManager->getTexture("heart");
+			ammoSrc.x = 0;
+			ammoSrc.y = 0;
+			ammoSrc.w = 32;
+			ammoSrc.h = 32;
+
+			ammoDest.x = 32;
+			ammoDest.y = 0;
+			ammoDest.w = 32;
+			ammoDest.h = 32;
+
+
+			healthbar = Game::assetManager->getTexture("heart");
+			ammoSymbol = Game::assetManager->getTexture("ammo");
+
+			SDL_Color red = { 255,0,0,255 };
+			displayAmmo = UILabel(32*2 + 4, 0, "","arial", red);
 		}
 	}
 
 	void update() override {
-		if (drawTex && currentHealth < maxHealth) {
-			Uint32 currentFrame = SDL_GetTicks();
-			if (currentFrame - lastDamageFrame >= regenTime) {
-				currentHealth++;
-				lastDamageFrame = currentFrame;
+		if (drawTex ) {
+
+			stringstream ammo;
+			int currentAmmo = equippedWeapon->currentAmmo;
+			if (currentAmmo < 10) {
+				ammo << "0";
+			}
+			ammo << currentAmmo;
+			displayAmmo.setLabelText(ammo.str());
+
+			if (currentHealth < maxHealth) {
+				Uint32 currentFrame = SDL_GetTicks();
+				if (currentFrame - lastDamageFrame >= regenTime) {
+					currentHealth++;
+					lastDamageFrame = currentFrame;
+				}
 			}
 		}
 	}
@@ -74,7 +111,9 @@ public:
 		if (drawTex) {
 			int index = maxHealth - currentHealth;
 			src.y = index * 32;
-			TextureManager::DrawTexture(texture, src, dest, SDL_FLIP_HORIZONTAL);
+			TextureManager::DrawTexture(healthbar, src, dest, SDL_FLIP_HORIZONTAL);
+			TextureManager::DrawTexture(ammoSymbol, ammoSrc, ammoDest);
+			displayAmmo.draw();
 		}
 	}
 

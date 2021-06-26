@@ -35,6 +35,9 @@ public:
 		checkCollision();
 	}
 
+	/*
+	* Check for collision. If top collision stop movement in y-direction. If right or left collision try to jump over obstacle
+	*/
 	void checkCollision() {
 		ColliderComponent enemyCollider = entity->getComponent<ColliderComponent>();
 		vector<Entity*> tiles = Game::manager.getGroup(Game::groupTile);
