@@ -55,11 +55,13 @@ private:
 				stats->changeWeapon(1);
 				sprite->setTexture("playerPistol");
 				reloading = false;
+				Mix_ExpireChannel(-1, 1);
 				break;
 			case SDLK_2:
 				stats->changeWeapon(2);
 				reloading = false;
 				sprite->setTexture("playerMachineGun");
+				Mix_ExpireChannel(-1, 1);
 				break;
 			case SDLK_r:
 				if (!reloading) {
