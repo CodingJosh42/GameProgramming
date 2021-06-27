@@ -77,4 +77,6 @@ Am 26.06. habe ich mich mit UILabels beschäftigt. Dazu habe ich die gleichnamig
  <img src="assets/player_machinegun.png" alt="SpriteSheet" width="800" height="640" />
  
   <img src="assets/hud.PNG" alt="HUD" width="800" height="640" />
-
+  
+ ## 27.06.2021
+ Heute habe ich mich mit den Soundeffekten und der Hintergrundmusik meines Spiels beschäftigt. Dazu habe ich die SDL_mixer Libary in mein Projekt mit eingebunden. In der init Funktion der Game Klasse wird der Audio Mixer initialisiert. Als nächstes habe ich die Lautstärke für die Soundeffekte und für die Musik reduziert. Anschließend kann mit Mix_LoadMUS die Musik einer .wav Datei geladen und mit Mix_PlayMusic abgespielt werden. Der Funktion wird als zweiter Parameter -1 übergeben, damit die Musik in einer Endlosschleife abgespielt wird. Für die Soundeffekte habe ich mal wieder den AssetManager um eine soundList erweitert. Mit addSound können Soundeffekte der Map hinzugefügt und mit getSound können bestimmte Sounds abgerufen werden. Bisher habe ich nur zwei Soundeffekte. Das wären einmal ein Soundeffekt für das Nachladen der Waffe und der Sound eines Pistolenschusses. Diese beiden Soundeffekte habe ich schließlich in meinem KeyboardController benutzt. Wenn der Spieler nachlädt wird mit Mix_PlayChannelTimed solange der Nachlade Soundeffekt abgespielt, wie der Spieler zum Nachladen benötigt. Falls der Spieler schießt wird der Schuss Soundeffekt einmal abgespielt (pro Schuss).
