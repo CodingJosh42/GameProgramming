@@ -7,6 +7,7 @@
 #include "ESC.h"
 #include "Vector2D.h"
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 
 using namespace std;
 
@@ -27,10 +28,13 @@ public:
 	void addFont(string id, const char* path, int fontSize);
 	TTF_Font* getFont(string id);
 
+	void addSound(string id, const char* path);
+	Mix_Chunk* getSound(string id);
 private:
 	Manager* manager;
 	map<string, SDL_Texture*> textureList;
 	map<string, TTF_Font*> fontList;
+	map<string, Mix_Chunk*> soundList;
 };
 
 #endif

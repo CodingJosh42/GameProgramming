@@ -11,6 +11,7 @@
 #include "../include/TileComponent.h"
 #include "../include/EnemyComponent.h"
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 
 using namespace std;
 
@@ -67,8 +68,20 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		cout << "Error => TTF not initialized" << endl;
 	}
 
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+	{
+		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+
+	}
+	else {
+		Mix_Volume(-1, MIX_MAX_VOLUME / 2);
+		Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
+		Mix_Music* music = Mix_LoadMUS("assets/audio/jamesbond.wav");
+		Mix_PlayMusic(music, -1);
+	}
+
 	// Textures
-	addTextures();
+	addAssets();
 
 	Map map;
 
@@ -83,11 +96,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 }
 
 /**
-* Add all necassary textures to the assetManager
+* Add all necassary assets to the assetManager
 */
-void Game::addTextures() {
-	// Fonts
-	assetManager->addFont("arial", "assets/arial.ttf", 32);
+void Game::addAssets() {
 
 	// Player and enemys
 	assetManager->addTexture("playerPistol", "assets/animation_player.png");
@@ -110,6 +121,13 @@ void Game::addTextures() {
 	// HUD
 	assetManager->addTexture("heart", "assets/heart.png");
 	assetManager->addTexture("ammo", "assets/ammo.png");
+
+	// Fonts
+	assetManager->addFont("arial", "assets/arial.ttf", 32);
+
+	// Sound
+	assetManager->addSound("reloading", "assets/audio/reloading.wav");
+	assetManager->addSound("gunshot", "assets/audio/gunshot.wav");
 }
 
 /*
@@ -259,6 +277,8 @@ void Game::render() {
 void Game::clean() {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	TTF_Quit();
+	Mix_Quit();
 	SDL_Quit();
 }
 

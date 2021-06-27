@@ -10,6 +10,7 @@
 #include "Stats.h"
 #include <iostream>
 #include "ColliderComponent.h"
+#include <SDL_mixer.h>
 
 using namespace std;
 class KeyboardController : public Component {
@@ -22,6 +23,9 @@ private:
 	Uint32 reloadFrame;
 	ColliderComponent* collider;
 	int initHeight;
+	// sounds
+	Mix_Chunk* reloadingSound;
+	Mix_Chunk* gunshot;
 
 	/**
 	* Checks Key Down events
@@ -74,6 +78,7 @@ private:
 		if (!reloading) {
 			reloading = true;
 			reloadFrame = SDL_GetTicks();
+			Mix_PlayChannelTimed(-1, reloadingSound, -1, stats->getWeapon().reloadTime);
 		}
 		else {
 			Uint32 current = SDL_GetTicks();
@@ -173,6 +178,7 @@ private:
 				}
 			}
 			Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
+			Mix_PlayChannel(-1, gunshot, 0);
 			Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction, 0), Game::groupPlayerProjectiles);
 			stats->getWeapon().reduceAmmo();
 			lastShot = currentTick;
@@ -277,6 +283,9 @@ public:
 		stats = &entity->getComponent<Stats>();
 		collider = &entity->getComponent<ColliderComponent>();
 		initHeight = collider->height;
+		// init sounds
+		reloadingSound = Game::assetManager->getSound("reloading");
+		gunshot = Game::assetManager->getSound("gunshot");
 	}
 
 	void update() override {

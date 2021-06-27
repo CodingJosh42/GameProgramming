@@ -37,6 +37,14 @@ AssetManager::~AssetManager() {
 		TTF_CloseFont(fit->second);
 	}
 	fontList.clear();
+
+	// Clear sound list
+	map<string, Mix_Chunk*>::iterator sit;
+	for (sit = soundList.begin(); sit != soundList.end(); sit++)
+	{
+		Mix_FreeChunk(sit->second);
+	}
+	soundList.clear();
 }
 
 /*
@@ -166,7 +174,6 @@ SDL_Texture* AssetManager::getTexture(string id) {
 * @param path Path of asset
 * @param fontSize Size of font
 */
-
 void AssetManager::addFont(string id, const char* path, int fontSize) {
 	TTF_Font* font = TTF_OpenFont(path, fontSize);
 	fontList.emplace(id, font);
@@ -180,4 +187,24 @@ void AssetManager::addFont(string id, const char* path, int fontSize) {
 */
 TTF_Font* AssetManager::getFont(string id) {
 	return fontList[id];
+}
+
+
+/*
+* Loads a sound and adds it to the list of sounds
+* @param id Id of sound
+* @param path Path of .wav file
+*/
+void AssetManager::addSound(string id, const char* path){
+	Mix_Chunk* sound = Mix_LoadWAV(path);
+	soundList.emplace(id, sound);
+}
+
+/*
+* Returns a specific sound from the list
+* @param id Id of sound that should be returned
+* @return Returns the requested sound
+*/
+Mix_Chunk* AssetManager::getSound(string id) {
+	return soundList[id];
 }

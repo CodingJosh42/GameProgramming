@@ -14,7 +14,7 @@ using namespace std;
 
 class Game {
 private:
-	void addTextures();
+	void addAssets();
 
 public:
 	enum groupLabels : size_t {
