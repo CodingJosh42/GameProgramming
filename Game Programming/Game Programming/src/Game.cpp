@@ -83,7 +83,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	addAssets();
 
 	// Map
-	Map::loadMap("assets/map100x50.map", 100, 50);
+	Map::loadMap("assets/map/map100x50.map", 100, 50);
 	// Player
 	assetManager->createPlayer();
 	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
@@ -108,7 +108,7 @@ void Game::addAssets() {
 	assetManager->addTexture("sniper", "assets/sniper.png");
 
 	// Tiles
-	assetManager->addTexture("tiles", "assets/tiles.png");
+	assetManager->addTexture("tiles", "assets/map/tiles.png");
 
 
 	// Projectiles
@@ -116,8 +116,8 @@ void Game::addAssets() {
 	assetManager->addTexture("sniperProjectile", "assets/sniperProjectile.png");
 
 	// HUD
-	assetManager->addTexture("heart", "assets/heart.png");
-	assetManager->addTexture("ammo", "assets/ammo.png");
+	assetManager->addTexture("heart", "assets/hud/heart.png");
+	assetManager->addTexture("ammo", "assets/hud/ammo.png");
 
 	// Fonts
 	assetManager->addFont("arial", "assets/arial.ttf", 32);
