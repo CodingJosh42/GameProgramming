@@ -35,30 +35,23 @@ public:
 		initialPosition.x = x;
 		initialPosition.y = y;
 
-
 		switch (id) {
 		case 0:
-			texId = "sky";
-			tag = "";
+			tag = "terrain";
 			break;
 		case 1:
-			texId = "grass";
 			tag = "terrain";
 			break;
 		case 2:
-			texId = "water";
 			tag = "terrain";
 			break;
 		case 3:
-			texId = "metal";
 			tag = "terrain";
 			break;
 		case 4:
-			texId = "dirt";
-			tag = "terrain";
+			tag = "";
 			break;
 		case 5:
-			texId = "cloud";
 			tag = "";
 			break;
 		default:
@@ -70,7 +63,7 @@ public:
 		entity->addComponent<TransformComponent>(dest.x, dest.y, dest.w, dest.h, 1);
 		position = &entity->getComponent<TransformComponent>();
 
-		entity->addComponent<SpriteComponent>(texId);
+		entity->addComponent<SpriteComponent>("tiles", tileId * 32);
 		sprite = &entity->getComponent<SpriteComponent>();
 
 		if (tag == "terrain") {
@@ -80,7 +73,7 @@ public:
 	}
 
 	void update() override {
-		position->position.x = initialPosition.x - Game::camera.x;
+		position->position.x = initialPosition.x - 0.5* Game::camera.x;
 		position->position.y = initialPosition.y - Game::camera.y;
 	}
 };

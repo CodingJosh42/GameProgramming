@@ -22,11 +22,10 @@ Entity* Game::player;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 
 bool Game::isRunning = false;
-SDL_Rect Game::camera = { 0,0,800,640 };
+SDL_Rect Game::camera = { 0,0,1600,1600 };
 
 
 SDL_Event Game::event;
-
 
 int maxWidth = 0;
 int maxHeight = 0;
@@ -75,7 +74,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 	else {
 		Mix_Volume(-1, MIX_MAX_VOLUME / 2);
-		Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
+		Mix_VolumeMusic(10);
 		Mix_Music* music = Mix_LoadMUS("assets/audio/jamesbond.wav");
 		Mix_PlayMusic(music, -1);
 	}
@@ -83,16 +82,18 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	// Textures
 	addAssets();
 
-	Map map;
-
+	// Map
+	Map::loadMap("assets/map100x50.map", 100, 50);
 	// Player
 	assetManager->createPlayer();
 	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
 	player = players[0];
 
 	// Enemys
-	assetManager->createEasyEnemy();
-	assetManager->createSniperEnemy();
+	//assetManager->createEasyEnemy();
+	//assetManager->createSniperEnemy();
+
+	camera.y = 15 * 32;
 }
 
 /**
@@ -107,12 +108,8 @@ void Game::addAssets() {
 	assetManager->addTexture("sniper", "assets/sniper.png");
 
 	// Tiles
-	assetManager->addTexture("sky", "assets/sky.png");
-	assetManager->addTexture("grass", "assets/grass.png");
-	assetManager->addTexture("water", "assets/water.png");
-	assetManager->addTexture("metal", "assets/metal.png");
-	assetManager->addTexture("dirt", "assets/dirt.png");
-	assetManager->addTexture("cloud", "assets/cloud.png");
+	assetManager->addTexture("tiles", "assets/tiles.png");
+
 
 	// Projectiles
 	assetManager->addTexture("projectile", "assets/projectile.png");
@@ -140,6 +137,7 @@ void Game::update() {
 
 	manager.refresh();
 	manager.update();
+	
 
 	// Enemy collision
 	float direction = 0.0f;
@@ -156,12 +154,44 @@ void Game::update() {
 	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTile);
 	for (Entity* tile: tiles) {
 		if (tile->getComponent<TileComponent>().tag == "terrain") {
+
 			ColliderComponent collider = tile->getComponent<ColliderComponent>();
+			TransformComponent currentPosition = player->getComponent<TransformComponent>();
 
 			if (Collision::AABB(playerCollider, collider) ) {
 				Collision::CollisionType collision = Collision::yCollision(playerCollider, collider);
 				if (collision == Collision::TOP) {
-					if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - 16) {
+					if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - 14) {
+
+							
+							collision = Collision::xCollision(playerCollider, collider);
+							if (collision == Collision::LEFT) {
+								player->getComponent<TransformComponent>().velocity.x = -1;
+							}
+							if (collision == Collision::RIGHT) {
+								player->getComponent<TransformComponent>().velocity.x = 1;
+							}
+							if (collision == Collision::NONE) {
+								player->getComponent<TransformComponent>().position.y = position.position.y;
+								keyBoardCollision = true;
+								keyboard->ignoreCollision = false;
+							}
+
+						
+					}
+					else {
+
+						player->getComponent<TransformComponent>().position.y = position.position.y;
+						keyboard->ignoreCollision = false;
+						keyBoardCollision = true;
+					}
+				}
+				if (collision == Collision::BOTTOM && keyboard->flying) {
+					player->getComponent<TransformComponent>().velocity.y = 2;
+				}
+				
+				if (keyboard->jumpHeight != -1) {
+					if ((position.height * position.scale + keyboard->jumpHeight - 16) > collider.collider.y && !keyboard->flying) {
 						collision = Collision::xCollision(playerCollider, collider);
 						if (collision == Collision::LEFT) {
 							player->getComponent<TransformComponent>().velocity.x = -1;
@@ -169,31 +199,8 @@ void Game::update() {
 						if (collision == Collision::RIGHT) {
 							player->getComponent<TransformComponent>().velocity.x = 1;
 						}
-						if (collision == Collision::NONE) {
-							player->getComponent<TransformComponent>().position.y = position.position.y;
-							keyBoardCollision = true;
-							keyboard->ignoreCollision = false;
-						}
+
 					}
-					else {
-						player->getComponent<TransformComponent>().position.y = position.position.y;
-						keyboard->ignoreCollision = false;
-						keyBoardCollision = true;
-					}
-				}
-				if (collision == Collision::BOTTOM) {
-					player->getComponent<TransformComponent>().velocity.y = 1;
-				}
-				
-				if ((position.height * position.scale + keyboard->jumpHeight - 16) > collider.collider.y  && !keyboard->flying) {
-					collision = Collision::xCollision(playerCollider, collider);
-					if (collision == Collision::LEFT) {
-						player->getComponent<TransformComponent>().velocity.x = -1;
-					}
-					if (collision == Collision::RIGHT) {
-						player->getComponent<TransformComponent>().velocity.x = 1;
-					}
-					
 				}
 				
 			}
@@ -228,13 +235,19 @@ void Game::update() {
 		}
 
 	camera.x = player->getComponent<TransformComponent>().position.x - 400;
-	camera.y = player->getComponent<TransformComponent>().position.y - (maxHeight - 128);
+	if (player->getComponent<TransformComponent>().position.y+ position.height*position.scale < camera.y) {
+		camera.y -= maxHeight - position.position.y ;
+	}
+	if (player->getComponent<TransformComponent>().position.y > camera.y + 640) {
+		camera.y += maxHeight - (position.position.y + position.height*position.scale);
+	}
+	
 	if (camera.x < 0)
 		camera.x = 0;
 	if (camera.y < 0)
 		camera.y = 0;
-	if (camera.x > camera.w - 400)
-		camera.x = camera.w - 400;
+	if (camera.x > camera.w )
+		camera.x = camera.w;
 	if (camera.y > camera.h)
 		camera.y = camera.h;
 	

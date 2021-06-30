@@ -94,7 +94,7 @@ void AssetManager::createPlayer() {
 	Entity* player = manager->addEntity();
 	Stats* stats = &player->addComponent<Stats>(3, Weapons::pistol, 4, 1, true);
 	stats->addSecondaryWeapon(Weapons::machineGun);
-	player->addComponent<TransformComponent>(400, 0);
+	player->addComponent<TransformComponent>(400, 23*32);
 	player->addComponent<SpriteComponent>("playerPistol", true);
 	player->addComponent<ColliderComponent>("Player", 8, 0, 12, 0);
 	player->addComponent<KeyboardController>();

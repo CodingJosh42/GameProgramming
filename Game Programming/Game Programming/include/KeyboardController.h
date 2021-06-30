@@ -274,7 +274,7 @@ public:
 	bool ignoreCollision = false;
 	bool xCollision = false;
 	int maxHeight = 640;
-	int jumpHeight = maxHeight - 128;
+	int jumpHeight = -1;
 
 	TransformComponent* position;
 	SpriteComponent* sprite;
@@ -291,6 +291,7 @@ public:
 	}
 
 	void update() override {
+
 		// Add Gravity
 		// Player not jumping
 		if (!flying) {
@@ -319,10 +320,10 @@ public:
 				}
 			}
 		}
-
+		/*
 		if (position->position.y > maxHeight - 32 - position->height * position->scale) {
 			ignoreCollision = false;
-		}
+		}*/
 
 		const Uint8* keystate = SDL_GetKeyboardState(NULL);
 

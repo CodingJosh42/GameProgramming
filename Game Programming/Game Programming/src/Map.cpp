@@ -4,7 +4,10 @@
 #include "../include/Game.h"
 #include "../include/ESC.h"
 #include "../include/ColliderComponent.h"
+#include <fstream>
+#include <iostream>
 
+using namespace std;
 
 int lvl1[20][50] = {
 	{3,5,0,0,0,5,0,0,0,5,0,0,0,5,0,0,0,5,0,0,0,5,0,0,0,0,5,0,0,0,5,0,0,0,5,0,0,0,5,0,0,0,5,0,0,0,5,0,0,3},
@@ -29,14 +32,6 @@ int lvl1[20][50] = {
 	{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1,2,2,2,1,1,1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,1,2,2,2,1,1,1,4,4},
 };
 
-/*
-* Loads a map. Map is array lvl1 at the moment
-*/
-Map::Map() {
-
-	loadMap(lvl1);
-
-}
 
 /*
 * Creates tile components
@@ -51,5 +46,24 @@ void Map::loadMap(int loadedMap[20][50]) {
 			TileComponent* tc = &tile->getComponent<TileComponent>();
 			tile->addGroup(Game::groupTile);
 		}
+	}
+}
+
+
+void Map::loadMap(const char* path, int xSize, int ySize) {
+	char tileId;
+	fstream file;
+	file.open(path);
+
+	for (int col = 0; col < ySize; col++) {
+		for (int row = 0; row < xSize; row++) {
+			file.get(tileId);
+			Entity* tile = Game::manager.addEntity();
+			tile->addComponent<TileComponent>(row * 32, col * 32, 32, 32, atoi(&tileId));
+			TileComponent* tc = &tile->getComponent<TileComponent>();
+			tile->addGroup(Game::groupTile);
+			file.ignore();
+		}
+		file.ignore();
 	}
 }

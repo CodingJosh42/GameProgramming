@@ -17,6 +17,8 @@ private:
 	TransformComponent* position;
 	SDL_Rect src;
 	SDL_Rect dest;
+	// Tiles
+	int xOffset = 0;
 
 	// Animation
 	int frames;
@@ -38,6 +40,16 @@ public:
 	SpriteComponent(string id) {
 		setTexture(id);
 	}
+
+	/*
+	* Constructor of SpriteComponent
+	* @param id Id of texture
+	* @param xOffset xOffset of src
+	*/
+	SpriteComponent(string id, int xOffset) : xOffset{ xOffset } {
+		setTexture(id);
+	}
+
 	/*
 	* Constructor of Sprite with animation
 	* @param id Id of texture
@@ -85,7 +97,7 @@ public:
 
 		position = &entity->getComponent<TransformComponent>();
 
-		src.x = 0;
+		src.x = xOffset;
 		src.y = 0;
 		src.w = position->width;
 		src.h = position->height;
