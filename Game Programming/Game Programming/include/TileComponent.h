@@ -73,7 +73,7 @@ public:
 	}
 
 	void update() override {
-		position->position.x = initialPosition.x - 0.5* Game::camera.x;
+		position->position.x = initialPosition.x - 0.5 * Game::camera.x;
 		position->position.y = initialPosition.y - Game::camera.y;
 	}
 };

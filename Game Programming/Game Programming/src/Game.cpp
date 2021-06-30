@@ -76,7 +76,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		Mix_Volume(-1, MIX_MAX_VOLUME / 2);
 		Mix_VolumeMusic(10);
 		Mix_Music* music = Mix_LoadMUS("assets/audio/jamesbond.wav");
-		Mix_PlayMusic(music, -1);
+		//Mix_PlayMusic(music, -1);
 	}
 
 	// Textures
@@ -161,7 +161,7 @@ void Game::update() {
 			if (Collision::AABB(playerCollider, collider) ) {
 				Collision::CollisionType collision = Collision::yCollision(playerCollider, collider);
 				if (collision == Collision::TOP) {
-					if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - 14) {
+					if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - 12) {
 
 							
 							collision = Collision::xCollision(playerCollider, collider);
@@ -176,8 +176,6 @@ void Game::update() {
 								keyBoardCollision = true;
 								keyboard->ignoreCollision = false;
 							}
-
-						
 					}
 					else {
 
@@ -187,7 +185,7 @@ void Game::update() {
 					}
 				}
 				if (collision == Collision::BOTTOM && keyboard->flying) {
-					player->getComponent<TransformComponent>().velocity.y = 2;
+					player->getComponent<TransformComponent>().velocity.y = 3;
 				}
 				
 				if (keyboard->jumpHeight != -1) {
@@ -236,17 +234,21 @@ void Game::update() {
 
 	camera.x = player->getComponent<TransformComponent>().position.x - 400;
 	if (player->getComponent<TransformComponent>().position.y+ position.height*position.scale < camera.y) {
-		camera.y -= maxHeight - position.position.y ;
+		int diff = abs(position.position.y - camera.y);
+		camera.y -= diff;
+		player->getComponent<TransformComponent>().position.y += diff;
 	}
-	if (player->getComponent<TransformComponent>().position.y > camera.y + 640) {
-		camera.y += maxHeight - (position.position.y + position.height*position.scale);
+	if (player->getComponent<TransformComponent>().position.y + (position.height * position.scale) > camera.y + 640) {
+		int diff = abs(position.position.y + (position.height * position.scale) - camera.y - 640);
+		camera.y += diff;
+		player->getComponent<TransformComponent>().position.y -= diff;
 	}
 	
 	if (camera.x < 0)
 		camera.x = 0;
 	if (camera.y < 0)
 		camera.y = 0;
-	if (camera.x > camera.w )
+	if (camera.x > camera.w)
 		camera.x = camera.w;
 	if (camera.y > camera.h)
 		camera.y = camera.h;
