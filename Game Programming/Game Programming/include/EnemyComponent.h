@@ -21,7 +21,7 @@ class EnemyComponent : public Component {
 private:
 	Uint32 lastShot = 0;
 	int lastDirection = 1;
-	int lastX;
+	long lastX;
 	bool reloading = false;
 	Uint32 reloadFrame;
 
@@ -45,6 +45,7 @@ public:
 	} EnemyType;
 
 
+
 	bool flying = false;
 	EnemyType type;
 	
@@ -66,6 +67,7 @@ public:
 		range = stats->getWeapon().range;
 
 		initialPosition = position->position;
+
 	}
 
 	void update() override {
@@ -96,9 +98,11 @@ public:
 			}
 			if (position->velocity.x == 0) {
 				if (lastX != Game::camera.x) {
-					position->position.x = initialPosition.x + 0.5 * (lastX - Game::camera.x);
+					long x = Game::camera.x;
+					position->position.x = initialPosition.x + 0.5 * (lastX - x);
 				}
 			}
+			
 		}
 		
 		updateTextures();

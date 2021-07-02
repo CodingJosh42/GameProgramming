@@ -197,7 +197,10 @@ private:
 		if (Game::event.type == SDL_KEYUP) {
 			switch (Game::event.key.keysym.sym) {
 			case SDLK_w:
-				// TODO
+				if (position->position.y <= jumpHeight - 120 && !ignoreCollision) {
+					position->velocity.y = 3;
+					ignoreCollision = false;
+				}
 				break;
 			case SDLK_d:
 				// Make movement smooth

@@ -17,8 +17,10 @@ class GravityComponent : public Component {
 public:
 	bool collision = false;
 	bool flying = false;
-	int jumpHeight = 640;
+	int jumpHeight = -1;
 	bool ignoreCollision = false;
+	bool firstupdate = true;
+	int lastY;
 
 	TransformComponent* position;
 	TransformComponent lastPosition;
@@ -37,6 +39,19 @@ public:
 	}
 
 	void update() override {
+		if (firstupdate) {
+			lastY = Game::camera.y;
+			firstupdate = false;
+		}
+		if (lastY != Game::camera.y) {
+			int diff = (lastY - Game::camera.y);
+			position->position.y += diff;
+			if (flying) {
+				jumpHeight += diff;
+			}
+			cout << diff << endl;
+			lastY = Game::camera.y;
+		}
 		gravity();
 		checkCollision();
 	}
@@ -66,7 +81,9 @@ public:
 								position->velocity.x = 1;
 							}
 							if (collision == Collision::NONE) {
+								ignoreCollision = false;
 								tempCollision = true;
+								position->position.y = lastPosition.position.y;
 							}
 						}
 						else {
@@ -75,17 +92,22 @@ public:
 							position->position.y = lastPosition.position.y;
 						}
 					}
+					if (collision == Collision::BOTTOM && flying) {
+						position->velocity.y = 1;
+					}
 
-					if (collider.collider.y < position->position.y + (position->height * position->scale) - 16) {
+					if (jumpHeight != -1) {
+						if (collider.collider.y < jumpHeight + (position->height * position->scale) - 16 && !flying) {
 
-						collision = Collision::xCollision(enemyCollider, collider);
-						if (collision == Collision::LEFT) {
-							entity->getComponent<TransformComponent>().position.x = position->position.x;
-							jump();
-						}
-						if (collision == Collision::RIGHT) {
-							entity->getComponent<TransformComponent>().position.x = position->position.x;
-							jump();
+							collision = Collision::xCollision(enemyCollider, collider);
+							if (collision == Collision::LEFT) {
+								entity->getComponent<TransformComponent>().position.x = lastPosition.position.x;
+								jump();
+							}
+							if (collision == Collision::RIGHT) {
+								entity->getComponent<TransformComponent>().position.x = lastPosition.position.x;
+								jump();
+							}
 						}
 					}
 
