@@ -107,7 +107,7 @@ void AssetManager::createPlayer() {
 void AssetManager::createEasyEnemy() {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(1, Weapons::easyEnemyGun, 3, 1, false);
-	enemy->addComponent<TransformComponent>(1000, 500, 32, 32, 4);
+	enemy->addComponent<TransformComponent>(1000, 23 * 32, 32, 32, 4);
 	// Animations
 	Animation standing = Animation(0, 2, 200);
 	Animation walking = Animation(1, 7, 150);
@@ -131,7 +131,7 @@ void AssetManager::createEasyEnemy() {
 void AssetManager::createSniperEnemy() {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(4, Weapons::sniperEnemyGun, 2, 1, false);
-	enemy->addComponent<TransformComponent>(1000, 500, 32, 32, 4);
+	enemy->addComponent<TransformComponent>(1000, 23 * 32, 32, 32, 4);
 	// Animations
 	Animation standing = Animation(0, 2, 200);
 	Animation walking = Animation(1, 7, 150);

@@ -22,11 +22,16 @@ public:
 
 	TransformComponent* position;
 	TransformComponent lastPosition;
+	ColliderComponent* collider;
+	ColliderComponent lastCollider;
 	SpriteComponent* sprite;
 	EnemyComponent* enemyComponent;
 
 	void init() override {
 		position = &entity->getComponent<TransformComponent>();
+		lastPosition = *position;
+		collider = &entity->getComponent<ColliderComponent>();
+		lastCollider = *collider;
 		sprite = &entity->getComponent<SpriteComponent>();
 		enemyComponent = &entity->getComponent<EnemyComponent>();
 	}
@@ -40,7 +45,8 @@ public:
 	* Check for collision. If top collision stop movement in y-direction. If right or left collision try to jump over obstacle
 	*/
 	void checkCollision() {
-		ColliderComponent enemyCollider = entity->getComponent<ColliderComponent>();
+		ColliderComponent enemyCollider = lastCollider;
+		lastCollider = *collider;
 		vector<Entity*> tiles = Game::manager.getGroup(Game::groupTile);
 
 		bool tempCollision = false;
@@ -51,7 +57,7 @@ public:
 					Collision::CollisionType collision = Collision::yCollision(enemyCollider, collider);
 
 					if (collision == Collision::TOP) {
-						if (flying && collider.collider.y < position->position.y + position->height * position->scale - 32) {
+						if (flying && collider.collider.y < position->position.y + (position->height * position->scale) - 16) {
 							collision = Collision::xCollision(enemyCollider, collider);
 							if (collision == Collision::LEFT) {
 								position->velocity.x = -1;
@@ -66,10 +72,11 @@ public:
 						else {
 							tempCollision = true;
 							ignoreCollision = false;
+							position->position.y = lastPosition.position.y;
 						}
 					}
 
-					if (collider.collider.y < position->position.y + position->height * position->scale - 32) {
+					if (collider.collider.y < position->position.y + (position->height * position->scale) - 16) {
 
 						collision = Collision::xCollision(enemyCollider, collider);
 						if (collision == Collision::LEFT) {
@@ -86,6 +93,7 @@ public:
 			}
 		}
 		this->collision = tempCollision;
+		lastPosition = *position;
 	}
 
 	/*
