@@ -13,7 +13,6 @@ public:
 	int width = 32;
 	int height = 32;
 	int scale = 4;
-
 	int speed = 4;
 	
 	/*

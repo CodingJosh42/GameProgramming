@@ -24,7 +24,7 @@ AssetManager* Game::assetManager = new AssetManager(&manager);
 bool Game::isRunning = false;
 bool Game::gameOver = false;
 SDL_Surface* Game::screen = NULL;
-SDL_Rect Game::camera = { 0,0,1600,1600 };
+SDL_Rect Game::camera = { 0,0,1600, 480 };
 
 
 SDL_Event Game::event;
@@ -255,15 +255,19 @@ void Game::update() {
 		}
 
 	camera.x = player->getComponent<TransformComponent>().position.x - 400;
-	if (player->getComponent<TransformComponent>().position.y+ position.height*position.scale < camera.y) {
-		int diff = abs(position.position.y - camera.y);
+
+	if (player->getComponent<TransformComponent>().position.y  < camera.y) {
+		int diff = abs(position.position.y - camera.y) + 64;
 		camera.y -= diff;
 		player->getComponent<TransformComponent>().position.y += diff;
+		keyboard->jumpHeight += diff;
+
 	}
 	if (player->getComponent<TransformComponent>().position.y + (position.height * position.scale) > camera.y + 640) {
-		int diff = abs(position.position.y + (position.height * position.scale) - camera.y - 640);
+		int diff = abs(position.position.y + (position.height * position.scale) - camera.y - 640 - 200);
 		camera.y += diff;
 		player->getComponent<TransformComponent>().position.y -= diff;
+
 	}
 	
 	if (camera.x < 0)
