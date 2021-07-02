@@ -21,6 +21,7 @@ public:
 	bool ignoreCollision = false;
 
 	TransformComponent* position;
+	TransformComponent lastPosition;
 	SpriteComponent* sprite;
 	EnemyComponent* enemyComponent;
 
@@ -50,7 +51,7 @@ public:
 					Collision::CollisionType collision = Collision::yCollision(enemyCollider, collider);
 
 					if (collision == Collision::TOP) {
-						if (flying && collider.collider.y < position->position.y + position->height * position->scale - 16) {
+						if (flying && collider.collider.y < position->position.y + position->height * position->scale - 32) {
 							collision = Collision::xCollision(enemyCollider, collider);
 							if (collision == Collision::LEFT) {
 								position->velocity.x = -1;
@@ -64,10 +65,11 @@ public:
 						}
 						else {
 							tempCollision = true;
+							ignoreCollision = false;
 						}
 					}
 
-					if (collider.collider.y < position->position.y + position->height * position->scale - 16) {
+					if (collider.collider.y < position->position.y + position->height * position->scale - 32) {
 
 						collision = Collision::xCollision(enemyCollider, collider);
 						if (collision == Collision::LEFT) {

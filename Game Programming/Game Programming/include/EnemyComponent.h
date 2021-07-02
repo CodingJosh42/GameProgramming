@@ -31,6 +31,7 @@ private:
 	SpriteComponent* sprite;
 	TransformComponent* playerPos;
 
+
 	Vector2D initialPosition;
 	
 	int range;
@@ -95,7 +96,7 @@ public:
 			}
 			if (position->velocity.x == 0) {
 				if (lastX != Game::camera.x) {
-					position->position.x = initialPosition.x + (lastX - Game::camera.x);
+					position->position.x = initialPosition.x + 0.5 * (lastX - Game::camera.x);
 				}
 			}
 		}

@@ -19,19 +19,34 @@ class Menu {
 
 public:
 
+	/*
+	* Constructor
+	* @param labels List of options that should be displayed
+	*/
 	Menu(vector<string>& labels) {
 
 		this->labels = labels;
 		int halfWidth = SCREENWIDTH / 2;
 		int halfHeight = SCREENHEIGHT / 2 - 200;
+		string font = "arial48";
 		for (int i = 0; i < labels.size(); i++) {
-			uiLabels.push_back(UILabel(halfWidth, halfHeight + i * 100, labels[i], "arial", red) );
+			if (i != 0) {
+				font = "arial";
+			}
+			int y = halfHeight + i * 150;
+			if (i > 1) {
+				y = halfHeight + 150 + (i-1) * 100;
+			}
+			uiLabels.push_back(UILabel(halfWidth, y, labels[i], font, red) );
 			SDL_Rect pos = uiLabels[i].getPosition();
 			uiLabels[i].setPosition(pos.x - pos.w / 2, pos.y);
 			selected[i] = false;
 		}
 	}
 
+	/*
+	* Draw a black screen and the menu options
+	*/
 	void draw() {
 
 		SDL_RenderClear(Game::renderer);
@@ -46,6 +61,10 @@ public:
 		SDL_RenderPresent(Game::renderer);
 	};
 
+	/*
+	* Shows the menu in an infinite loop and handles for events
+	* @return Returns the selected option
+	*/
 	int showMenu() {
 		const int fps = 60;
 		const int frameDelay = 1000 / fps;
@@ -88,6 +107,9 @@ public:
 		}
 	}
 
+	/*
+	* Checks if user is hovering over a specific Option. If he is hovering over a specific option the text color changes to white
+	*/
 	void checkHovering(SDL_Event event) {
 		int x = event.motion.x;
 		int y = event.motion.y;
@@ -108,6 +130,10 @@ public:
 		}
 	}
 
+	/*
+	* Checks if user has selected an option
+	* @return Returns the index of the selected option
+	*/
 	int checkSelectedOption(SDL_Event event) {
 		int x = event.motion.x;
 		int y = event.motion.y;

@@ -21,6 +21,7 @@ public:
 	int width = 0;
 	int height = 0;
 
+	ColliderComponent() = default;
 	/*
 	* Constructor of Collider.
 	* @param tag Tag of collider

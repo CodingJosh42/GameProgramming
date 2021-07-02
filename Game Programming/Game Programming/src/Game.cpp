@@ -141,6 +141,7 @@ void Game::addAssets() {
 
 	// Fonts
 	assetManager->addFont("arial", "assets/arial.ttf", 32);
+	assetManager->addFont("arial48", "assets/arial.ttf", 48);
 
 	// Sound
 	assetManager->addSound("reloading", "assets/audio/reloading.wav");
@@ -210,7 +211,7 @@ void Game::update() {
 				
 				// x collision when player is not jumping
 				if (keyboard->jumpHeight != -1) {
-					if ((position.height * position.scale + keyboard->jumpHeight - 16) > collider.collider.y && !keyboard->flying) {
+					if ((position.height * position.scale + keyboard->jumpHeight - 12) > collider.collider.y && !keyboard->flying) {
 						collision = Collision::xCollision(playerCollider, collider);
 						if (collision == Collision::LEFT) {
 							player->getComponent<TransformComponent>().velocity.x = -1;
