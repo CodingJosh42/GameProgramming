@@ -165,6 +165,8 @@
     <ClInclude Include="include\Gravity.h" />
     <ClInclude Include="include\KeyboardController.h" />
     <ClInclude Include="include\Map.h" />
+    <ClInclude Include="include\Menu.h" />
+    <ClInclude Include="include\Numbers.h" />
     <ClInclude Include="include\ProjectileComponent.h" />
     <ClInclude Include="include\SpriteComponent.h" />
     <ClInclude Include="include\Stats.h" />

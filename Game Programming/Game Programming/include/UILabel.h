@@ -40,11 +40,38 @@ public:
 	* @param labelText Text that should be displayed by the label
 	*/
 	void setLabelText(string labelText) {
+		this->labelText = labelText;
 		SDL_Surface* surface = TTF_RenderText_Blended(Game::assetManager->getFont(fontId), labelText.c_str(), textColor);
 		texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
 		SDL_FreeSurface(surface);
 
 		SDL_QueryTexture(texture, nullptr, nullptr, &position.w, &position.h);
+	}
+
+	/*
+	* Sets the text color of the label
+	*/
+	void setColor(SDL_Color color) {
+		textColor = color;
+
+		SDL_Surface* surface = TTF_RenderText_Blended(Game::assetManager->getFont(fontId), labelText.c_str(), textColor);
+		texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
+		SDL_FreeSurface(surface);
+	}
+
+	/*
+	* Returns the position of the UILabel
+	*/
+	SDL_Rect& getPosition() {
+		return position;
+	}
+
+	/*
+	* Set x and y of position
+	*/
+	void setPosition(int x, int y) {
+		position.x = x;
+		position.y = y;
 	}
 
 	/**

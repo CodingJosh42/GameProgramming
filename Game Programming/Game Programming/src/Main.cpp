@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include <SDL.h>
 #include "../include/Game.h"
+#include "../include/Menu.h"
+#include <vector>
+#include <string>
+#include <iostream>
 
+using namespace std;
 int main(int argc, char* args[]) {
 	
     Game* game = new Game();
@@ -17,9 +22,24 @@ int main(int argc, char* args[]) {
     {
         framestart = SDL_GetTicks();
 
-        game->handleEvents();
-        game->update();
-        game->render();
+        if (!Game::gameOver) {
+            game->handleEvents();
+            game->update();
+            game->render();
+        }
+        else {
+            vector<string> labels = { "GameOver", "Erneut spielen", "Beenden" };
+            Menu gameOverMenu = Menu(labels);
+            game->cleanGame();
+            int i = gameOverMenu.showMenu();
+            if (i == 1) {
+                Game::gameOver = false;
+                game->startGame();
+            }
+            else if (i == 2) {
+                Game::isRunning = false;
+            }
+        }
 
         frametime = SDL_GetTicks() - framestart;
 

@@ -22,6 +22,8 @@ Entity* Game::player;
 AssetManager* Game::assetManager = new AssetManager(&manager);
 
 bool Game::isRunning = false;
+bool Game::gameOver = false;
+SDL_Surface* Game::screen = NULL;
 SDL_Rect Game::camera = { 0,0,1600,1600 };
 
 
@@ -53,9 +55,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+
 		maxWidth = width;
 		maxHeight = height;
 		renderer = SDL_CreateRenderer(window, -1, 0);
+
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+		screen = SDL_GetWindowSurface(window);
 
 		isRunning = true;
 	}
@@ -82,20 +89,33 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	// Textures
 	addAssets();
 
+	
+	startGame();
+}
+
+/*
+* Clean the game
+*/
+void Game::cleanGame() {
+	SDL_RenderClear(renderer);
+	Game::manager.clear();
+}
+
+void Game::startGame() {
 	// Map
 	Map::loadMap("assets/map/map100x50.map", 100, 50);
+
 	// Player
 	assetManager->createPlayer();
 	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
 	player = players[0];
 
 	// Enemys
-	//assetManager->createEasyEnemy();
-	//assetManager->createSniperEnemy();
+	assetManager->createEasyEnemy();
+	assetManager->createSniperEnemy();
 
 	camera.y = 15 * 32;
 }
-
 /**
 * Add all necassary assets to the assetManager
 */
@@ -156,13 +176,12 @@ void Game::update() {
 		if (tile->getComponent<TileComponent>().tag == "terrain") {
 
 			ColliderComponent collider = tile->getComponent<ColliderComponent>();
-			TransformComponent currentPosition = player->getComponent<TransformComponent>();
 
 			if (Collision::AABB(playerCollider, collider) ) {
 				Collision::CollisionType collision = Collision::yCollision(playerCollider, collider);
 				if (collision == Collision::TOP) {
 					if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - 12) {
-
+							// player should bounce back from tiles while jumping
 							
 							collision = Collision::xCollision(playerCollider, collider);
 							if (collision == Collision::LEFT) {
@@ -178,16 +197,18 @@ void Game::update() {
 							}
 					}
 					else {
-
+						// if player is falling down
 						player->getComponent<TransformComponent>().position.y = position.position.y;
 						keyboard->ignoreCollision = false;
 						keyBoardCollision = true;
 					}
 				}
+				// player falls down
 				if (collision == Collision::BOTTOM && keyboard->flying) {
 					player->getComponent<TransformComponent>().velocity.y = 3;
 				}
 				
+				// x collision when player is not jumping
 				if (keyboard->jumpHeight != -1) {
 					if ((position.height * position.scale + keyboard->jumpHeight - 16) > collider.collider.y && !keyboard->flying) {
 						collision = Collision::xCollision(playerCollider, collider);
@@ -252,6 +273,7 @@ void Game::update() {
 		camera.x = camera.w;
 	if (camera.y > camera.h)
 		camera.y = camera.h;
+
 	
 }
 

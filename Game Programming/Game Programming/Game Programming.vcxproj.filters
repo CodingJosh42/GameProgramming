@@ -107,5 +107,11 @@
     <ClInclude Include="include\UILabel.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\Menu.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Numbers.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -97,6 +97,10 @@ public:
 			ammo << currentAmmo;
 			displayAmmo.setLabelText(ammo.str());
 
+			if (currentHealth == 0) {
+				Game::gameOver = true;
+			}
+
 			if (currentHealth < maxHealth) {
 				Uint32 currentFrame = SDL_GetTicks();
 				if (currentFrame - lastDamageFrame >= regenTime) {

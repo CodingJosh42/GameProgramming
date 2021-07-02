@@ -214,6 +214,22 @@ public:
 	}
 
 	/*
+	* Deletes all Entities
+	*/
+	void clear() {
+		for (size_t i = 0; i < entities.size(); i++) {
+			Entity* entity = entities[i];
+			delete entity;
+		}
+		entities.clear();
+
+		for (size_t i = 0; i < MAXGROUPS; i++) {
+			vector<Entity*>* vEntities = &groupedEntities[i];
+			vEntities->clear();
+		}
+	}
+
+	/*
 	* Creates entity and adds it to list
 	*/
 	Entity* addEntity() {

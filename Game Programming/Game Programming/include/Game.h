@@ -39,12 +39,18 @@ public:
 
 	bool running();
 
+	void startGame();
+	void cleanGame();
+
+	static SDL_Surface* screen;
+
 	static Manager manager;
 	static SDL_Event event;
 	static SDL_Renderer* renderer;
 	static vector<ColliderComponent*> colliders;
 	static SDL_Rect camera;
 	static bool isRunning;
+	static bool gameOver;
 	static AssetManager* assetManager;
 
 private:
