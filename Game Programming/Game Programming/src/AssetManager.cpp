@@ -10,7 +10,7 @@
 #include "../include/Weapons.h"
 #include "../include/EnemyComponent.h"
 #include "../include/Gravity.h"
-
+#include "../include/Numbers.h"
 #include <iostream>
 
 /*
@@ -94,7 +94,7 @@ void AssetManager::createPlayer() {
 	Entity* player = manager->addEntity();
 	Stats* stats = &player->addComponent<Stats>(3, Weapons::pistol, 4, 1, true);
 	stats->addSecondaryWeapon(Weapons::machineGun);
-	player->addComponent<TransformComponent>(400, 23*32);
+	player->addComponent<TransformComponent>(SCREENWIDTH / 2, 23*TILESIZE);
 	player->addComponent<SpriteComponent>("playerPistol", true);
 	player->addComponent<ColliderComponent>("Player", 8, 0, 12, 0);
 	player->addComponent<KeyboardController>();
@@ -107,7 +107,7 @@ void AssetManager::createPlayer() {
 void AssetManager::createEasyEnemy() {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(1, Weapons::easyEnemyGun, 3, 1, false);
-	enemy->addComponent<TransformComponent>(1000, 23 * 32, 32, 32, 4);
+	enemy->addComponent<TransformComponent>(1000, 23 * TILESIZE, TILESIZE, TILESIZE, 4);
 	// Animations
 	Animation standing = Animation(0, 2, 200);
 	Animation walking = Animation(1, 7, 150);
@@ -131,7 +131,7 @@ void AssetManager::createEasyEnemy() {
 void AssetManager::createSniperEnemy() {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(4, Weapons::sniperEnemyGun, 2, 1, false);
-	enemy->addComponent<TransformComponent>(2000, 23 * 32, 32, 32, 4);
+	enemy->addComponent<TransformComponent>(2000, 23 * TILESIZE, TILESIZE, TILESIZE, 4);
 	// Animations
 	Animation standing = Animation(0, 2, 200);
 	Animation walking = Animation(1, 7, 150);

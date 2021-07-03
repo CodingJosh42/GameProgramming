@@ -99,7 +99,7 @@ public:
 
 			if (currentHealth == 0) {
 				if (!Game::easyMode) {
-					//Game::gameOver = true;
+					Game::gameOver = true;
 				}
 			}
 

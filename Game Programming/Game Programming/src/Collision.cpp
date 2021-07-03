@@ -43,3 +43,52 @@ float Collision::AABB_direction(const ColliderComponent& c1, const ColliderCompo
 	return 0.0f;
 }
 
+
+/*
+* Checks if two colliders overlap and returns collision type in y direction
+* @param c1 Collider 1
+* @param c2 Collider 2
+* @return Returns TOP, BOTTOM or NONE
+*/
+Collision::CollisionType Collision::yCollision(const ColliderComponent& player, const ColliderComponent& tile) {
+
+	SDL_Rect A = player.collider;
+	SDL_Rect B = tile.collider;
+	// Check x axis and y axis
+	CollisionType retVal = NONE;
+	if (A.x + A.w - 1 >= B.x && B.x + B.w >= A.x &&
+		A.y + A.h - 1 >= B.y && B.y + B.h >= A.y) {
+
+		if (A.y < B.y) {
+			retVal = TOP;
+		}
+		else {
+			retVal = BOTTOM;
+		}
+	}
+	return retVal;
+}
+
+/*
+* Checks if two colliders overlap and returns collision type in x direction
+* @param c1 Collider 1
+* @param c2 Collider 2
+* @return Returns LEFT, RIGHT or NONE
+*/
+Collision::CollisionType Collision::xCollision(const ColliderComponent& player, const ColliderComponent& tile) {
+	SDL_Rect A = player.collider;
+	SDL_Rect B = tile.collider;
+	// Check x axis and y axis
+	CollisionType retVal = NONE;
+	if (A.x + A.w >= B.x && B.x + B.w >= A.x &&
+		A.y + A.h >= B.y && B.y + B.h >= A.y) {
+
+		if (A.x < B.x) {
+			retVal = LEFT;
+		}
+		else {
+			retVal = RIGHT;
+		}
+	}
+	return retVal;
+}

@@ -12,6 +12,7 @@
 #include "../include/EnemyComponent.h"
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
+#include "../include/Numbers.h"
 
 using namespace std;
 
@@ -26,7 +27,7 @@ bool Game::gameOver = false;
 bool Game::gameWon = false;
 bool Game::easyMode = false;
 SDL_Surface* Game::screen = NULL;
-SDL_Rect Game::camera = { 0,0,1600, 480 };
+SDL_Rect Game::camera = { 0,0,MAPWIDTH * TILESIZE / 2, MAPHEIGHT * TILESIZE - 35 * TILESIZE };
 
 
 SDL_Event Game::event;
@@ -217,7 +218,7 @@ void Game::update() {
 				
 				// x collision when player is not jumping
 				if (keyboard->jumpHeight != -1) {
-					if ((position.height * position.scale + keyboard->jumpHeight - 12) > collider.collider.y && !keyboard->flying) {
+					if ((position.height * position.scale + position.position.y - 12) > collider.collider.y && !keyboard->flying) {
 						collision = Collision::xCollision(playerCollider, collider);
 						if (collision == Collision::LEFT) {
 							player->getComponent<TransformComponent>().velocity.x = -1;
@@ -260,7 +261,7 @@ void Game::update() {
 			}
 		}
 
-	camera.x = player->getComponent<TransformComponent>().position.x - 400;
+	camera.x = player->getComponent<TransformComponent>().position.x - SCREENWIDTH / 2;
 
 	if (player->getComponent<TransformComponent>().position.y  < camera.y) {
 		int diff = abs(position.position.y - camera.y) + 64;
@@ -269,8 +270,8 @@ void Game::update() {
 		keyboard->jumpHeight += diff;
 
 	}
-	if (player->getComponent<TransformComponent>().position.y + (position.height * position.scale) > camera.y + 640) {
-		int diff = abs(position.position.y + (position.height * position.scale) - camera.y - 640 - 200);
+	if (player->getComponent<TransformComponent>().position.y + (position.height * position.scale) > camera.y + SCREENHEIGHT) {
+		int diff = abs(position.position.y + (position.height * position.scale) - camera.y - SCREENHEIGHT - 200);
 		camera.y += diff;
 		player->getComponent<TransformComponent>().position.y -= diff;
 

@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "../include/Numbers.h"
 
 using namespace std;
 int main(int argc, char* args[]) {
@@ -17,7 +18,7 @@ int main(int argc, char* args[]) {
     Uint32 framestart;
     int frametime;
 
-    game->init("TENET", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
+    game->init("TENET", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREENWIDTH, SCREENHEIGHT, false);
     while (game->running())
     {
         framestart = SDL_GetTicks();

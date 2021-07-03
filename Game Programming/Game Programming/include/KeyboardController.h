@@ -39,11 +39,7 @@ private:
 				jump();
 				break;
 			case SDLK_s:
-				if (maxHeight - 32 - 128 > position->position.y) {
-					ignoreCollision = true;
-					flying = true;
-					position->velocity.y = 3;
-				}
+				// Maybe TODO
 				break;
 			case SDLK_k:
 				shoot(stats->getWeapon());
@@ -217,7 +213,7 @@ private:
 				}
 				break;
 			case SDLK_s:
-				ignoreCollision = false;
+				// Mayby TODO
 				break;
 			case SDLK_LCTRL:
 				position->speed = stats->getSpeed();
@@ -276,7 +272,6 @@ public:
 	bool collision = false;
 	bool ignoreCollision = false;
 	bool xCollision = false;
-	int maxHeight = 640;
 	int jumpHeight = -1;
 
 	TransformComponent* position;
@@ -323,10 +318,6 @@ public:
 				}
 			}
 		}
-		/*
-		if (position->position.y > maxHeight - 32 - position->height * position->scale) {
-			ignoreCollision = false;
-		}*/
 
 		const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
