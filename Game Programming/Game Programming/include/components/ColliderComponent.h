@@ -1,7 +1,7 @@
 #ifndef COLLIDER
 #define COLLIDER
 
-#include "Game.h"
+#include "../Game.h"
 #include "ESC.h"
 #include <SDL.h>
 #include <string>

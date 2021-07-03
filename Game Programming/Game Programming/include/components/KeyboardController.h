@@ -1,12 +1,12 @@
 #ifndef KEYBOARD
 #define KEYBOARD
 
-#include "Game.h"
+#include "../Game.h"
 #include "ESC.h"
 #include "TransformComponent.h"
 #include <SDL.h>
-#include "Vector2D.h"
-#include "Weapons.h"
+#include "../Vector2D.h"
+#include "../Weapons.h"
 #include "Stats.h"
 #include <iostream>
 #include "ColliderComponent.h"

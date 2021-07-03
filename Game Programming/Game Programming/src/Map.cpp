@@ -1,9 +1,9 @@
 #include "../include/Map.h"
 #include "../include/TextureManager.h"
-#include "../include/TileComponent.h"
+#include "../include/components/TileComponent.h"
 #include "../include/Game.h"
-#include "../include/ESC.h"
-#include "../include/ColliderComponent.h"
+#include "../include/components/ESC.h"
+#include "../include/components/ColliderComponent.h"
 #include <fstream>
 #include <iostream>
 #include "../include/Numbers.h"
@@ -22,7 +22,6 @@ void Map::loadMap(const char* path, int xSize, int ySize) {
 			file.get(tileId);
 			Entity* tile = Game::manager.addEntity();
 			tile->addComponent<TileComponent>(row * TILESIZE, col * TILESIZE, TILESIZE, TILESIZE, atoi(&tileId));
-			TileComponent* tc = &tile->getComponent<TileComponent>();
 			tile->addGroup(Game::groupTile);
 			file.ignore();
 		}

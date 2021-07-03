@@ -2,7 +2,7 @@
 #define COLLISION
 
 #include <SDL.h>
-#include "ColliderComponent.h"
+#include "components/ColliderComponent.h"
 
 class Collision {
 public:

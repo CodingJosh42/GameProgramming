@@ -3,10 +3,10 @@
 
 #include "ESC.h"
 #include <SDL.h>
-#include "TextureManager.h"
+#include "../TextureManager.h"
 #include "TransformComponent.h"
 #include <iostream>
-#include "Animation.h"
+#include "../Animation.h"
 #include <map>
 
 using namespace std;

@@ -62,46 +62,46 @@
     <ClInclude Include="include\Vector2D.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\ESC.h">
+    <ClInclude Include="include\components\ESC.h">
       <Filter>Headerdateien\ESC</Filter>
     </ClInclude>
-    <ClInclude Include="include\TransformComponent.h">
+    <ClInclude Include="include\components\TransformComponent.h">
       <Filter>Headerdateien\ESC</Filter>
     </ClInclude>
-    <ClInclude Include="include\SpriteComponent.h">
+    <ClInclude Include="include\components\SpriteComponent.h">
       <Filter>Headerdateien\ESC</Filter>
     </ClInclude>
-    <ClInclude Include="include\KeyboardController.h">
+    <ClInclude Include="include\components\KeyboardController.h">
       <Filter>Headerdateien\ESC</Filter>
     </ClInclude>
-    <ClInclude Include="include\ColliderComponent.h">
+    <ClInclude Include="include\components\ColliderComponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="include\Collision.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\TileComponent.h">
+    <ClInclude Include="include\components\TileComponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="include\Animation.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\EnemyComponent.h">
+    <ClInclude Include="include\components\EnemyComponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="include\AssetManager.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\ProjectileComponent.h">
+    <ClInclude Include="include\components\ProjectileComponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\Stats.h">
+    <ClInclude Include="include\components\Stats.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="include\Weapons.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\Gravity.h">
+    <ClInclude Include="include\components\Gravity.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="include\UILabel.h">

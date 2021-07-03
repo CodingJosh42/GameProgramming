@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <SDL.h>
-#include "ESC.h"
+#include "components/ESC.h"
 #include "Vector2D.h"
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>

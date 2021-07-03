@@ -2,9 +2,9 @@
 #define TRANSFORM
 
 #include "ESC.h"
-#include "Vector2D.h"
+#include "../Vector2D.h"
 #include "Stats.h"
-#include "Numbers.h"
+#include "../Numbers.h"
 
 class TransformComponent : public Component {
 public:

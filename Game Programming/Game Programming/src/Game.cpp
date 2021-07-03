@@ -2,14 +2,14 @@
 #include "../include/TextureManager.h"
 #include <vector>
 #include "../include/Map.h"
-#include "../include/ESC.h"
-#include "../include/TransformComponent.h"
-#include "../include/SpriteComponent.h"
-#include "../include/KeyboardController.h"
+#include "../include/components/ESC.h"
+#include "../include/components/TransformComponent.h"
+#include "../include/components/SpriteComponent.h"
+#include "../include/components/KeyboardController.h"
 #include "../include/Collision.h"
-#include "../include/ColliderComponent.h"
-#include "../include/TileComponent.h"
-#include "../include/EnemyComponent.h"
+#include "../include/components/ColliderComponent.h"
+#include "../include/components/TileComponent.h"
+#include "../include/components/EnemyComponent.h"
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 #include "../include/Numbers.h"
@@ -153,6 +153,8 @@ void Game::addAssets() {
 	assetManager->addSound("gamewon", "assets/audio/game_won.wav");
 	assetManager->addSound("optionSelected", "assets/audio/menu_option_selected.wav");
 	assetManager->addSound("optionHovering", "assets/audio/menu_option_hovering.wav");
+	assetManager->addSound("easyEnemyShot", "assets/audio/easy_enemy_shot.wav");
+	assetManager->addSound("sniperShot", "assets/audio/sniper_shot.wav");
 }
 
 /*
@@ -179,46 +181,16 @@ void Game::update() {
 
 	// Tile collision
 	bool keyBoardCollision = false;
-	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTile);
+	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTileColliders);
 	for (Entity* tile: tiles) {
-		if (tile->getComponent<TileComponent>().tag == "terrain") {
+		ColliderComponent collider = tile->getComponent<ColliderComponent>();
 
-			ColliderComponent collider = tile->getComponent<ColliderComponent>();
-
-			if (Collision::AABB(playerCollider, collider) ) {
-				Collision::CollisionType collision = Collision::yCollision(playerCollider, collider);
-				if (collision == Collision::TOP) {
-					if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - 12) {
-							// player should bounce back from tiles while jumping
+		if (Collision::AABB(playerCollider, collider) ) {
+			Collision::CollisionType collision = Collision::yCollision(playerCollider, collider);
+			if (collision == Collision::TOP) {
+				if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - 12) {
+						// player should bounce back from tiles while jumping
 							
-							collision = Collision::xCollision(playerCollider, collider);
-							if (collision == Collision::LEFT) {
-								player->getComponent<TransformComponent>().velocity.x = -1;
-							}
-							if (collision == Collision::RIGHT) {
-								player->getComponent<TransformComponent>().velocity.x = 1;
-							}
-							if (collision == Collision::NONE) {
-								player->getComponent<TransformComponent>().position.y = position.position.y;
-								keyBoardCollision = true;
-								keyboard->ignoreCollision = false;
-							}
-					}
-					else {
-						// if player is falling down
-						player->getComponent<TransformComponent>().position.y = position.position.y;
-						keyboard->ignoreCollision = false;
-						keyBoardCollision = true;
-					}
-				}
-				// player falls down
-				if (collision == Collision::BOTTOM && keyboard->flying) {
-					player->getComponent<TransformComponent>().velocity.y = 3;
-				}
-				
-				// x collision when player is not jumping
-				if (keyboard->jumpHeight != -1) {
-					if ((position.height * position.scale + position.position.y - 12) > collider.collider.y && !keyboard->flying) {
 						collision = Collision::xCollision(playerCollider, collider);
 						if (collision == Collision::LEFT) {
 							player->getComponent<TransformComponent>().velocity.x = -1;
@@ -226,11 +198,38 @@ void Game::update() {
 						if (collision == Collision::RIGHT) {
 							player->getComponent<TransformComponent>().velocity.x = 1;
 						}
-
-					}
+						if (collision == Collision::NONE) {
+							player->getComponent<TransformComponent>().position.y = position.position.y;
+							keyBoardCollision = true;
+							keyboard->ignoreCollision = false;
+						}
 				}
-				
+				else {
+					// if player is falling down
+					player->getComponent<TransformComponent>().position.y = position.position.y;
+					keyboard->ignoreCollision = false;
+					keyBoardCollision = true;
+				}
 			}
+			// player falls down
+			if (collision == Collision::BOTTOM && keyboard->flying) {
+				player->getComponent<TransformComponent>().velocity.y = 3;
+			}
+				
+			// x collision when player is not jumping
+			if (keyboard->jumpHeight != -1) {
+				if ((position.height * position.scale + position.position.y - 12) > collider.collider.y && !keyboard->flying) {
+					collision = Collision::xCollision(playerCollider, collider);
+					if (collision == Collision::LEFT) {
+						player->getComponent<TransformComponent>().velocity.x = -1;
+					}
+					if (collision == Collision::RIGHT) {
+						player->getComponent<TransformComponent>().velocity.x = 1;
+					}
+
+				}
+			}
+				
 		}
 	}
 	keyboard->collision = keyBoardCollision;

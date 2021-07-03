@@ -5,15 +5,15 @@
 #include "TransformComponent.h"
 #include "SpriteComponent.h"
 #include "Stats.h"
-#include "Vector2D.h"
-#include "Game.h"
+#include "../Vector2D.h"
+#include "../Game.h"
 #include <iostream>
 #include <vector>
 #include "ESC.h"
 #include "ColliderComponent.h"
-#include "Collision.h"
+#include "../Collision.h"
 #include "TileComponent.h"
-
+#include <SDL_mixer.h>
 
 using namespace std;
 
@@ -24,17 +24,18 @@ private:
 	
 	bool reloading = false;
 	Uint32 reloadFrame;
-
+	int range;
 
 	Stats* stats;
 	TransformComponent* position;
 	SpriteComponent* sprite;
 	TransformComponent* playerPos;
 
+	// sounds
+	Mix_Chunk* easyEnemyShot;
+	Mix_Chunk* sniperShot;
 
 	
-	
-	int range;
 
 public:
 	Vector2D direction;
@@ -45,7 +46,6 @@ public:
 		EASY,
 		SNIPER
 	} EnemyType;
-
 
 
 	bool flying = false;
@@ -69,6 +69,9 @@ public:
 		range = stats->getWeapon().range;
 
 		initialPosition = position->position;
+
+		easyEnemyShot = Game::assetManager->getSound("easyEnemyShot");
+		sniperShot = Game::assetManager->getSound("sniperShot");
 
 	}
 
@@ -134,9 +137,11 @@ public:
 			Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
 			switch (type) {
 			case EASY:
+				Mix_PlayChannel(-1, easyEnemyShot, 0);
 				Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x, direction.y), Game::groupEnemyProjectiles);
 				break;
 			case SNIPER:
+				Mix_PlayChannel(-1, sniperShot, 0);
 				Game::assetManager->createSniperProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x, direction.y), Game::groupEnemyProjectiles);
 				break;
 			default:

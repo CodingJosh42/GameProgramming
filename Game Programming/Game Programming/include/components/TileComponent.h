@@ -5,6 +5,7 @@
 #include "TransformComponent.h"
 #include "SpriteComponent.h"
 #include "ColliderComponent.h"
+#include "../Numbers.h"
 
 class TileComponent : public Component {
 public:
@@ -37,16 +38,16 @@ public:
 
 		switch (id) {
 		case 0:
-			tag = "terrain";
+			tag = "dirt";
 			break;
 		case 1:
-			tag = "terrain";
+			tag = "grass";
 			break;
 		case 2:
-			tag = "terrain";
+			tag = "water";
 			break;
 		case 3:
-			tag = "terrain";
+			tag = "metal";
 			break;
 		case 4:
 			tag = "";
@@ -63,13 +64,14 @@ public:
 		entity->addComponent<TransformComponent>(dest.x, dest.y, dest.w, dest.h, 1);
 		position = &entity->getComponent<TransformComponent>();
 
-		entity->addComponent<SpriteComponent>("tiles", tileId * 32);
+		entity->addComponent<SpriteComponent>("tiles", tileId * TILESIZE);
 		sprite = &entity->getComponent<SpriteComponent>();
 
-		if (tag == "terrain") {
+		if (tag != "") {
 			ColliderComponent* collider = &entity->addComponent<ColliderComponent>(tag);
+			entity->addGroup(Game::groupTileColliders);
 		}
-		entity->addGroup(Game::groupColliders);
+		
 	}
 
 	void update() override {

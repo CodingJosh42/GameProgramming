@@ -21,7 +21,7 @@ public:
 		groupTile,
 		groupPlayer,
 		groupEnemy,
-		groupColliders,
+		groupTileColliders,
 		groupPlayerProjectiles,
 		groupEnemyProjectiles
 	};

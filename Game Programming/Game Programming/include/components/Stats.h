@@ -2,12 +2,12 @@
 #define STATS
 
 #include "ESC.h"
-#include "Weapons.h"
-#include "Vector2D.h"
+#include "../Weapons.h"
+#include "../Vector2D.h"
 #include <SDL.h>
-#include "Game.h"
-#include "TextureManager.h"
-#include "UILabel.h"
+#include "../Game.h"
+#include "../TextureManager.h"
+#include "../UILabel.h"
 #include <string>
 #include <sstream>
 #include <iostream>

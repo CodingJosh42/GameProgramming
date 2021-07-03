@@ -3,7 +3,7 @@
 
 #include "ESC.h"
 #include "TransformComponent.h"
-#include "Game.h"
+#include "../Game.h"
 
 
 class ProjectileComponent : public Component {

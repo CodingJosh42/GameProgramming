@@ -3,14 +3,14 @@
 
 #include "ESC.h"
 #include "ColliderComponent.h"
-#include "Game.h"
+#include "../Game.h"
 #include "TileComponent.h"
 #include "TransformComponent.h"
-#include "Collision.h"
+#include "../Collision.h"
 #include "SpriteComponent.h"
 #include <vector>
 #include <iostream>
-#include "Vector2D.h"
+#include "../Vector2D.h"
 
 using namespace std;
 
@@ -72,56 +72,54 @@ public:
 	void checkCollision() {
 		ColliderComponent enemyCollider = lastCollider;
 		lastCollider = *collider;
-		vector<Entity*> tiles = Game::manager.getGroup(Game::groupTile);
+		vector<Entity*> tiles = Game::manager.getGroup(Game::groupTileColliders);
 
 		bool tempCollision = false;
 		for (Entity* tile : tiles) {
-			if (tile->getComponent<TileComponent>().tag == "terrain") {
-				ColliderComponent collider = tile->getComponent<ColliderComponent>();
-				if (Collision::AABB(enemyCollider, collider)) {
-					Collision::CollisionType collision = Collision::yCollision(enemyCollider, collider);
+			ColliderComponent collider = tile->getComponent<ColliderComponent>();
+			if (Collision::AABB(enemyCollider, collider)) {
+				Collision::CollisionType collision = Collision::yCollision(enemyCollider, collider);
 
-					if (collision == Collision::TOP) {
-						if (flying && collider.collider.y < position->position.y + (position->height * position->scale) - 16) {
-							collision = Collision::xCollision(enemyCollider, collider);
-							if (collision == Collision::LEFT) {
-								position->velocity.x = -1;
-							}
-							if (collision == Collision::RIGHT) {
-								position->velocity.x = 1;
-							}
-							if (collision == Collision::NONE) {
-								ignoreCollision = false;
-								tempCollision = true;
-								position->position.y = lastPosition.position.y;
-							}
+				if (collision == Collision::TOP) {
+					if (flying && collider.collider.y < position->position.y + (position->height * position->scale) - 16) {
+						collision = Collision::xCollision(enemyCollider, collider);
+						if (collision == Collision::LEFT) {
+							position->velocity.x = -1;
 						}
-						else {
-							tempCollision = true;
+						if (collision == Collision::RIGHT) {
+							position->velocity.x = 1;
+						}
+						if (collision == Collision::NONE) {
 							ignoreCollision = false;
+							tempCollision = true;
 							position->position.y = lastPosition.position.y;
 						}
 					}
-					if (collision == Collision::BOTTOM && flying) {
-						position->velocity.y = 1;
+					else {
+						tempCollision = true;
+						ignoreCollision = false;
+						position->position.y = lastPosition.position.y;
 					}
+				}
+				if (collision == Collision::BOTTOM && flying) {
+					position->velocity.y = 1;
+				}
 
-					if (jumpHeight != -1) {
-						if (collider.collider.y < jumpHeight + (position->height * position->scale) - 16 && !flying) {
+				if (jumpHeight != -1) {
+					if (collider.collider.y < jumpHeight + (position->height * position->scale) - 16 && !flying) {
 
-							collision = Collision::xCollision(enemyCollider, collider);
-							if (collision == Collision::LEFT) {
-								entity->getComponent<TransformComponent>().position.x = lastPosition.position.x;
-								jump();
-							}
-							if (collision == Collision::RIGHT) {
-								entity->getComponent<TransformComponent>().position.x = lastPosition.position.x;
-								jump();
-							}
+						collision = Collision::xCollision(enemyCollider, collider);
+						if (collision == Collision::LEFT) {
+							entity->getComponent<TransformComponent>().position.x = lastPosition.position.x;
+							jump();
+						}
+						if (collision == Collision::RIGHT) {
+							entity->getComponent<TransformComponent>().position.x = lastPosition.position.x;
+							jump();
 						}
 					}
-
 				}
+
 			}
 		}
 		this->collision = tempCollision;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ESC.h"
+#include "components/ESC.h"
 #include "TextureManager.h"
 #include <SDL.h>
 #include <string>
