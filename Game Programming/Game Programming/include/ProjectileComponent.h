@@ -7,14 +7,13 @@
 
 
 class ProjectileComponent : public Component {
-
 private:
 	int range = 0;
 	int speed = 0;
 	int distance = 0;
 	Vector2D velocity;
-
 	TransformComponent* position;
+
 public:
 	/*
 	* Constructor of Component
