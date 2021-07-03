@@ -21,7 +21,7 @@ class EnemyComponent : public Component {
 private:
 	Uint32 lastShot = 0;
 	int lastDirection = 1;
-	long lastX;
+	
 	bool reloading = false;
 	Uint32 reloadFrame;
 
@@ -32,12 +32,14 @@ private:
 	TransformComponent* playerPos;
 
 
-	Vector2D initialPosition;
+	
 	
 	int range;
 
 public:
 	Vector2D direction;
+	int lastX;
+	Vector2D initialPosition;
 
 	typedef enum EnemyType {
 		EASY,
@@ -99,12 +101,7 @@ public:
 			if (realDist < range) {
 				shoot(stats->getWeapon());
 			}
-			if (position->velocity.x == 0) {
-				if (lastX != Game::camera.x) {
-					long x = Game::camera.x;
-					position->position.x = initialPosition.x + 0.5 * (lastX - x);
-				}
-			}
+			
 			
 		}
 		

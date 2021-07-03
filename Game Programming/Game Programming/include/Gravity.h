@@ -10,6 +10,7 @@
 #include "SpriteComponent.h"
 #include <vector>
 #include <iostream>
+#include "Vector2D.h"
 
 using namespace std;
 
@@ -21,6 +22,8 @@ public:
 	bool ignoreCollision = false;
 	bool firstupdate = true;
 	int lastY;
+	int* lastX;
+	Vector2D* initialPosition;
 
 	TransformComponent* position;
 	TransformComponent lastPosition;
@@ -36,6 +39,8 @@ public:
 		lastCollider = *collider;
 		sprite = &entity->getComponent<SpriteComponent>();
 		enemyComponent = &entity->getComponent<EnemyComponent>();
+		lastX = &enemyComponent->lastX;
+		initialPosition = &enemyComponent->initialPosition;
 	}
 
 	void update() override {
@@ -49,6 +54,13 @@ public:
 			jumpHeight += diff;
 			lastPosition.position.y += diff;
 			lastY = Game::camera.y;
+		}
+		if (position->velocity.x == 0) {
+			if (*lastX != Game::camera.x) {
+				long x = Game::camera.x;
+				position->position.x = initialPosition->x + 0.5 * (*lastX - x);
+				lastPosition.position.x = initialPosition->x + 0.5 * (*lastX - x);
+			}
 		}
 		gravity();
 		checkCollision();
