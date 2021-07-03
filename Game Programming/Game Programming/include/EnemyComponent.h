@@ -83,7 +83,9 @@ public:
 
 			}
 			if (abs(distance.x) > range) {
-				position->velocity.x = direction.x;
+				if (sqrt(pow(distance.x, 2) + pow(distance.y, 2)) < range + range / 2) {
+					position->velocity.x = direction.x;
+				}
 			}
 			if (abs(distance.x) < range - 50) {
 				if (position->velocity.x != 0) {

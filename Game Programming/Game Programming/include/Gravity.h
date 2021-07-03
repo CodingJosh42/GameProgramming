@@ -49,7 +49,6 @@ public:
 			if (flying) {
 				jumpHeight += diff;
 			}
-			cout << diff << endl;
 			lastY = Game::camera.y;
 		}
 		gravity();
