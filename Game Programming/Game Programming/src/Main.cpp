@@ -28,7 +28,7 @@ int main(int argc, char* args[]) {
             game->render();
         }
         else if(Game::gameOver) {
-            vector<string> labels = { "GAME OVER", "Erneut spielen", "Beenden" };
+            vector<string> labels = { "GAME OVER", "Erneut spielen", "Easy Mode", "Beenden" };
             Menu gameOverMenu = Menu(labels);
             game->cleanGame();
             gameOverMenu.setSound("gameover");
@@ -38,6 +38,11 @@ int main(int argc, char* args[]) {
                 game->startGame();
             }
             else if (i == 2) {
+                Game::gameOver = false;
+                Game::easyMode = true;
+                game->startGame();
+            }
+            else if (i == 3) {
                 Game::isRunning = false;
             }
         }

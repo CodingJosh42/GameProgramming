@@ -97,7 +97,7 @@ public:
 			while (SDL_PollEvent(&event)) {
 				switch (event.type) {
 				case SDL_QUIT:
-					return 2;
+					return labels.size() - 1;
 					break;
 				case SDL_MOUSEMOTION:
 					checkHovering(event);

@@ -24,6 +24,7 @@ AssetManager* Game::assetManager = new AssetManager(&manager);
 bool Game::isRunning = false;
 bool Game::gameOver = false;
 bool Game::gameWon = false;
+bool Game::easyMode = false;
 SDL_Surface* Game::screen = NULL;
 SDL_Rect Game::camera = { 0,0,1600, 480 };
 

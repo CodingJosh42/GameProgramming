@@ -82,8 +82,9 @@ public:
 				direction.y = distance.y / abs(distance.x);
 
 			}
+			int realDist = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
 			if (abs(distance.x) > range) {
-				if (sqrt(pow(distance.x, 2) + pow(distance.y, 2)) < range + range / 2) {
+				if (realDist < range + range / 2) {
 					position->velocity.x = direction.x;
 				}
 			}
@@ -95,7 +96,7 @@ public:
 				}
 			}
 
-			if (abs(distance.x) < range) {
+			if (realDist < range) {
 				shoot(stats->getWeapon());
 			}
 			if (position->velocity.x == 0) {

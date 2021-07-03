@@ -52,6 +52,7 @@ public:
 	static bool isRunning;
 	static bool gameOver;
 	static bool gameWon;
+	static bool easyMode;
 	static AssetManager* assetManager;
 
 private:

@@ -45,10 +45,9 @@ public:
 		}
 		if (lastY != Game::camera.y) {
 			int diff = (lastY - Game::camera.y);
-			position->position.y += diff;
-			if (flying) {
-				jumpHeight += diff;
-			}
+			position->position.y = position->position.y + diff;
+			jumpHeight += diff;
+			lastPosition.position.y += diff;
 			lastY = Game::camera.y;
 		}
 		gravity();
