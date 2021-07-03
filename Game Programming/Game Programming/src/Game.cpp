@@ -23,6 +23,7 @@ AssetManager* Game::assetManager = new AssetManager(&manager);
 
 bool Game::isRunning = false;
 bool Game::gameOver = false;
+bool Game::gameWon = false;
 SDL_Surface* Game::screen = NULL;
 SDL_Rect Game::camera = { 0,0,1600, 480 };
 
@@ -146,6 +147,10 @@ void Game::addAssets() {
 	// Sound
 	assetManager->addSound("reloading", "assets/audio/reloading.wav");
 	assetManager->addSound("gunshot", "assets/audio/gunshot.wav");
+	assetManager->addSound("gameover", "assets/audio/game_over.wav");
+	assetManager->addSound("gamewon", "assets/audio/game_won.wav");
+	assetManager->addSound("optionSelected", "assets/audio/menu_option_selected.wav");
+	assetManager->addSound("optionHovering", "assets/audio/menu_option_hovering.wav");
 }
 
 /*

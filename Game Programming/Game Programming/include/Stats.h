@@ -98,7 +98,7 @@ public:
 			displayAmmo.setLabelText(ammo.str());
 
 			if (currentHealth == 0) {
-				//Game::gameOver = true;
+				// Game::gameOver = true;
 			}
 
 			if (currentHealth < maxHealth) {

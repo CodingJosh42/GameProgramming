@@ -6,6 +6,7 @@
 #include <string>
 #include "Game.h"
 #include <SDL.h>
+#include <SDL_mixer.h>
 
 using namespace std;
 
@@ -16,6 +17,9 @@ class Menu {
 	SDL_Color white = { 255,255,255 };
 	bool selected[10];
 	SDL_Texture* background;
+	Mix_Chunk* sound = nullptr;
+	Mix_Chunk* hoveringSound;
+	Mix_Chunk* selectedSound;
 
 public:
 
@@ -42,6 +46,13 @@ public:
 			uiLabels[i].setPosition(pos.x - pos.w / 2, pos.y);
 			selected[i] = false;
 		}
+
+		hoveringSound = Game::assetManager->getSound("optionHovering");
+		selectedSound = Game::assetManager->getSound("optionSelected");
+	}
+
+	void setSound(string id) {
+		sound = Game::assetManager->getSound(id);
 	}
 
 	/*
@@ -76,6 +87,9 @@ public:
 		SDL_FillRect(Game::screen, NULL, SDL_MapRGB(Game::screen->format, 0x00, 0x00, 0x00));
 		background = SDL_CreateTextureFromSurface(Game::renderer, Game::screen);
 
+		if (sound) {
+			Mix_PlayChannel(-1, sound, 0);
+		}
 		SDL_Event event;
 		while (true) {
 			framestart = SDL_GetTicks();
@@ -119,6 +133,7 @@ public:
 				if (!selected[i]) {
 					uiLabels[i].setColor(white);
 					selected[i] = true;
+					Mix_PlayChannel(-1, hoveringSound, 0);
 				}
 			}
 			else {
@@ -140,6 +155,7 @@ public:
 		for (int i = 1; i < uiLabels.size(); i++) {
 			SDL_Rect pos = uiLabels[i].getPosition();
 			if (x >= pos.x && x <= pos.x + pos.w && y >= pos.y && y <= pos.y + pos.h) {
+				Mix_PlayChannel(-1, selectedSound, 0);
 				return i;
 			}
 		}

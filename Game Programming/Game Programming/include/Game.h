@@ -51,6 +51,7 @@ public:
 	static SDL_Rect camera;
 	static bool isRunning;
 	static bool gameOver;
+	static bool gameWon;
 	static AssetManager* assetManager;
 
 private:

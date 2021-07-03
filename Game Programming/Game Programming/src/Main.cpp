@@ -22,18 +22,33 @@ int main(int argc, char* args[]) {
     {
         framestart = SDL_GetTicks();
 
-        if (!Game::gameOver) {
+        if (!Game::gameOver && !Game::gameWon) {
             game->handleEvents();
             game->update();
             game->render();
         }
-        else {
-            vector<string> labels = { "GameOver", "Erneut spielen", "Beenden" };
+        else if(Game::gameOver) {
+            vector<string> labels = { "GAME OVER", "Erneut spielen", "Beenden" };
             Menu gameOverMenu = Menu(labels);
             game->cleanGame();
+            gameOverMenu.setSound("gameover");
             int i = gameOverMenu.showMenu();
             if (i == 1) {
                 Game::gameOver = false;
+                game->startGame();
+            }
+            else if (i == 2) {
+                Game::isRunning = false;
+            }
+        }
+        else if (Game::gameWon) {
+            vector<string> labels = { "DU HAST GEWONNEN!", "Erneut spielen", "Beenden" };
+            Menu gameOverMenu = Menu(labels);
+            game->cleanGame();
+            gameOverMenu.setSound("gamewon");
+            int i = gameOverMenu.showMenu();
+            if (i == 1) {
+                Game::gameWon = false;
                 game->startGame();
             }
             else if (i == 2) {
