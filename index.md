@@ -89,3 +89,5 @@ Am 02.07. habe ich mich damit beschäftigt ein Menü für das Spiel zu entwerfen
 
 ## 03.07.2021
 Heute habe ich noch ein paar Sounds im Menü eingefügt, z.B. wenn man über eine Option hovert oder sie anklickt. Des Weiteren habe ich ein weiteres Menü in die Main-Loop mit eingebunden, für den Fall, dass der Spieler gewonnen hat (auch wenn ich das bis jetzt noch nicht implementiert habe). Zudem habe ich für jedes Menü einen Sound rausgesucht, welcher abgespielt wird, wenn das Menü aufgerufen wird. In dem "Verloren" Menü wird zum z.B. ein "Fail"-Sound abgespielt. Zuletzt habe ich nach stundenlanger Suche endlich den Fehler bei der Kamera der Enemys gefunden und gefixed. Es lag daran, dass die vorherige Position nicht upgedatet wurde und die TileCollision die Enemy Entity an die falsche Position zurückgesetzt hat.
+
+<img src="assets/menu.PNG" alt="HUD" width="800" height="640" />
