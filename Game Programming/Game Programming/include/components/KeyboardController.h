@@ -20,14 +20,21 @@ private:
 	Stats* stats;
 	Uint32 lastShot = 0;
 	int lastDirection = 1;
+	// Reload
 	bool reloading = false;
 	Uint32 reloadFrame;
+	// For crouching
 	ColliderComponent* collider;
 	int initHeight;
 	// sounds
 	Mix_Chunk* reloadingSound;
 	Mix_Chunk* gunshot;
 	Mix_Chunk* changeGun;
+	Mix_Chunk* jumpSound;
+
+	// For Walking sounds
+	int channel = 1;
+	bool soundPlaying = false;
 
 	/**
 	* Checks Key Down events
@@ -50,14 +57,14 @@ private:
 				crouch();
 				break;
 			case SDLK_1:
-				Mix_ExpireChannel(-1, 1);
+				Mix_ExpireChannel(2, 1);
 				stats->changeWeapon(1);
 				sprite->setTexture("playerPistol");
 				reloading = false;
 				Mix_PlayChannel(-1, changeGun, 0);
 				break;
 			case SDLK_2:
-				Mix_ExpireChannel(-1, 1);
+				Mix_ExpireChannel(2, 1);
 				stats->changeWeapon(2);
 				reloading = false;
 				sprite->setTexture("playerMachineGun");
@@ -80,7 +87,7 @@ private:
 		if (!reloading) {
 			reloading = true;
 			reloadFrame = SDL_GetTicks();
-			Mix_PlayChannelTimed(-1, reloadingSound, -1, stats->getWeapon().reloadTime);
+			Mix_PlayChannelTimed(2, reloadingSound, -1, stats->getWeapon().reloadTime);
 		}
 		else {
 			Uint32 current = SDL_GetTicks();
@@ -123,7 +130,8 @@ private:
 	void jump()
 	{
 		// Only Jump if on the Ground
-		if (flying == false && position->speed > stats->getCrouchSpeed()) {
+		if (flying == false && position->speed > stats->getCrouchSpeed() && position->velocity.y == 0) {
+			Mix_PlayChannel(-1, jumpSound, 0);
 			position->velocity.y = -3;
 			sprite->setAnimation("jumping");
 			flying = true;
@@ -306,9 +314,6 @@ public:
 	// Walking sounds
 	string tileTag = "";
 	bool terrainChanged = false;
-	bool wasJumping = false;
-	int channel = 1;
-	bool soundPlaying = false;
 
 	TransformComponent* position;
 	SpriteComponent* sprite;
@@ -329,6 +334,7 @@ public:
 		reloadingSound = Game::assetManager->getSound("reloading");
 		gunshot = Game::assetManager->getSound("gunshot");
 		changeGun = Game::assetManager->getSound("changeGun");
+		jumpSound = Game::assetManager->getSound("jump");
 	}
 
 	void update() override {
@@ -361,7 +367,6 @@ public:
 			if (position->velocity.y > 0 && ignoreCollision == false) {
 				if (collision) {
 					flying = false;
-					wasJumping = true;
 					position->velocity.y = 0;
 					Mix_PlayChannel(-1, Game::assetManager->getSound("fallen_" + tileTag), 0);
 				}

@@ -48,16 +48,20 @@ int main(int argc, char* args[]) {
             }
         }
         else if (Game::gameWon) {
-            vector<string> labels = { "DU HAST GEWONNEN!", "Erneut spielen", "Beenden" };
+            vector<string> labels = { "DU HAST GEWONNEN!", "Erneut spielen", "Karte erkunden", "Beenden" };
             Menu gameOverMenu = Menu(labels);
-            game->cleanGame();
+            Mix_ExpireChannel(-1, 1);
             gameOverMenu.setSound("gamewon");
             int i = gameOverMenu.showMenu();
             if (i == 1) {
+                game->cleanGame();
                 Game::gameWon = false;
                 game->startGame();
             }
             else if (i == 2) {
+                Game::gameWon = false;
+            }
+            else if (i == 3) {
                 Game::isRunning = false;
             }
         }

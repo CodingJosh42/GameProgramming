@@ -163,11 +163,13 @@ void Game::addAssets() {
 	assetManager->addSound("grass", "assets/audio/grass.wav");
 	assetManager->addSound("water", "assets/audio/water.wav");
 	assetManager->addSound("metal", "assets/audio/metal.wav");
+	assetManager->addSound("jump", "assets/audio/jump.wav");
 	// Landing on tile sound
 	assetManager->addSound("fallen_dirt", "assets/audio/fallen_dirt.wav");
 	assetManager->addSound("fallen_grass", "assets/audio/fallen_grass.wav");
 	assetManager->addSound("fallen_water", "assets/audio/fallen_water.wav");
 	assetManager->addSound("fallen_metal", "assets/audio/fallen_metal.wav");
+
 
 }
 
