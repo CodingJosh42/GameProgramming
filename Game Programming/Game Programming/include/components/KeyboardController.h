@@ -11,6 +11,7 @@
 #include <iostream>
 #include "ColliderComponent.h"
 #include <SDL_mixer.h>
+#include <string>
 
 using namespace std;
 class KeyboardController : public Component {
@@ -26,6 +27,7 @@ private:
 	// sounds
 	Mix_Chunk* reloadingSound;
 	Mix_Chunk* gunshot;
+	Mix_Chunk* changeGun;
 
 	/**
 	* Checks Key Down events
@@ -48,16 +50,18 @@ private:
 				crouch();
 				break;
 			case SDLK_1:
+				Mix_ExpireChannel(-1, 1);
 				stats->changeWeapon(1);
 				sprite->setTexture("playerPistol");
 				reloading = false;
-				Mix_ExpireChannel(-1, 1);
+				Mix_PlayChannel(-1, changeGun, 0);
 				break;
 			case SDLK_2:
+				Mix_ExpireChannel(-1, 1);
 				stats->changeWeapon(2);
 				reloading = false;
 				sprite->setTexture("playerMachineGun");
-				Mix_ExpireChannel(-1, 1);
+				Mix_PlayChannel(-1, changeGun, 0);
 				break;
 			case SDLK_r:
 				if (!reloading) {
@@ -263,7 +267,33 @@ private:
 			sprite->flip = SDL_FLIP_HORIZONTAL;
 
 		}
+	}
 
+	void updateWalkingSound() {
+		if (soundPlaying) {
+			if (position->velocity.x == 0) {
+				Mix_FadeOutChannel(channel, 100);
+				soundPlaying = false;
+			}
+			if (flying) {
+				Mix_FadeOutChannel(channel, 100);
+				soundPlaying = false;
+			}
+			if (terrainChanged && position->velocity.x != 0) {
+				Mix_ExpireChannel(channel, 1);
+				terrainChanged = false;
+				Mix_PlayChannel(channel, Game::assetManager->getSound(tileTag), -1);
+			}
+		}
+		else {
+			if (!flying) {
+				if (position->velocity.x != 0) {
+					terrainChanged = false;
+					Mix_PlayChannel(channel, Game::assetManager->getSound(tileTag), -1);
+					soundPlaying = true;
+				}
+			}
+		}
 	}
 
 public:
@@ -273,9 +303,21 @@ public:
 	bool ignoreCollision = false;
 	bool xCollision = false;
 	int jumpHeight = -1;
+	// Walking sounds
+	string tileTag = "";
+	bool terrainChanged = false;
+	bool wasJumping = false;
+	int channel = 1;
+	bool soundPlaying = false;
 
 	TransformComponent* position;
 	SpriteComponent* sprite;
+
+	~KeyboardController() {
+		if (soundPlaying) {
+			Mix_ExpireChannel(channel, 1);
+		}
+	}
 
 	void init() override {
 		position = &(entity->getComponent<TransformComponent>());
@@ -286,6 +328,7 @@ public:
 		// init sounds
 		reloadingSound = Game::assetManager->getSound("reloading");
 		gunshot = Game::assetManager->getSound("gunshot");
+		changeGun = Game::assetManager->getSound("changeGun");
 	}
 
 	void update() override {
@@ -297,8 +340,12 @@ public:
 				position->velocity.y = 3;
 			}
 			else {
+				if (position->velocity.y == 3) {
+					Mix_PlayChannel(-1, Game::assetManager->getSound("fallen_" + tileTag), 0);
+				}
 				jumpHeight = position->position.y;
 				position->velocity.y = 0;
+
 			}
 		}
 		// Player jumping
@@ -314,7 +361,9 @@ public:
 			if (position->velocity.y > 0 && ignoreCollision == false) {
 				if (collision) {
 					flying = false;
+					wasJumping = true;
 					position->velocity.y = 0;
+					Mix_PlayChannel(-1, Game::assetManager->getSound("fallen_" + tileTag), 0);
 				}
 			}
 		}
@@ -349,6 +398,8 @@ public:
 		catch_KeyUp();
 
 		updateTextures();
+
+		updateWalkingSound();
 	}
 
 	

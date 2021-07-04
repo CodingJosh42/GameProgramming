@@ -86,7 +86,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		Mix_Volume(-1, MIX_MAX_VOLUME / 2);
 		Mix_VolumeMusic(10);
 		Mix_Music* music = Mix_LoadMUS("assets/audio/jamesbond.wav");
-		//Mix_PlayMusic(music, -1);
+		Mix_PlayMusic(music, -1);
 	}
 
 	// Textures
@@ -147,14 +147,28 @@ void Game::addAssets() {
 	assetManager->addFont("arial48", "assets/arial.ttf", 48);
 
 	// Sound
+	// Gun Sounds
 	assetManager->addSound("reloading", "assets/audio/reloading.wav");
 	assetManager->addSound("gunshot", "assets/audio/gunshot.wav");
+	assetManager->addSound("easyEnemyShot", "assets/audio/easy_enemy_shot.wav");
+	assetManager->addSound("sniperShot", "assets/audio/sniper_shot.wav");
+	assetManager->addSound("changeGun", "assets/audio/change_gun.wav");
+	// Menu Sounds
 	assetManager->addSound("gameover", "assets/audio/game_over.wav");
 	assetManager->addSound("gamewon", "assets/audio/game_won.wav");
 	assetManager->addSound("optionSelected", "assets/audio/menu_option_selected.wav");
 	assetManager->addSound("optionHovering", "assets/audio/menu_option_hovering.wav");
-	assetManager->addSound("easyEnemyShot", "assets/audio/easy_enemy_shot.wav");
-	assetManager->addSound("sniperShot", "assets/audio/sniper_shot.wav");
+	// Walking sounds
+	assetManager->addSound("dirt", "assets/audio/dirt.wav");
+	assetManager->addSound("grass", "assets/audio/grass.wav");
+	assetManager->addSound("water", "assets/audio/water.wav");
+	assetManager->addSound("metal", "assets/audio/metal.wav");
+	// Landing on tile sound
+	assetManager->addSound("fallen_dirt", "assets/audio/fallen_dirt.wav");
+	assetManager->addSound("fallen_grass", "assets/audio/fallen_grass.wav");
+	assetManager->addSound("fallen_water", "assets/audio/fallen_water.wav");
+	assetManager->addSound("fallen_metal", "assets/audio/fallen_metal.wav");
+
 }
 
 /*
@@ -181,6 +195,8 @@ void Game::update() {
 
 	// Tile collision
 	bool keyBoardCollision = false;
+	bool dontChange = false;
+	string newTag = "";
 	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTileColliders);
 	for (Entity* tile: tiles) {
 		ColliderComponent collider = tile->getComponent<ColliderComponent>();
@@ -202,6 +218,13 @@ void Game::update() {
 							player->getComponent<TransformComponent>().position.y = position.position.y;
 							keyBoardCollision = true;
 							keyboard->ignoreCollision = false;
+							string tag = tile->getComponent<TileComponent>().tag;
+							if (keyboard->tileTag == tag) {
+								dontChange = true;
+							}
+							else {
+								newTag = tag;
+							}
 						}
 				}
 				else {
@@ -209,6 +232,13 @@ void Game::update() {
 					player->getComponent<TransformComponent>().position.y = position.position.y;
 					keyboard->ignoreCollision = false;
 					keyBoardCollision = true;
+					string tag = tile->getComponent<TileComponent>().tag;
+					if (keyboard->tileTag == tag) {
+						dontChange = true;
+					}
+					else {
+						newTag = tag;
+					}
 				}
 			}
 			// player falls down
@@ -233,6 +263,11 @@ void Game::update() {
 		}
 	}
 	keyboard->collision = keyBoardCollision;
+	if (newTag != "" && !dontChange) {
+		keyboard->tileTag = newTag;
+		keyboard->terrainChanged = true;
+	}
+	
 
 
 	// Projectile collision

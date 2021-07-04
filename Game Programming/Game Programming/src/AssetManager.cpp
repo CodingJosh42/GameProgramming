@@ -197,6 +197,9 @@ TTF_Font* AssetManager::getFont(string id) {
 */
 void AssetManager::addSound(string id, const char* path){
 	Mix_Chunk* sound = Mix_LoadWAV(path);
+	if (sound == nullptr) {
+		cout << "Something went wrong with loading sound:  " << id << " | " << path << "\nError: " << Mix_GetError() << endl;;
+	}
 	soundList.emplace(id, sound);
 }
 
