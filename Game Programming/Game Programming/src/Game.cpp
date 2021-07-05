@@ -89,15 +89,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	else {
 		Mix_Volume(-1, MIX_MAX_VOLUME / 2);
 		Mix_VolumeMusic(10);
-		Mix_Music* music = Mix_LoadMUS("assets/audio/jamesbond.wav");
-		Mix_PlayMusic(music, -1);
+		
 	}
 
 	// Textures
 	addAssets();
 
-	
-	startGame();
 }
 
 /*
@@ -106,9 +103,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 void Game::cleanGame() {
 	SDL_RenderClear(renderer);
 	Game::manager.clear();
+	camera.x = 0;
 }
 
 void Game::startGame() {
+	Mix_Music* music = Mix_LoadMUS("assets/audio/jamesbond.wav");
+	Mix_PlayMusic(music, -1);
+
 	// Map
 	Map::loadMap("assets/map/map100x50.map", 100, 50);
 	spawnPoints = Map::loadSpawnPoints("assets/map/spawn_points.map", 100, 50);
@@ -156,12 +157,15 @@ void Game::addAssets() {
 
 	// Player and enemys
 	assetManager->addTexture("playerPistol", "assets/animation_player.png");
-	assetManager->addTexture("playerMachineGun", "assets/player_machinegun.png");
+	assetManager->addTexture("playerMachineGun", "assets/player_machinegun.png"); 
+	assetManager->addTexture("shielding_pistol", "assets/shielding_pistol.png");
+	assetManager->addTexture("shielding_machinegun", "assets/shielding_machinegun.png");
 	assetManager->addTexture("easyEnemy", "assets/easyEnemy.png");
 	assetManager->addTexture("sniper", "assets/sniper.png");
 
 	// Tiles
 	assetManager->addTexture("tiles", "assets/map/tiles.png");
+
 
 
 	// Projectiles
@@ -185,6 +189,9 @@ void Game::addAssets() {
 	assetManager->addSound("easyEnemyShot", "assets/audio/easy_enemy_shot.wav");
 	assetManager->addSound("sniperShot", "assets/audio/sniper_shot.wav");
 	assetManager->addSound("changeGun", "assets/audio/change_gun.wav");
+	assetManager->addSound("shielding", "assets/audio/shielding.wav");
+	// Death sounds
+	assetManager->addSound("death", "assets/audio/death_scream.wav");
 	// Menu Sounds
 	assetManager->addSound("gameover", "assets/audio/game_over.wav");
 	assetManager->addSound("gamewon", "assets/audio/game_won.wav");
@@ -338,7 +345,7 @@ void Game::update() {
 	for (Entity* projectile: projectiles) {
 		for (Entity* enemy : enemys) {
 			ColliderComponent* enemyCollider = &enemy->getComponent<ColliderComponent>();
-			if (enemyCollider) {
+			if (enemyCollider && projectile) {
 				if (Collision::AABB(*enemyCollider, projectile->getComponent<ColliderComponent>())) {
 					projectile->destroy();
 					Stats* stats = &enemy->getComponent<Stats>();

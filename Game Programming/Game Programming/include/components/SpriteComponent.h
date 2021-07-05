@@ -62,12 +62,14 @@ public:
 		Animation walking = Animation(1, 6, 150);
 		Animation jumping = Animation(2, 1, 100);
 		Animation crouching = Animation(3, 6, 200);
+		Animation shielding = Animation(0, 4, 50);
 
 		animations.emplace("standing", standing);
 		animations.emplace("walking", walking);
 		animations.emplace("jumping", jumping);
 		animations.emplace("crouching", crouching);
-
+		animations.emplace("shielding", shielding);
+		
 		setAnimation("standing");
 	}
 

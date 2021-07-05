@@ -37,11 +37,14 @@ private:
 	int speed;
 	int crouchSpeed;
 	bool drawTex;
-	Uint32 lastDamageFrame = 0;
-	int regenTime = 10000;
+	Uint32 lastCombatFrame = 0;
+	int regenTime = 5000;
+
+	
 
 public:
 	Stats() = default;
+	bool shielding = false;
 
 	/*
 	* Constructor of Component
@@ -100,15 +103,18 @@ public:
 
 			if (currentHealth == 0) {
 				if (!Game::easyMode) {
-					//Game::gameOver = true;
+					Game::gameOver = true;
 				}
 			}
 
 			if (currentHealth < maxHealth) {
 				Uint32 currentFrame = SDL_GetTicks();
-				if (currentFrame - lastDamageFrame >= regenTime) {
+				if (shielding) {
+					lastCombatFrame = currentFrame;
+				}
+				if (currentFrame - lastCombatFrame >= regenTime) {
 					currentHealth++;
-					lastDamageFrame = currentFrame;
+					lastCombatFrame = currentFrame;
 				}
 			}
 		}
@@ -149,11 +155,13 @@ public:
 	* Reduce Health of player
 	*/
 	void reduceHealth(int damage) {
-		currentHealth -= damage;
-		if (currentHealth < 0) {
-			currentHealth = 0;
+		if (!shielding) {
+			currentHealth -= damage;
+			if (currentHealth < 0) {
+				currentHealth = 0;
+			}
+			lastCombatFrame = SDL_GetTicks();
 		}
-		lastDamageFrame = SDL_GetTicks();
 	}
 
 	int getMaxHealth() {

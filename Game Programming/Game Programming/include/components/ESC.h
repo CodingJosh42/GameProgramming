@@ -219,6 +219,7 @@ public:
 	void clear() {
 		for (size_t i = 0; i < entities.size(); i++) {
 			Entity* entity = entities[i];
+			entities.erase(entities.begin() + i);
 			delete entity;
 		}
 		entities.clear();

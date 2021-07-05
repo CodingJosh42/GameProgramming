@@ -61,7 +61,6 @@ public:
 			lastY = Game::camera.y;
 		}
 		if (position->velocity.x == 0) {
-
 			lastPosition.position.x = position->position.x;
 		}
 		
@@ -81,8 +80,8 @@ public:
 		for (Entity* tile : tiles) {
 			ColliderComponent collider = tile->getComponent<ColliderComponent>();
 			if (Collision::AABB(enemyCollider, collider)) {
+			
 				Collision::CollisionType collision = Collision::yCollision(enemyCollider, collider);
-
 				if (collision == Collision::TOP) {
 					// 3 * stats->getSpeed() + 1
 					if (flying && collider.collider.y < position->position.y + (position->height * position->scale) - (16)) {
@@ -105,7 +104,7 @@ public:
 						position->position.y = lastPosition.position.y;
 					}
 				}
-				if (collision == Collision::BOTTOM && flying) {
+				if (collision == Collision::BOTTOM && flying && collider.collider.y > jumpHeight + 32) {
 					position->velocity.y = 1;
 					lastBottom = SDL_GetTicks();
 				}
@@ -186,14 +185,13 @@ public:
 		// Enemy jumping
 		if (flying) {
 			// Player can jump 200 pixels
-			if (position->position.y <= jumpHeight - 200) {
+			if (position->position.y <= jumpHeight - 7* 32) {
 				if (!collision) {
 					position->velocity.y = 3;
-					cout << position->velocity.x << endl;
 					ignoreCollision = false;
 				}
 			}
-			else if(position->position.y <= jumpHeight - 150) {
+			else if(position->position.y <= jumpHeight - 170) {
 				position->velocity.x = enemyComponent->direction.x;
 			}
 			else {

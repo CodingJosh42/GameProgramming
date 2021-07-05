@@ -111,7 +111,7 @@ void AssetManager::createPlayer() {
 */
 void AssetManager::createEasyEnemy(int x, int y) {
 	Entity* enemy = manager->addEntity();
-	enemy->addComponent<Stats>(1, Weapons::easyEnemyGun, 3, 1, false);
+	enemy->addComponent<Stats>(2, Weapons::easyEnemyGun, 3, 1, false);
 	enemy->addComponent<TransformComponent>(x - Game::camera.x, y-Game::camera.y, TILESIZE, TILESIZE, 4);
 	// Animations
 	Animation standing = Animation(0, 2, 200);

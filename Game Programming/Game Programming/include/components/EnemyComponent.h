@@ -35,6 +35,7 @@ private:
 	// sounds
 	Mix_Chunk* easyEnemyShot;
 	Mix_Chunk* sniperShot;
+	Mix_Chunk* deathScream;
 
 	
 	bool firstUpdate = true;
@@ -74,9 +75,10 @@ public:
 		initialPosition = position->position;
 
 		lastX = Game::camera.x;
+		// Sounds
 		easyEnemyShot = Game::assetManager->getSound("easyEnemyShot");
 		sniperShot = Game::assetManager->getSound("sniperShot");
-
+		deathScream = Game::assetManager->getSound("death");
 	}
 
 	void update() override {
@@ -87,6 +89,8 @@ public:
 		Vector2D pos = playerPos->position;
 		Vector2D distance = pos - position->position;
 		if (stats->getCurrentHealth() <= 0) {
+			Mix_PlayChannel(-1, deathScream, 0);
+			cout << "Killed " << id << endl;
 			entity->destroy();
 		}
 		else {
@@ -97,16 +101,22 @@ public:
 			}
 			int realDist = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
 			if (abs(distance.x) > range && type == EASY ) {
-				if (realDist < 2 * range) {
+				if (realDist < 1.5 * range) {
 					position->velocity.x = direction.x;
 				}
 				else {
-					position->velocity.x = 0;
-					lastX = Game::camera.x;
-					initialPosition = position->position;
+					if (position->velocity.x != 0) {
+						lastX = Game::camera.x;
+						initialPosition = position->position;
+						position->velocity.x = 0;
+					}
 				}
+				
 			}
-
+			
+			if (id == 10) {
+				//cout << "First: " << lastX << "pos: " << initialPosition.x << endl;
+			}
 			if (abs(distance.x) < range - 50 ) {
 				if (position->velocity.x != 0) {
 					position->velocity.x = 0;
@@ -114,11 +124,14 @@ public:
 					initialPosition = position->position;
 				}
 			}
-
+			
 			if (position->velocity.x == 0) {
 				if (lastX != Game::camera.x) {
 					diff = lastX - Game::camera.x;
 					position->position.x = initialPosition.x + 0.5 * diff;
+					if (id == 10) {
+						cout << "Diff: " << diff << "pos: " << position->position.x << endl;
+					}
 				}
 			}
 

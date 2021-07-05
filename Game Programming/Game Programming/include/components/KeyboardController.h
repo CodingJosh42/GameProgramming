@@ -12,6 +12,7 @@
 #include "ColliderComponent.h"
 #include <SDL_mixer.h>
 #include <string>
+#include "Stats.h"
 
 using namespace std;
 class KeyboardController : public Component {
@@ -31,10 +32,25 @@ private:
 	Mix_Chunk* gunshot;
 	Mix_Chunk* changeGun;
 	Mix_Chunk* jumpSound;
+	Mix_Chunk* shieldingSound;
 
 	// For Walking sounds
 	int channel = 1;
+	int reloadChannel = 2;
+	int shieldingChannel = 3;
 	bool soundPlaying = false;
+	
+	bool crouching = false;
+
+	// Shielding
+	bool shielding = false;
+	Uint32 shieldFrame;
+	Uint32 shieldTime;
+	Uint32 lastShieldFrame = 0;
+	Uint32 shieldDisabled = 0;
+	Uint32 maxShieldDuration = 2850;
+
+	int weapon = 1;
 
 	/**
 	* Checks Key Down events
@@ -53,21 +69,26 @@ private:
 			case SDLK_k:
 				shoot(stats->getWeapon());
 				break;
+			case SDLK_l:
+				shield();
+				break;
 			case SDLK_LCTRL:
 				crouch();
 				break;
 			case SDLK_1:
-				Mix_ExpireChannel(2, 1);
+				Mix_ExpireChannel(reloadChannel, 1);
 				stats->changeWeapon(1);
 				sprite->setTexture("playerPistol");
 				reloading = false;
+				weapon = 1;
 				Mix_PlayChannel(-1, changeGun, 0);
 				break;
 			case SDLK_2:
-				Mix_ExpireChannel(2, 1);
+				Mix_ExpireChannel(reloadChannel, 1);
 				stats->changeWeapon(2);
 				reloading = false;
 				sprite->setTexture("playerMachineGun");
+				weapon = 2;
 				Mix_PlayChannel(-1, changeGun, 0);
 				break;
 			case SDLK_r:
@@ -81,19 +102,43 @@ private:
 	}
 
 	/*
+	* Player shielding
+	*/
+	void shield() {
+		if (!shielding && shieldDisabled + lastShieldFrame < SDL_GetTicks() && !flying && !crouching) {
+			shielding = true;
+			stats->shielding = true;
+			if (reloading) {
+				reloading = false;
+				Mix_ExpireChannel(reloadChannel, 100);
+			}
+			shieldFrame = SDL_GetTicks();
+			if (weapon == 1) {
+				sprite->setTexture("shielding_pistol");
+			}
+			else if (weapon == 2) {
+				sprite->setTexture("shielding_machinegun");
+			}
+			Mix_PlayChannelTimed(shieldingChannel, shieldingSound, 0, 3000);
+		}
+	}
+
+	/*
 	* Player is reloading his weapon. After reloading time weapon has maxAmmo again
 	*/
 	void reload() {
-		if (!reloading) {
-			reloading = true;
-			reloadFrame = SDL_GetTicks();
-			Mix_PlayChannelTimed(2, reloadingSound, -1, stats->getWeapon().reloadTime);
-		}
-		else {
-			Uint32 current = SDL_GetTicks();
-			if (current - reloadFrame >= stats->getWeapon().reloadTime) {
-				stats->getWeapon().reload();
-				reloading = false;
+		if (!shielding) {
+			if (!reloading) {
+				reloading = true;
+				reloadFrame = SDL_GetTicks();
+				Mix_PlayChannelTimed(reloadChannel, reloadingSound, -1, stats->getWeapon().reloadTime);
+			}
+			else {
+				Uint32 current = SDL_GetTicks();
+				if (current - reloadFrame >= stats->getWeapon().reloadTime) {
+					stats->getWeapon().reload();
+					reloading = false;
+				}
 			}
 		}
 	}
@@ -103,7 +148,7 @@ private:
 	*/
 	void crouch()
 	{
-		if (collision) {
+		if (collision && !shielding) {
 			if (position->velocity.x == -1) {
 				sprite->flip = SDL_FLIP_HORIZONTAL;
 			}
@@ -121,6 +166,7 @@ private:
 			position->speed = stats->getCrouchSpeed();
 			collider->height = 22;
 			collider->yOffset = 10;
+			crouching = true;
 		}
 	}
 
@@ -130,7 +176,7 @@ private:
 	void jump()
 	{
 		// Only Jump if on the Ground
-		if (flying == false && position->speed > stats->getCrouchSpeed() && position->velocity.y == 0) {
+		if (!flying && position->speed > stats->getCrouchSpeed() && position->velocity.y == 0 && !shielding) {
 			Mix_PlayChannel(-1, jumpSound, 0);
 			position->velocity.y = -3;
 			sprite->setAnimation("jumping");
@@ -163,35 +209,38 @@ private:
 	*/
 	void shoot(Weapon weapon)
 	{
-		Uint32 currentTick = SDL_GetTicks();
-		if (stats->getWeapon().currentAmmo <= 0) {
-			reload();
-		} else if (currentTick - lastShot > weapon.delay && !reloading) {
+		if(!shielding) {
+			Uint32 currentTick = SDL_GetTicks();
+			if (stats->getWeapon().currentAmmo <= 0) {
+				reload();
+			}
+			else if (currentTick - lastShot > weapon.delay && !reloading) {
 
-			int direction = 0;
-			int xStart = 0;
-			if (position->velocity.x == -1) {
-				direction = -1;
-				xStart = position->position.x;
-			}
-			else if (position->velocity.x == 1) {
-				direction = 1;
-				xStart = position->position.x + position->width * position->scale;
-			}
-			else {
-				direction = lastDirection;
-				if (lastDirection == -1) {
+				int direction = 0;
+				int xStart = 0;
+				if (position->velocity.x == -1) {
+					direction = -1;
 					xStart = position->position.x;
 				}
-				else {
+				else if (position->velocity.x == 1) {
+					direction = 1;
 					xStart = position->position.x + position->width * position->scale;
 				}
+				else {
+					direction = lastDirection;
+					if (lastDirection == -1) {
+						xStart = position->position.x;
+					}
+					else {
+						xStart = position->position.x + position->width * position->scale;
+					}
+				}
+				Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
+				Mix_PlayChannel(-1, gunshot, 0);
+				Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction, 0), Game::groupPlayerProjectiles);
+				stats->getWeapon().reduceAmmo();
+				lastShot = currentTick;
 			}
-			Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
-			Mix_PlayChannel(-1, gunshot, 0);
-			Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction, 0), Game::groupPlayerProjectiles);
-			stats->getWeapon().reduceAmmo();
-			lastShot = currentTick;
 		}
 	}
 
@@ -227,10 +276,13 @@ private:
 			case SDLK_s:
 				// Mayby TODO
 				break;
+			case SDLK_l:
+				expireShield();
 			case SDLK_LCTRL:
 				position->speed = stats->getSpeed();
 				collider->height = initHeight;
 				collider->yOffset = 0;
+				crouching = false;
 				break;
 			case SDLK_ESCAPE:
 				Game::isRunning = false;
@@ -241,6 +293,26 @@ private:
 		}
 	}
 
+	/*
+	* End the shield
+	*/
+	void expireShield() {
+		if (shielding) {
+			shielding = false;
+			stats->shielding = false;
+			if (weapon == 1) {
+				sprite->setTexture("playerPistol");
+			}
+			if (weapon == 2) {
+				sprite->setTexture("playerMachineGun");
+			}
+			lastShieldFrame = SDL_GetTicks();
+			shieldTime = lastShieldFrame - shieldFrame;
+			shieldDisabled = shieldTime / 3;
+			Mix_FadeOutChannel(shieldingChannel, 100);
+		}
+	}
+
 	/**
 	* Updates Textures depending on what buttons are still pressed
 	*
@@ -248,7 +320,7 @@ private:
 	void updateTextures()
 	{
 		// Update Textures if buttons still pressed
-		if (!flying) {
+		if (!flying && !shielding) {
 			// Crouching
 			if (position->speed <= stats->getCrouchSpeed()) {
 				sprite->setAnimation("crouching");
@@ -264,6 +336,10 @@ private:
 					sprite->setAnimation("walking");
 				}
 			}
+		}
+		// Shielding
+		if (shielding) {
+			sprite->setAnimation("shielding");
 		}
 		// RIGHT
 		if (position->velocity.x == 1) {
@@ -336,6 +412,7 @@ public:
 		gunshot = Game::assetManager->getSound("gunshot");
 		changeGun = Game::assetManager->getSound("changeGun");
 		jumpSound = Game::assetManager->getSound("jump");
+		shieldingSound = Game::assetManager->getSound("shielding");
 	}
 
 	void update() override {
@@ -359,7 +436,7 @@ public:
 		// Player jumping
 		if (flying) {
 			// Player can jump 200 pixels
-			if (position->position.y <= jumpHeight - 200) {
+			if (position->position.y <= jumpHeight - 7 * 32) {
 				if (!collision) {
 					position->velocity.y = 3;
 					ignoreCollision = false;
@@ -391,6 +468,7 @@ public:
 			position->velocity.x = 0;
 		}
 
+
 		if (keystate[SDL_SCANCODE_K])
 		{
 			shoot(stats->getWeapon());
@@ -403,6 +481,14 @@ public:
 		catch_KeyDown();
 
 		catch_KeyUp();
+
+		if (shielding) {
+			position->velocity.x = 0;
+			Uint32 currentFrame = SDL_GetTicks();
+			if (currentFrame > shieldFrame + maxShieldDuration) {
+				expireShield();
+			}
+		}
 
 		updateTextures();
 
