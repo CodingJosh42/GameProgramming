@@ -60,6 +60,7 @@ int main(int argc, char* args[]) {
             }
             else if (i == 2) {
                 Game::gameWon = false;
+                Game::exploreMap = true;
             }
             else if (i == 3) {
                 Game::isRunning = false;

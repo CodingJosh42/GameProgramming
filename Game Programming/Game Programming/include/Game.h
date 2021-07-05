@@ -38,7 +38,7 @@ public:
 	void handleEvents();
 
 	bool running();
-
+	bool checkIfWon();
 	void startGame();
 	void cleanGame();
 
@@ -53,6 +53,7 @@ public:
 	static bool gameOver;
 	static bool gameWon;
 	static bool easyMode;
+	static bool exploreMap;
 	static AssetManager* assetManager;
 
 private:

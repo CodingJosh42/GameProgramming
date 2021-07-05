@@ -25,6 +25,7 @@ public:
 	int lastY;
 	int* lastX;
 	Vector2D* initialPosition;
+	Uint32 lastBottom = 0;
 
 	TransformComponent* position;
 	TransformComponent lastPosition;
@@ -60,10 +61,8 @@ public:
 			lastY = Game::camera.y;
 		}
 		if (position->velocity.x == 0) {
-			if (enemyComponent->diff != 0) {
-				lastPosition.position.x = position->position.x;
-				enemyComponent->diff = 0;
-			}
+
+			lastPosition.position.x = position->position.x;
 		}
 		
 		gravity();
@@ -86,7 +85,7 @@ public:
 
 				if (collision == Collision::TOP) {
 					// 3 * stats->getSpeed() + 1
-					if (flying && collider.collider.y < position->position.y + (position->height * position->scale) - 16) {
+					if (flying && collider.collider.y < position->position.y + (position->height * position->scale) - (16)) {
 						collision = Collision::xCollision(enemyCollider, collider);
 						if (collision == Collision::LEFT) {
 							position->velocity.x = -1;
@@ -108,19 +107,31 @@ public:
 				}
 				if (collision == Collision::BOTTOM && flying) {
 					position->velocity.y = 1;
+					lastBottom = SDL_GetTicks();
 				}
 
 				if (jumpHeight != -1) {
-					if (collider.collider.y < position->position.y + (position->height * position->scale) - 16 && !flying) {
+					if (collider.collider.y < position->position.y + (position->height * position->scale) - (16) && !flying) {
 
 						collision = Collision::xCollision(enemyCollider, collider);
+						Uint32 current = SDL_GetTicks();
 						if (collision == Collision::LEFT) {
-							entity->getComponent<TransformComponent>().position.x = lastPosition.position.x;
-							jump();
+							//entity->getComponent<TransformComponent>().position.x = lastPosition.position.x;
+							entity->getComponent<TransformComponent>().velocity.x = -1;
+							if (current > lastBottom + 1000) {
+								position->position.x = lastPosition.position.x;
+								position->velocity.x = 0;
+								jump();
+							}
 						}
 						if (collision == Collision::RIGHT) {
-							entity->getComponent<TransformComponent>().position.x = lastPosition.position.x;
-							jump();
+							//entity->getComponent<TransformComponent>().position.x = lastPosition.position.x;
+							entity->getComponent<TransformComponent>().velocity.x = 1;
+							if (current > lastBottom + 1000) {
+								position->position.x = lastPosition.position.x;
+								position->velocity.x = 0;
+								jump();
+							}
 						}
 					}
 				}
@@ -178,8 +189,15 @@ public:
 			if (position->position.y <= jumpHeight - 200) {
 				if (!collision) {
 					position->velocity.y = 3;
+					cout << position->velocity.x << endl;
 					ignoreCollision = false;
 				}
+			}
+			else if(position->position.y <= jumpHeight - 150) {
+				position->velocity.x = enemyComponent->direction.x;
+			}
+			else {
+				position->velocity.x = 0;
 			}
 			// Enemy is falling down
 			if (position->velocity.y > 0 && ignoreCollision == false) {

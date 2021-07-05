@@ -26,6 +26,7 @@ bool Game::isRunning = false;
 bool Game::gameOver = false;
 bool Game::gameWon = false;
 bool Game::easyMode = false;
+bool Game::exploreMap = false;
 SDL_Surface* Game::screen = NULL;
 
 SDL_Rect Game::camera = { 0,0,SCREENWIDTH,(50 * 32 - SCREENHEIGHT) / 2};
@@ -205,9 +206,25 @@ void Game::addAssets() {
 }
 
 /*
+* Check if player won the game 
+* @return Returns true when all enemys were defeated
+*/
+bool Game::checkIfWon() {
+	vector<Entity*> enemys = Game::manager.getGroup(Game::groupEnemy);
+	if (enemys.size() <= 0) {
+		return true;
+	}
+	return false;
+}
+
+/*
 * Entities in manager are getting updated. Check for collisions after. Update camera
 */
 void Game::update() {
+	if (!exploreMap) {
+		gameWon = checkIfWon();
+	}
+
 	ColliderComponent playerCollider = player->getComponent<ColliderComponent>();
 	TransformComponent position = player->getComponent<TransformComponent>();
 	KeyboardController* keyboard = &player->getComponent<KeyboardController>();
@@ -291,7 +308,7 @@ void Game::update() {
 			}
 				
 			// x collision when player is not jumping
-			if (keyboard->jumpHeight != -1) {
+			if (keyboard->jumpHeight != -1 && !keyboard->falling) {
 				if ((position.height * position.scale + position.position.y - (3 * playerSpeed)) > collider.collider.y && !keyboard->flying) {
 					collision = Collision::xCollision(playerCollider, collider);
 					if (collision == Collision::LEFT) {
@@ -320,11 +337,13 @@ void Game::update() {
 
 	for (Entity* projectile: projectiles) {
 		for (Entity* enemy : enemys) {
-			ColliderComponent enemyCollider = enemy->getComponent<ColliderComponent>();
-			if (Collision::AABB(enemyCollider, projectile->getComponent<ColliderComponent>())) {
-				projectile->destroy();
-				Stats* stats = &enemy->getComponent<Stats>();
-				stats->reduceHealth(1);
+			ColliderComponent* enemyCollider = &enemy->getComponent<ColliderComponent>();
+			if (enemyCollider) {
+				if (Collision::AABB(*enemyCollider, projectile->getComponent<ColliderComponent>())) {
+					projectile->destroy();
+					Stats* stats = &enemy->getComponent<Stats>();
+					stats->reduceHealth(1);
+				}
 			}
 		}
 	}

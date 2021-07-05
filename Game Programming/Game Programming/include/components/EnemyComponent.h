@@ -97,11 +97,16 @@ public:
 			}
 			int realDist = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
 			if (abs(distance.x) > range && type == EASY ) {
-				if (realDist < 1.5 * range) {
+				if (realDist < 2 * range) {
 					position->velocity.x = direction.x;
 				}
+				else {
+					position->velocity.x = 0;
+					lastX = Game::camera.x;
+					initialPosition = position->position;
+				}
 			}
-			// Somewhere here is a mistake
+
 			if (abs(distance.x) < range - 50 ) {
 				if (position->velocity.x != 0) {
 					position->velocity.x = 0;

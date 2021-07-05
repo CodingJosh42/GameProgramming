@@ -314,6 +314,7 @@ public:
 	// Walking sounds
 	string tileTag = "";
 	bool terrainChanged = false;
+	bool falling = false;
 
 	TransformComponent* position;
 	SpriteComponent* sprite;
@@ -343,6 +344,7 @@ public:
 		// Player not jumping
 		if (!flying) {
 			if (!collision) {
+				falling = true;
 				position->velocity.y = 3;
 			}
 			else {
@@ -351,7 +353,7 @@ public:
 				}
 				jumpHeight = position->position.y;
 				position->velocity.y = 0;
-
+				falling = false;
 			}
 		}
 		// Player jumping
@@ -376,18 +378,18 @@ public:
 		const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
 
-			//continuous-response keys
-			if (keystate[SDL_SCANCODE_D])
-			{
-				position->velocity.x = 1;
-			}
-			else if (keystate[SDL_SCANCODE_A])
-			{
-				position->velocity.x = -1;
-			}
-			else {
-				position->velocity.x = 0;
-			}
+		//continuous-response keys
+		if (keystate[SDL_SCANCODE_D])
+		{
+			position->velocity.x = 1;
+		}
+		else if (keystate[SDL_SCANCODE_A])
+		{
+			position->velocity.x = -1;
+		}
+		else {
+			position->velocity.x = 0;
+		}
 
 		if (keystate[SDL_SCANCODE_K])
 		{
