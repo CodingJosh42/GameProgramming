@@ -11,6 +11,7 @@
 #include <vector>
 #include <iostream>
 #include "../Vector2D.h"
+#include "Stats.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ public:
 	ColliderComponent lastCollider;
 	SpriteComponent* sprite;
 	EnemyComponent* enemyComponent;
+	Stats* stats;
 
 	void init() override {
 		position = &entity->getComponent<TransformComponent>();
@@ -41,6 +43,8 @@ public:
 		enemyComponent = &entity->getComponent<EnemyComponent>();
 		lastX = &enemyComponent->lastX;
 		initialPosition = &enemyComponent->initialPosition;
+		stats = &entity->getComponent<Stats>();
+		lastY = Game::camera.y;
 	}
 
 	void update() override {
@@ -62,6 +66,7 @@ public:
 				lastPosition.position.x = initialPosition->x + 0.5 * (*lastX - x);
 			}
 		}
+		
 		gravity();
 		checkCollision();
 	}
@@ -81,6 +86,7 @@ public:
 				Collision::CollisionType collision = Collision::yCollision(enemyCollider, collider);
 
 				if (collision == Collision::TOP) {
+					// 3 * stats->getSpeed() + 1
 					if (flying && collider.collider.y < position->position.y + (position->height * position->scale) - 16) {
 						collision = Collision::xCollision(enemyCollider, collider);
 						if (collision == Collision::LEFT) {
@@ -106,7 +112,7 @@ public:
 				}
 
 				if (jumpHeight != -1) {
-					if (collider.collider.y < jumpHeight + (position->height * position->scale) - 16 && !flying) {
+					if (collider.collider.y < position->position.y + (position->height * position->scale) - 16 && !flying) {
 
 						collision = Collision::xCollision(enemyCollider, collider);
 						if (collision == Collision::LEFT) {

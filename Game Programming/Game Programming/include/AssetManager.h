@@ -19,13 +19,15 @@ public:
 	void createProjectile(Vector2D position, int range, int speed, Vector2D velocity, int group);
 	void createSniperProjectile(Vector2D position, int range, int speed, Vector2D velocity, int group);
 	void createPlayer();
-	void createEasyEnemy();
-	void createSniperEnemy();
+	void createEasyEnemy(int x, int y);
+	void createSniperEnemy(int x, int y);
+
+	static int id;
 
 	void addTexture(string id, const char* path);
 	SDL_Texture* getTexture(string id);
 
-	void addFont(string id, const char* path, int fontSize);
+	void addFont(string id, const char* path, int fontSize, int style);
 	TTF_Font* getFont(string id);
 
 	void addSound(string id, const char* path);

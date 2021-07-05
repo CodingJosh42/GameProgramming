@@ -13,6 +13,9 @@
 #include "../include/Numbers.h"
 #include <iostream>
 
+
+int AssetManager::id = 0;
+
 /*
 * Constructor
 */
@@ -80,7 +83,7 @@ void AssetManager::createSniperProjectile(Vector2D position, int range, int spee
 		flip = -1.0;
 	}
 	if (velocity.y != 0) {
-		sprite->angle = flip * atan(velocity.y) * 180 / M_PI;;
+		sprite->angle = flip * atan(velocity.y) * 180 / M_PI;
 	}
 	projectile->addComponent<ColliderComponent>("projectile");
 	projectile->addComponent<ProjectileComponent>(range, speed, velocity);
@@ -94,7 +97,7 @@ void AssetManager::createPlayer() {
 	Entity* player = manager->addEntity();
 	Stats* stats = &player->addComponent<Stats>(3, Weapons::pistol, 4, 1, true);
 	stats->addSecondaryWeapon(Weapons::machineGun);
-	player->addComponent<TransformComponent>(SCREENWIDTH / 2, 23*TILESIZE);
+	player->addComponent<TransformComponent>(8 * 32, 25 * TILESIZE); // 23*TILESIZE
 	player->addComponent<SpriteComponent>("playerPistol", true);
 	player->addComponent<ColliderComponent>("Player", 8, 0, 12, 0);
 	player->addComponent<KeyboardController>();
@@ -103,11 +106,13 @@ void AssetManager::createPlayer() {
 
 /*
 * Creates an easy-enemy-entity
+* @param x x Position of enemy
+* @param y y Position of enemy
 */
-void AssetManager::createEasyEnemy() {
+void AssetManager::createEasyEnemy(int x, int y) {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(1, Weapons::easyEnemyGun, 3, 1, false);
-	enemy->addComponent<TransformComponent>(1000, 23 * TILESIZE, TILESIZE, TILESIZE, 4);
+	enemy->addComponent<TransformComponent>(x - Game::camera.x, y-Game::camera.y, TILESIZE, TILESIZE, 4);
 	// Animations
 	Animation standing = Animation(0, 2, 200);
 	Animation walking = Animation(1, 7, 150);
@@ -120,18 +125,20 @@ void AssetManager::createEasyEnemy() {
 
 	enemy->addComponent<SpriteComponent>("easyEnemy", true, animations);
 	enemy->addComponent<ColliderComponent>("Enemy", 2, 0, 16, 0);
-	enemy->addComponent<EnemyComponent>(EnemyComponent::EASY);
+	enemy->addComponent<EnemyComponent>(EnemyComponent::EASY, id++);
 	enemy->addComponent<GravityComponent>();
 	enemy->addGroup(Game::groupEnemy);
 }
 
 /*
 * Creates a sniper-enemy-entity
+* @param x x Position of enemy
+* @param y y Position of enemy
 */
-void AssetManager::createSniperEnemy() {
+void AssetManager::createSniperEnemy(int x, int y) {
 	Entity* enemy = manager->addEntity();
 	enemy->addComponent<Stats>(4, Weapons::sniperEnemyGun, 2, 1, false);
-	enemy->addComponent<TransformComponent>(2000, 23 * TILESIZE, TILESIZE, TILESIZE, 4);
+	enemy->addComponent<TransformComponent>(x-Game::camera.x, y-Game::camera.y, TILESIZE, TILESIZE, 4);
 	// Animations
 	Animation standing = Animation(0, 2, 200);
 	Animation walking = Animation(1, 7, 150);
@@ -144,7 +151,7 @@ void AssetManager::createSniperEnemy() {
 
 	enemy->addComponent<SpriteComponent>("sniper", true, animations);
 	enemy->addComponent<ColliderComponent>("Enemy", 2, 0, 16, 0);
-	enemy->addComponent<EnemyComponent>(EnemyComponent::SNIPER);
+	enemy->addComponent<EnemyComponent>(EnemyComponent::SNIPER, id++);
 	enemy->addComponent<GravityComponent>();
 	enemy->addGroup(Game::groupEnemy);
 }
@@ -174,8 +181,9 @@ SDL_Texture* AssetManager::getTexture(string id) {
 * @param path Path of asset
 * @param fontSize Size of font
 */
-void AssetManager::addFont(string id, const char* path, int fontSize) {
+void AssetManager::addFont(string id, const char* path, int fontSize, int style) {
 	TTF_Font* font = TTF_OpenFont(path, fontSize);
+	TTF_SetFontStyle(font, style);
 	fontList.emplace(id, font);
 }
 

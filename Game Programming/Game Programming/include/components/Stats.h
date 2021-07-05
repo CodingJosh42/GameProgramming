@@ -11,6 +11,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "../Numbers.h"
 
 using namespace std;
 
@@ -59,30 +60,30 @@ public:
 		if (drawTex) {
 			src.x = 0;
 			src.y = 0;
-			src.w = 3 * 32;
-			src.h = 32;
+			src.w = 3 * TILESIZE;
+			src.h = TILESIZE;
 
-			dest.x = 800 - 4 * 32;
+			dest.x = SCREENWIDTH - 4 * TILESIZE;
 			dest.y = 0;
-			dest.w = 3 * 32;
-			dest.h = 32;
+			dest.w = 3 * TILESIZE;
+			dest.h = TILESIZE;
 
 			ammoSrc.x = 0;
 			ammoSrc.y = 0;
-			ammoSrc.w = 32;
-			ammoSrc.h = 32;
+			ammoSrc.w = TILESIZE;
+			ammoSrc.h = TILESIZE;
 
-			ammoDest.x = 32;
+			ammoDest.x = TILESIZE;
 			ammoDest.y = 0;
-			ammoDest.w = 32;
-			ammoDest.h = 32;
+			ammoDest.w = TILESIZE;
+			ammoDest.h = TILESIZE;
 
 
 			healthbar = Game::assetManager->getTexture("heart");
 			ammoSymbol = Game::assetManager->getTexture("ammo");
 
 			SDL_Color red = { 255,0,0,255 };
-			displayAmmo = UILabel(32*2 + 4, 0, "","arial", red);
+			displayAmmo = UILabel(TILESIZE*2 + 4, 0, "","arial32bold", red);
 		}
 	}
 
@@ -99,7 +100,7 @@ public:
 
 			if (currentHealth == 0) {
 				if (!Game::easyMode) {
-					Game::gameOver = true;
+					//Game::gameOver = true;
 				}
 			}
 

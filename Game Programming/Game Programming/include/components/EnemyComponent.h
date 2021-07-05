@@ -21,7 +21,8 @@ class EnemyComponent : public Component {
 private:
 	Uint32 lastShot = 0;
 	int lastDirection = 1;
-	
+	int id;
+
 	bool reloading = false;
 	Uint32 reloadFrame;
 	int range;
@@ -36,7 +37,7 @@ private:
 	Mix_Chunk* sniperShot;
 
 	
-
+	bool firstUpdate = true;
 public:
 	Vector2D direction;
 	int lastX;
@@ -54,7 +55,7 @@ public:
 
 	EnemyComponent() = default;
 
-	EnemyComponent(EnemyType type) : type{ type } {
+	EnemyComponent(EnemyType type, int id) : type{ type }, id{ id }{
 	};
 
 
@@ -69,13 +70,17 @@ public:
 		range = stats->getWeapon().range;
 
 		initialPosition = position->position;
-
+		lastX = Game::camera.x;
 		easyEnemyShot = Game::assetManager->getSound("easyEnemyShot");
 		sniperShot = Game::assetManager->getSound("sniperShot");
 
 	}
 
 	void update() override {
+		if (firstUpdate) {
+			lastX = Game::camera.x;
+			firstUpdate = false;
+		}
 		Vector2D pos = playerPos->position;
 		Vector2D distance = pos - position->position;
 		if (stats->getCurrentHealth() <= 0) {
@@ -88,11 +93,10 @@ public:
 
 			}
 			int realDist = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
-			if (abs(distance.x) > range) {
-				if (realDist < range + range / 2) {
-					position->velocity.x = direction.x;
-				}
+			if (realDist < 1.25 * range && type == EASY ) {
+				position->velocity.x = direction.x;
 			}
+			// Somewhere here is a mistake
 			if (abs(distance.x) < range - 50) {
 				if (position->velocity.x != 0) {
 					position->velocity.x = 0;
@@ -125,31 +129,33 @@ public:
 			reload();
 		}
 		else if (currentTick - lastShot > weapon.delay && !reloading) {
+			if (abs(atan(direction.y) * 180 / M_PI) < 30) {
+				int xStart = 0;
 
-			int xStart = 0;
+				if (direction.x == -1) {
+					xStart = position->position.x;
+				}
+				else {
+					xStart = position->position.x + position->width * position->scale;
+				}
+				Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
 
-			if (direction.x == -1) {
-				xStart = position->position.x;
+				switch (type) {
+				case EASY:
+					Mix_PlayChannel(-1, easyEnemyShot, 0);
+					Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x, direction.y), Game::groupEnemyProjectiles);
+					break;
+				case SNIPER:
+					Mix_PlayChannel(-1, sniperShot, 0);
+					Game::assetManager->createSniperProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x, direction.y), Game::groupEnemyProjectiles);
+					break;
+				default:
+					break;
+				}
+
+				stats->getWeapon().reduceAmmo();
+				lastShot = currentTick;
 			}
-			else {
-				xStart = position->position.x + position->width * position->scale;
-			}
-			Vector2D projetilePos = Vector2D(xStart, position->position.y + position->height / 2 * position->scale);
-			switch (type) {
-			case EASY:
-				Mix_PlayChannel(-1, easyEnemyShot, 0);
-				Game::assetManager->createProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x, direction.y), Game::groupEnemyProjectiles);
-				break;
-			case SNIPER:
-				Mix_PlayChannel(-1, sniperShot, 0);
-				Game::assetManager->createSniperProjectile(projetilePos, weapon.range, weapon.speed, Vector2D(direction.x, direction.y), Game::groupEnemyProjectiles);
-				break;
-			default:
-				break;
-			}
-			
-			stats->getWeapon().reduceAmmo();
-			lastShot = currentTick;
 		}
 	}
 

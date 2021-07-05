@@ -74,6 +74,7 @@ public:
 		position.y = y;
 	}
 
+
 	/**
 	* Draws the texture of the label to the screen
 	*/

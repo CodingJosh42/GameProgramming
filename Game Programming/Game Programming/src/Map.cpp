@@ -8,9 +8,8 @@
 #include <iostream>
 #include "../include/Numbers.h"
 
+
 using namespace std;
-
-
 
 void Map::loadMap(const char* path, int xSize, int ySize) {
 	char tileId;
@@ -27,4 +26,35 @@ void Map::loadMap(const char* path, int xSize, int ySize) {
 		}
 		file.ignore();
 	}
+	file.close();
+}
+
+vector<tuple<int, int, EnemyComponent::EnemyType>> Map::loadSpawnPoints(const char* path, int xSize, int ySize) {
+	char enemyId;
+	fstream file;
+	file.open(path);
+	// Tuple: xpos, ypos, enemyType
+	vector<tuple<int, int, EnemyComponent::EnemyType>> spawnPoints;
+
+	for (int col = 0; col < ySize; col++) {
+		for (int row = 0; row < xSize; row++) {
+			file.get(enemyId);
+			switch (enemyId) {
+			case '0':
+				break;
+			case '1':
+				spawnPoints.push_back(make_tuple(row * TILESIZE, col * TILESIZE, EnemyComponent::EASY));
+				break;
+			case '2':
+				spawnPoints.push_back(make_tuple(row * TILESIZE, col * TILESIZE, EnemyComponent::SNIPER));
+				break;
+			default:
+				break;
+			}
+			file.ignore();
+		}
+		file.ignore();
+	}
+	file.close();
+	return spawnPoints;
 }

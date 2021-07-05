@@ -27,13 +27,16 @@ bool Game::gameOver = false;
 bool Game::gameWon = false;
 bool Game::easyMode = false;
 SDL_Surface* Game::screen = NULL;
-SDL_Rect Game::camera = { 0,0,MAPWIDTH * TILESIZE / 2, MAPHEIGHT * TILESIZE - 35 * TILESIZE };
+
+SDL_Rect Game::camera = { 0,0,SCREENWIDTH,(50 * 32 - SCREENHEIGHT) / 2};
 
 
 SDL_Event Game::event;
 
 int maxWidth = 0;
 int maxHeight = 0;
+
+vector <tuple<int, int, EnemyComponent::EnemyType>> spawnPoints;
 
 Game::Game() {
 
@@ -107,17 +110,43 @@ void Game::cleanGame() {
 void Game::startGame() {
 	// Map
 	Map::loadMap("assets/map/map100x50.map", 100, 50);
+	spawnPoints = Map::loadSpawnPoints("assets/map/spawn_points.map", 100, 50);
+
+	
 
 	// Player
 	assetManager->createPlayer();
 	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
 	player = players[0];
-
+	camera.y = player->getComponent<TransformComponent>().position.y;
+	if (camera.x < 0)
+		camera.x = 0;
+	if (camera.y < 0)
+		camera.y = 0;
+	if (camera.x > camera.w)
+		camera.x = camera.w;
+	if (camera.y > camera.h)
+		camera.y = camera.h;
 	// Enemys
-	assetManager->createEasyEnemy();
-	assetManager->createSniperEnemy();
+	for (tuple<int, int, EnemyComponent::EnemyType> spawnPoint : spawnPoints) {
+		int x; int y;
+		EnemyComponent::EnemyType type;
+		tie(x, y, type) = spawnPoint;
+		switch (type) {
+		case EnemyComponent::EASY:
+			assetManager->createEasyEnemy(x, y);
+			break;
+		case EnemyComponent::SNIPER:
 
-	camera.y = 15 * 32;
+			assetManager->createSniperEnemy(x, y);
+			break;
+		default:
+			break;
+		}
+	}
+
+	
+
 }
 /**
 * Add all necassary assets to the assetManager
@@ -143,8 +172,10 @@ void Game::addAssets() {
 	assetManager->addTexture("ammo", "assets/hud/ammo.png");
 
 	// Fonts
-	assetManager->addFont("arial", "assets/arial.ttf", 32);
-	assetManager->addFont("arial48", "assets/arial.ttf", 48);
+	assetManager->addFont("arial", "assets/arial.ttf", 32, TTF_STYLE_NORMAL);
+	assetManager->addFont("arial32bold", "assets/arial.ttf", 32, TTF_STYLE_BOLD);
+	assetManager->addFont("arial48", "assets/arial.ttf", 48, TTF_STYLE_NORMAL);
+	
 
 	// Sound
 	// Gun Sounds
@@ -181,6 +212,16 @@ void Game::update() {
 	TransformComponent position = player->getComponent<TransformComponent>();
 	KeyboardController* keyboard = &player->getComponent<KeyboardController>();
 
+	if (camera.x < 0)
+		camera.x = 0;
+	if (camera.y < 0)
+		camera.y = 0;
+	if (camera.x > camera.w)
+		camera.x = camera.w;
+	if (camera.y > camera.h)
+		camera.y = camera.h;
+
+
 	manager.refresh();
 	manager.update();
 	
@@ -200,13 +241,14 @@ void Game::update() {
 	bool dontChange = false;
 	string newTag = "";
 	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTileColliders);
+	int playerSpeed = player->getComponent<Stats>().getSpeed();
 	for (Entity* tile: tiles) {
 		ColliderComponent collider = tile->getComponent<ColliderComponent>();
 
 		if (Collision::AABB(playerCollider, collider) ) {
 			Collision::CollisionType collision = Collision::yCollision(playerCollider, collider);
 			if (collision == Collision::TOP) {
-				if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - 12) {
+				if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - (3 * playerSpeed)) {
 						// player should bounce back from tiles while jumping
 							
 						collision = Collision::xCollision(playerCollider, collider);
@@ -250,7 +292,7 @@ void Game::update() {
 				
 			// x collision when player is not jumping
 			if (keyboard->jumpHeight != -1) {
-				if ((position.height * position.scale + position.position.y - 12) > collider.collider.y && !keyboard->flying) {
+				if ((position.height * position.scale + position.position.y - (3 * playerSpeed)) > collider.collider.y && !keyboard->flying) {
 					collision = Collision::xCollision(playerCollider, collider);
 					if (collision == Collision::LEFT) {
 						player->getComponent<TransformComponent>().velocity.x = -1;
@@ -299,7 +341,7 @@ void Game::update() {
 
 	camera.x = player->getComponent<TransformComponent>().position.x - SCREENWIDTH / 2;
 
-	if (player->getComponent<TransformComponent>().position.y  < camera.y) {
+	if (player->getComponent<TransformComponent>().position.y < camera.y) {
 		int diff = abs(position.position.y - camera.y) + 64;
 		camera.y -= diff;
 		player->getComponent<TransformComponent>().position.y += diff;
@@ -312,17 +354,6 @@ void Game::update() {
 		player->getComponent<TransformComponent>().position.y -= diff;
 
 	}
-	
-	if (camera.x < 0)
-		camera.x = 0;
-	if (camera.y < 0)
-		camera.y = 0;
-	if (camera.x > camera.w)
-		camera.x = camera.w;
-	if (camera.y > camera.h)
-		camera.y = camera.h;
-
-	
 }
 
 
