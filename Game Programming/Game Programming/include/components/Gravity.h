@@ -60,10 +60,9 @@ public:
 			lastY = Game::camera.y;
 		}
 		if (position->velocity.x == 0) {
-			if (*lastX != Game::camera.x) {
-				long x = Game::camera.x;
-				position->position.x = initialPosition->x + 0.5 * (*lastX - x);
-				lastPosition.position.x = initialPosition->x + 0.5 * (*lastX - x);
+			if (enemyComponent->diff != 0) {
+				lastPosition.position.x = position->position.x;
+				enemyComponent->diff = 0;
 			}
 		}
 		

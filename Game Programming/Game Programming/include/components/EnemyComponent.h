@@ -42,6 +42,7 @@ public:
 	Vector2D direction;
 	int lastX;
 	Vector2D initialPosition;
+	bool wasMoving = false;
 
 	typedef enum EnemyType {
 		EASY,
@@ -51,6 +52,7 @@ public:
 
 	bool flying = false;
 	EnemyType type;
+	int diff = 0;
 	
 
 	EnemyComponent() = default;
@@ -70,6 +72,7 @@ public:
 		range = stats->getWeapon().range;
 
 		initialPosition = position->position;
+
 		lastX = Game::camera.x;
 		easyEnemyShot = Game::assetManager->getSound("easyEnemyShot");
 		sniperShot = Game::assetManager->getSound("sniperShot");
@@ -93,15 +96,24 @@ public:
 
 			}
 			int realDist = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
-			if (realDist < 1.25 * range && type == EASY ) {
-				position->velocity.x = direction.x;
+			if (abs(distance.x) > range && type == EASY ) {
+				if (realDist < 1.5 * range) {
+					position->velocity.x = direction.x;
+				}
 			}
 			// Somewhere here is a mistake
-			if (abs(distance.x) < range - 50) {
+			if (abs(distance.x) < range - 50 ) {
 				if (position->velocity.x != 0) {
 					position->velocity.x = 0;
 					lastX = Game::camera.x;
 					initialPosition = position->position;
+				}
+			}
+
+			if (position->velocity.x == 0) {
+				if (lastX != Game::camera.x) {
+					diff = lastX - Game::camera.x;
+					position->position.x = initialPosition.x + 0.5 * diff;
 				}
 			}
 
