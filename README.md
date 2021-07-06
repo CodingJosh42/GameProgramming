@@ -19,3 +19,8 @@ L -> Unverwundbar machen (max 2,85 Sekunden am Stück), keine anderen Aktionen w
 ### Gegnertypen
 Easy -> Bewegen sich wenn sie in Reichweite sind, kleine Reichweite, 2 Leben\
 Sniper -> Bewegen sich nicht, hohe Reichweite, 4 Leben
+
+### Modi
+Normal -> Der Spieler hat 3 Leben und hat verloren wenn er keine Leben mehr hat (über Erneut spielen oder Spiel starten erreichbar)\
+Easy -> Der Spieler kann nicht sterben (über Easy Mode erreichbar)
+
