@@ -24,3 +24,11 @@ Sniper -> Bewegen sich nicht, hohe Reichweite, 4 Leben
 Normal -> Der Spieler hat 3 Leben und hat verloren wenn er keine Leben mehr hat (über Erneut spielen oder Spiel starten erreichbar)\
 Easy -> Der Spieler kann nicht sterben (über Easy Mode erreichbar)
 
+## Dependecies
+
+SDL2\
+SDL2_image\
+SDL2_mixer\
+SDL2_ttf
+
+
