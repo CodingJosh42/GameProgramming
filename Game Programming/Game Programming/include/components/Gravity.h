@@ -18,14 +18,18 @@ using namespace std;
 class GravityComponent : public Component {
 public:
 	bool collision = false;
+	// For jump
+	Uint32 lastBottom = 0;
 	bool flying = false;
 	int jumpHeight = -1;
 	bool ignoreCollision = false;
+
 	bool firstupdate = true;
+	// For camera
 	int lastY;
 	int* lastX;
 	Vector2D* initialPosition;
-	Uint32 lastBottom = 0;
+	
 
 	TransformComponent* position;
 	TransformComponent lastPosition;
@@ -85,7 +89,7 @@ public:
 				if (collision == Collision::TOP) {
 					// 3 * stats->getSpeed() + 1
 					
-					//  collider.collider.y < position->position.y + (position->height * position->scale) - (16)
+					// Enemy is jumping. Check x collsion
 					if (flying && collider.collider.y < position->position.y + (position->height * position->scale) - (16)) {
 						collision = Collision::xCollision(enemyCollider, collider);
 						if (collision == Collision::LEFT) {
@@ -101,16 +105,19 @@ public:
 						}
 					}
 					else {
+						// enemy is on top of a tile
 						tempCollision = true;
 						ignoreCollision = false;
 						position->position.y = lastPosition.position.y;
 					}
 				}
-				if (collision == Collision::BOTTOM && flying && collider.collider.y > jumpHeight + 32) {
+				// Check bottom collision when enemy jumping
+				if (collision == Collision::BOTTOM && flying && collider.collider.y < jumpHeight - 32) {
 					position->velocity.y = 1;
 					lastBottom = SDL_GetTicks();
 				}
 
+				// x collision when enemy is not jumping
 				if (jumpHeight != -1) {
 					if (!flying && collider.collider.y < position->position.y + (position->height * position->scale) - (16)) {
 
@@ -186,14 +193,14 @@ public:
 		}
 		// Enemy jumping
 		if (flying) {
-			// Player can jump 200 pixels
+			// Enemy can jump 7 * 32 pixels
 			if (position->position.y <= jumpHeight - 7* 32) {
 				if (!collision) {
 					position->velocity.y = 3;
 					ignoreCollision = false;
 				}
 			}
-			else if(position->position.y <= jumpHeight - 170) {
+			else if(position->position.y <= jumpHeight - 5 * 32) {
 				position->velocity.x = enemyComponent->direction.x;
 			}
 			else {

@@ -15,6 +15,7 @@ using namespace std;
 class Game {
 private:
 	void addAssets();
+	SDL_Window* window;
 
 public:
 	enum groupLabels : size_t {
@@ -26,25 +27,21 @@ public:
 		groupEnemyProjectiles,
 		groupEffects
 	};
-	static Entity* player;
 
 	Game();
 	~Game();
 
 	void init(const char* title, int xpos, int ypos, int width,  int height, bool fullscreen);
-
 	void update();
 	void render();
 	void clean();
 	void handleEvents();
-
 	bool running();
 	bool checkIfWon();
 	void startGame();
 	void cleanGame();
 
 	static SDL_Surface* screen;
-
 	static Manager manager;
 	static SDL_Event event;
 	static SDL_Renderer* renderer;
@@ -56,10 +53,7 @@ public:
 	static bool easyMode;
 	static bool exploreMap;
 	static AssetManager* assetManager;
-
-private:
-	SDL_Window* window;
-	
+	static Entity* player;
 };
 
 #endif

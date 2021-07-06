@@ -76,20 +76,24 @@ private:
 				crouch();
 				break;
 			case SDLK_1:
-				Mix_ExpireChannel(reloadChannel, 1);
-				stats->changeWeapon(1);
-				sprite->setTexture("playerPistol");
-				reloading = false;
-				weapon = 1;
-				Mix_PlayChannel(-1, changeGun, 0);
+				if (weapon != 1) {
+					Mix_ExpireChannel(reloadChannel, 1);
+					stats->changeWeapon(1);
+					sprite->setTexture("playerPistol");
+					reloading = false;
+					weapon = 1;
+					Mix_PlayChannel(-1, changeGun, 0);
+				}
 				break;
 			case SDLK_2:
-				Mix_ExpireChannel(reloadChannel, 1);
-				stats->changeWeapon(2);
-				reloading = false;
-				sprite->setTexture("playerMachineGun");
-				weapon = 2;
-				Mix_PlayChannel(-1, changeGun, 0);
+				if (weapon != 2) {
+					Mix_ExpireChannel(reloadChannel, 1);
+					stats->changeWeapon(2);
+					reloading = false;
+					sprite->setTexture("playerMachineGun");
+					weapon = 2;
+					Mix_PlayChannel(-1, changeGun, 0);
+				}
 				break;
 			case SDLK_r:
 				if (!reloading) {
@@ -330,6 +334,9 @@ private:
 		}
 	}
 
+	/*
+	* Update Walking Sounds based on the terrain
+	*/
 	void updateWalkingSound() {
 		if (soundPlaying) {
 			if (position->velocity.x == 0) {
@@ -364,15 +371,19 @@ public:
 	bool ignoreCollision = false;
 	bool xCollision = false;
 	int jumpHeight = -1;
-	// Walking sounds
+	// For Walking sounds
 	string tileTag = "";
 	bool terrainChanged = false;
 	bool falling = false;
+	// For crouching
 	bool wasCrouching = false;
 
 	TransformComponent* position;
 	SpriteComponent* sprite;
 
+	/*
+	* Destructor. Stops walking sounds
+	*/
 	~KeyboardController() {
 		if (soundPlaying) {
 			Mix_ExpireChannel(walkingChannel, 1);

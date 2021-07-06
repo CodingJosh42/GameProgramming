@@ -26,10 +26,15 @@ public:
 		currentAmmo = maxAmmo;
 	}
 
+	/*
+	* Reduce ammo for one
+	*/
 	void reduceAmmo() {
 		currentAmmo--;
 	}
-
+	/*
+	* Reload weapon
+	*/
 	void reload() {
 		currentAmmo = maxAmmo;
 	}

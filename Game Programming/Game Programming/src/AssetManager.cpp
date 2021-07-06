@@ -91,6 +91,11 @@ void AssetManager::createSniperProjectile(Vector2D position, int range, int spee
 	projectile->addGroup(group);
 }
 
+/*
+* Creates a hit animation on the given position + the given width
+* @param position Position of projectile when collision where detected
+* @param width Width of projectile that should be added to the x position
+*/
 void AssetManager::createHitAnimation(Vector2D position, int width) {
 	Entity* effect = manager->addEntity();
 	effect->addComponent<TransformComponent>(position.x + width, position.y, TILESIZE, TILESIZE, 1);
@@ -100,7 +105,6 @@ void AssetManager::createHitAnimation(Vector2D position, int width) {
 	// Animation map
 	map<const char*, Animation> animations;
 	animations.emplace("bullet_hit", bulletHit);
-
 
 	effect->addComponent<SpriteComponent>("bullet_hit", true, animations, "bullet_hit");
 	effect->addComponent<EffectComponent>(bulletHit, TILESIZE);

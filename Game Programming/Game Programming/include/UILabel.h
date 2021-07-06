@@ -50,10 +50,10 @@ public:
 
 	/*
 	* Sets the text color of the label
+	* @param color New color
 	*/
 	void setColor(SDL_Color color) {
 		textColor = color;
-
 		SDL_Surface* surface = TTF_RenderText_Blended(Game::assetManager->getFont(fontId), labelText.c_str(), textColor);
 		texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
 		SDL_FreeSurface(surface);
@@ -74,7 +74,6 @@ public:
 		position.y = y;
 	}
 
-
 	/**
 	* Draws the texture of the label to the screen
 	*/
@@ -82,5 +81,4 @@ public:
 		SDL_RenderCopy(Game::renderer, texture, nullptr, &position);
 	}
 
-	
 };

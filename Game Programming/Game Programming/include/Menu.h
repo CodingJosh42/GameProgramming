@@ -11,12 +11,16 @@
 using namespace std;
 
 class Menu {
+	// Labels and selection
 	vector<string> labels;
 	vector<UILabel> uiLabels;
+	bool selected[10];
+	// Colors
 	SDL_Color red = { 255,0,0 };
 	SDL_Color white = { 255,255,255 };
-	bool selected[10];
+	// Background texture (black)
 	SDL_Texture* background;
+	// Sounds
 	Mix_Chunk* sound = nullptr;
 	Mix_Chunk* hoveringSound;
 	Mix_Chunk* selectedSound;
@@ -42,6 +46,7 @@ public:
 				y = halfHeight + 150 + (i-1) * 100;
 			}
 			uiLabels.push_back(UILabel(halfWidth, y, labels[i], font, red) );
+			// Center options horizontal
 			SDL_Rect pos = uiLabels[i].getPosition();
 			uiLabels[i].setPosition(pos.x - pos.w / 2, pos.y);
 			selected[i] = false;
@@ -82,8 +87,10 @@ public:
 
 		Uint32 framestart;
 		int frametime;
+		// Return value
 		int ret;
 
+		// Background texture
 		SDL_FillRect(Game::screen, NULL, SDL_MapRGB(Game::screen->format, 0x00, 0x00, 0x00));
 		background = SDL_CreateTextureFromSurface(Game::renderer, Game::screen);
 
@@ -123,11 +130,13 @@ public:
 
 	/*
 	* Checks if user is hovering over a specific Option. If he is hovering over a specific option the text color changes to white
+	* @param event Current event
 	*/
 	void checkHovering(SDL_Event event) {
 		int x = event.motion.x;
 		int y = event.motion.y;
 		for (int i = 1; i < uiLabels.size(); i++) {
+			// Change color to white if user hovering over option
 			SDL_Rect pos = uiLabels[i].getPosition();
 			if (x >= pos.x && x <= pos.x + pos.w && y >= pos.y && y <= pos.y + pos.h) {
 				if (!selected[i]) {
@@ -137,6 +146,7 @@ public:
 				}
 			}
 			else {
+				// Change color back to red if not hovering over option
 				if (selected[i]) {
 					uiLabels[i].setColor(red);
 					selected[i] = false;
@@ -147,12 +157,13 @@ public:
 
 	/*
 	* Checks if user has selected an option
-	* @return Returns the index of the selected option
+	* @return Returns the index of the selected option or -1 if no option were selected
 	*/
 	int checkSelectedOption(SDL_Event event) {
 		int x = event.motion.x;
 		int y = event.motion.y;
 		for (int i = 1; i < uiLabels.size(); i++) {
+			// Check if any option is selected. Return the index of option
 			SDL_Rect pos = uiLabels[i].getPosition();
 			if (x >= pos.x && x <= pos.x + pos.w && y >= pos.y && y <= pos.y + pos.h) {
 				Mix_PlayChannel(-1, selectedSound, 0);

@@ -19,13 +19,14 @@ using namespace std;
 
 class EnemyComponent : public Component {
 private:
-	Uint32 lastShot = 0;
-	int lastDirection = 1;
 	int id;
-
+	// For shooting
+	Uint32 lastShot = 0;
+	int range;
+	int lastDirection = 1;
+	// For reloading
 	bool reloading = false;
 	Uint32 reloadFrame;
-	int range;
 
 	Stats* stats;
 	TransformComponent* position;
@@ -36,25 +37,27 @@ private:
 	Mix_Chunk* easyEnemyShot;
 	Mix_Chunk* sniperShot;
 	Mix_Chunk* deathScream;
-
 	
 	bool firstUpdate = true;
 public:
+	// Vars
+
 	Vector2D direction;
+	// camera vars
 	int lastX;
 	Vector2D initialPosition;
-	bool wasMoving = false;
+	int diff = 0;
 
+	// Enemy type
 	typedef enum EnemyType {
 		EASY,
 		SNIPER
 	} EnemyType;
-
+	EnemyType type;
 
 	bool flying = false;
-	EnemyType type;
-	int diff = 0;
-	
+
+	// Methods
 
 	EnemyComponent() = default;
 
@@ -71,9 +74,8 @@ public:
 
 		stats = &entity->getComponent<Stats>();
 		range = stats->getWeapon().range;
-
+		// set camera vars
 		initialPosition = position->position;
-
 		lastX = Game::camera.x;
 		// Sounds
 		easyEnemyShot = Game::assetManager->getSound("easyEnemyShot");
@@ -82,22 +84,25 @@ public:
 	}
 
 	void update() override {
+		// set camera vars
 		if (firstUpdate) {
 			lastX = Game::camera.x;
 			firstUpdate = false;
 		}
 		Vector2D pos = playerPos->position;
 		Vector2D distance = pos - position->position;
+		// Destroy entity if no health left
 		if (stats->getCurrentHealth() <= 0) {
 			Mix_PlayChannel(-1, deathScream, 0);
 			entity->destroy();
 		}
 		else {
+			// Calc direction
 			if (distance.x != 0) {
 				direction.x = distance.x / abs(distance.x);
 				direction.y = distance.y / abs(distance.x);
-
 			}
+			// Start running if in range
 			int realDist = sqrt(pow(distance.x, 2) + pow(distance.y, 2));
 			if (abs(distance.x) > range && type == EASY ) {
 				if (realDist < 1.5 * range) {
@@ -105,34 +110,34 @@ public:
 				}
 				else {
 					if (position->velocity.x != 0) {
-						lastX = Game::camera.x;
-						initialPosition = position->position;
 						position->velocity.x = 0;
+						// Update camera vars
+						lastX = Game::camera.x;
+						initialPosition = position->position;	
 					}
 				}
 				
 			}
-
+			// Stop running if in range
 			if (abs(distance.x) < range - 50 ) {
 				if (position->velocity.x != 0) {
 					position->velocity.x = 0;
+					// Update camera vars
 					lastX = Game::camera.x;
 					initialPosition = position->position;
 				}
 			}
-			
+			// Position updated when standing still based on camera
 			if (position->velocity.x == 0) {
 				if (lastX != Game::camera.x) {
 					diff = lastX - Game::camera.x;
 					position->position.x = initialPosition.x + 0.5 * diff;
 				}
 			}
-
+			// shoot if in range
 			if (realDist < range) {
 				shoot(stats->getWeapon());
 			}
-			
-			
 		}
 		
 		updateTextures();
@@ -152,6 +157,7 @@ public:
 			reload();
 		}
 		else if (currentTick - lastShot > weapon.delay && !reloading) {
+			// Shoot when angle is not too large
 			if (abs(atan(direction.y) * 180 / M_PI) < 30) {
 				int xStart = 0;
 
@@ -207,8 +213,6 @@ public:
 	{
 		// Update Textures if buttons still pressed
 		if (!flying) {
-			
-
 			// Standing
 			if (position->velocity.x == 0) {
 				sprite->setAnimation("standing");
@@ -217,19 +221,16 @@ public:
 			else {
 				sprite->setAnimation("walking");
 			}
-
 		}
 		// RIGHT
 		if (direction.x == 1) {
 			sprite->flip = SDL_FLIP_NONE;
 		}
-
 		// LEFT
 		if (direction.x == -1) {
 			sprite->flip = SDL_FLIP_HORIZONTAL;
 
 		}
-
 	}
 	
 };

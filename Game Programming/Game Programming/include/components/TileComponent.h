@@ -69,7 +69,7 @@ public:
 
 		entity->addComponent<SpriteComponent>("tiles", tileId * TILESIZE);
 		sprite = &entity->getComponent<SpriteComponent>();
-
+		// Only tiles with no empty tag have colliders. Empty tag tiles are decorative tiles
 		if (tag != "") {
 			ColliderComponent* collider = &entity->addComponent<ColliderComponent>(tag);
 			entity->addGroup(Game::groupTileColliders);

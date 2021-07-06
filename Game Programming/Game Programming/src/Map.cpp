@@ -11,6 +11,12 @@
 
 using namespace std;
 
+/*
+* Load tilemap from the given file
+* @param path Path of tilemap file
+* @param xSize Width of map
+* @param ySize Height of map
+*/
 void Map::loadMap(const char* path, int xSize, int ySize) {
 	char tileId;
 	fstream file;
@@ -29,6 +35,13 @@ void Map::loadMap(const char* path, int xSize, int ySize) {
 	file.close();
 }
 
+/*
+* Loads all spawn points from given file and returns vector of spawnpoint-tuples
+* @param path Path of file
+* @param xSize Width of map
+* @param ySize Height of map
+* @return Returns vector of spawnpoint-tuples. Tuple has following shape: xpos, ypos, enemyType
+*/
 vector<tuple<int, int, EnemyComponent::EnemyType>> Map::loadSpawnPoints(const char* path, int xSize, int ySize) {
 	char enemyId;
 	fstream file;

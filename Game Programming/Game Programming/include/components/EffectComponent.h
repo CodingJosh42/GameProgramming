@@ -9,6 +9,11 @@ private:
 	Animation anim;
 	int width;
 public:
+	/*
+	* Constructor
+	* @param anim Animation of effect
+	* @param width Width of single frame sprites
+	*/
 	EffectComponent(Animation anim, int width) : anim{ anim }, width{ width } {
 
 	}
@@ -17,6 +22,7 @@ public:
 		if (currentIndex > 0) {
 			firstTime = false;
 		}
+		// Destroy entity after animation has run one time
 		if (!firstTime && currentIndex == 0) {
 			entity->destroy();
 		}

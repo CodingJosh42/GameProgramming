@@ -78,6 +78,7 @@ public:
 	* Constructor of Sprite with animation
 	* @param id Id of texture
 	* @param animated If true texture is animated, if false texture is not animated
+	* @param startAnimation Id of the starting animation
 	*/
 	SpriteComponent(string id, bool animated, map<const char*, Animation>& anims, const char* startAnimation) : animated{ animated } {
 		setTexture(id);

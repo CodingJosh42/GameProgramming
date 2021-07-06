@@ -16,12 +16,10 @@
 
 using namespace std;
 
-
-
+// Init vars
 Manager Game::manager;
 Entity* Game::player;
 AssetManager* Game::assetManager = new AssetManager(&manager);
-
 bool Game::isRunning = false;
 bool Game::gameOver = false;
 bool Game::gameWon = false;
@@ -31,13 +29,11 @@ SDL_Surface* Game::screen = NULL;
 
 SDL_Rect Game::camera = { 0,0,SCREENWIDTH,(50 * 32 - SCREENHEIGHT) / 2};
 
-
 SDL_Event Game::event;
 
-int maxWidth = 0;
-int maxHeight = 0;
-
 vector <tuple<int, int, EnemyComponent::EnemyType>> spawnPoints;
+
+SDL_Renderer* Game::renderer = nullptr;
 
 Game::Game() {
 
@@ -47,7 +43,6 @@ Game::~Game() {
 
 }
 
-SDL_Renderer* Game::renderer = nullptr;
 
 /*
 * Initializes SDL, creates window, loads textures and creates Player and Enemy
@@ -63,8 +58,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 
-		maxWidth = width;
-		maxHeight = height;
 		renderer = SDL_CreateRenderer(window, -1, 0);
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -91,10 +84,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		Mix_VolumeMusic(10);
 		
 	}
-
 	// Textures
 	addAssets();
-
 }
 
 /*
@@ -103,24 +94,24 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 void Game::cleanGame() {
 	SDL_RenderClear(renderer);
 	Game::manager.clear();
-	camera.x = 0;
 }
 
 void Game::startGame() {
+	// Background music
 	Mix_Music* music = Mix_LoadMUS("assets/audio/jamesbond.wav");
 	Mix_PlayMusic(music, -1);
 
-	// Map
+	// Map and Spawn Points
 	Map::loadMap("assets/map/map100x50.map", 100, 50);
 	spawnPoints = Map::loadSpawnPoints("assets/map/spawn_points.map", 100, 50);
-
-	
 
 	// Player
 	assetManager->createPlayer();
 	vector<Entity*> players = Game::manager.getGroup(Game::groupPlayer);
 	player = players[0];
+	// Set Camera
 	camera.y = player->getComponent<TransformComponent>().position.y;
+	camera.x = 0;
 	if (camera.x < 0)
 		camera.x = 0;
 	if (camera.y < 0)
@@ -129,7 +120,7 @@ void Game::startGame() {
 		camera.x = camera.w;
 	if (camera.y > camera.h)
 		camera.y = camera.h;
-	// Enemys
+	// Let Enemys spawn
 	for (tuple<int, int, EnemyComponent::EnemyType> spawnPoint : spawnPoints) {
 		int x; int y;
 		EnemyComponent::EnemyType type;
@@ -139,7 +130,6 @@ void Game::startGame() {
 			assetManager->createEasyEnemy(x, y);
 			break;
 		case EnemyComponent::SNIPER:
-
 			assetManager->createSniperEnemy(x, y);
 			break;
 		default:
@@ -154,7 +144,7 @@ void Game::startGame() {
 * Add all necassary assets to the assetManager
 */
 void Game::addAssets() {
-
+	// Textures
 	// Player and enemys
 	assetManager->addTexture("playerPistol", "assets/animation_player.png");
 	assetManager->addTexture("playerMachineGun", "assets/player_machinegun.png"); 
@@ -162,17 +152,12 @@ void Game::addAssets() {
 	assetManager->addTexture("shielding_machinegun", "assets/shielding_machinegun.png");
 	assetManager->addTexture("easyEnemy", "assets/easyEnemy.png");
 	assetManager->addTexture("sniper", "assets/sniper.png");
-
 	// Tiles
 	assetManager->addTexture("tiles", "assets/map/tiles.png");
-
-
-
 	// Projectiles
 	assetManager->addTexture("projectile", "assets/projectile.png");
 	assetManager->addTexture("sniperProjectile", "assets/sniperProjectile.png");
 	assetManager->addTexture("bullet_hit", "assets/bullet_hit.png");
-
 	// HUD
 	assetManager->addTexture("heart", "assets/hud/heart.png");
 	assetManager->addTexture("ammo", "assets/hud/ammo.png");
@@ -181,7 +166,6 @@ void Game::addAssets() {
 	assetManager->addFont("arial", "assets/arial.ttf", 32, TTF_STYLE_NORMAL);
 	assetManager->addFont("arial32bold", "assets/arial.ttf", 32, TTF_STYLE_BOLD);
 	assetManager->addFont("arial48", "assets/arial.ttf", 48, TTF_STYLE_NORMAL);
-	
 
 	// Sound
 	// Gun Sounds
@@ -193,6 +177,9 @@ void Game::addAssets() {
 	assetManager->addSound("shielding", "assets/audio/shielding.wav");
 	// Death sounds
 	assetManager->addSound("death", "assets/audio/death_scream.wav");
+	// Effect sounds
+	assetManager->addSound("bullet_hit", "assets/audio/bullet_hit.wav");
+	assetManager->addSound("player_hit", "assets/audio/player_hit.wav");
 	// Menu Sounds
 	assetManager->addSound("gameover", "assets/audio/game_over.wav");
 	assetManager->addSound("gamewon", "assets/audio/game_won.wav");
@@ -209,8 +196,6 @@ void Game::addAssets() {
 	assetManager->addSound("fallen_grass", "assets/audio/fallen_grass.wav");
 	assetManager->addSound("fallen_water", "assets/audio/fallen_water.wav");
 	assetManager->addSound("fallen_metal", "assets/audio/fallen_metal.wav");
-
-
 }
 
 /*
@@ -237,6 +222,7 @@ void Game::update() {
 	TransformComponent position = player->getComponent<TransformComponent>();
 	KeyboardController* keyboard = &player->getComponent<KeyboardController>();
 
+	// Check camera width and height
 	if (camera.x < 0)
 		camera.x = 0;
 	if (camera.y < 0)
@@ -246,12 +232,10 @@ void Game::update() {
 	if (camera.y > camera.h)
 		camera.y = camera.h;
 
-
 	manager.refresh();
 	manager.update();
-	
 
-	// Enemy collision
+	//  Player-Enemy collision
 	float direction = 0.0f;
 	vector<Entity*> enemys = Game::manager.getGroup(Game::groupEnemy);
 	for (Entity* enemy : enemys) {
@@ -261,13 +245,15 @@ void Game::update() {
 		}
 	}
 
-	// Tile collision
+	// Tile collision vars
 	bool keyBoardCollision = false;
 	bool dontChange = false;
 	bool wasCrouching = false;
 	string newTag = "";
 	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTileColliders);
 	int playerSpeed = player->getComponent<Stats>().getSpeed();
+
+	// tile collision
 	for (Entity* tile: tiles) {
 		ColliderComponent collider = tile->getComponent<ColliderComponent>();
 
@@ -275,8 +261,8 @@ void Game::update() {
 			Collision::CollisionType collision = Collision::yCollision(playerCollider, collider);
 			if (collision == Collision::TOP) {
 				if (keyboard->flying && collider.collider.y < position.position.y + position.height * position.scale - (3 * playerSpeed)) {
-						// player should bounce back from tiles while jumping
-							
+						
+						// player should bounce back from tiles while jumping	
 						collision = Collision::xCollision(playerCollider, collider);
 						if (collision == Collision::LEFT) {
 							player->getComponent<TransformComponent>().velocity.x = -1;
@@ -349,6 +335,7 @@ void Game::update() {
 
 	// Projectile collision
 	
+	// Player projectiles hitting enemys
 	vector<Entity*> projectiles = Game::manager.getGroup(Game::groupPlayerProjectiles);
 
 	for (Entity* projectile: projectiles) {
@@ -358,6 +345,7 @@ void Game::update() {
 				if (Collision::AABB(*enemyCollider, projectile->getComponent<ColliderComponent>())) {
 					TransformComponent projectilePos = projectile->getComponent<TransformComponent>();
 					assetManager->createHitAnimation(projectilePos.position, projectilePos.width* projectilePos.scale * projectilePos.velocity.x);
+					Mix_PlayChannel(-1, assetManager->getSound("bullet_hit"), 0);
 					projectile->destroy();
 					Stats* stats = &enemy->getComponent<Stats>();
 					stats->reduceHealth(1);
@@ -366,6 +354,7 @@ void Game::update() {
 		}
 	}
 
+	// Enemy projectiles hitting player
 	vector<Entity*> enemyProjectiles = Game::manager.getGroup(Game::groupEnemyProjectiles);
 
 	for (Entity* projectile : enemyProjectiles) {
@@ -377,9 +366,11 @@ void Game::update() {
 				stats->reduceHealth(1);
 			}
 		}
-
+	// Update x camera
 	camera.x = player->getComponent<TransformComponent>().position.x - SCREENWIDTH / 2;
 
+	// Update y camera and player y position based on the difference
+	// Camera moving up
 	if (player->getComponent<TransformComponent>().position.y < camera.y) {
 		int diff = abs(position.position.y - camera.y) + 64;
 		camera.y -= diff;
@@ -387,6 +378,7 @@ void Game::update() {
 		keyboard->jumpHeight += diff;
 
 	}
+	// Camera moving down
 	if (player->getComponent<TransformComponent>().position.y + (position.height * position.scale) > camera.y + SCREENHEIGHT) {
 		int diff = abs(position.position.y + (position.height * position.scale) - camera.y - SCREENHEIGHT - 200);
 		camera.y += diff;
