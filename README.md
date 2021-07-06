@@ -12,7 +12,7 @@ d -> Nach rechts laufen\
 Strg Links -> Ducken\
 r -> Nachladen\
 k -> Schießen\
-l -> Unverwundbar machen (max 2,85 Sekunden am Stück), Kleiner Cooldown nach Benutzung, keine anderen Aktionen währenddessen möglich\
+l -> Unverwundbar machen (max 2,85 Sekunden am Stück), keine anderen Aktionen währenddessen möglich, kleiner Cooldown nach Benutzung\
 1 -> Auf Pistole wechseln\
 2 -> Auf Maschinengewehr wechseln
 
