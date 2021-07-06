@@ -159,6 +159,7 @@
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\components\ColliderComponent.h" />
     <ClInclude Include="include\Collision.h" />
+    <ClInclude Include="include\components\EffectComponent.h" />
     <ClInclude Include="include\components\EnemyComponent.h" />
     <ClInclude Include="include\components\ESC.h" />
     <ClInclude Include="include\Game.h" />

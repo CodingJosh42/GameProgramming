@@ -23,7 +23,8 @@ public:
 		groupEnemy,
 		groupTileColliders,
 		groupPlayerProjectiles,
-		groupEnemyProjectiles
+		groupEnemyProjectiles,
+		groupEffects
 	};
 	static Entity* player;
 

@@ -18,6 +18,7 @@ public:
 
 	void createProjectile(Vector2D position, int range, int speed, Vector2D velocity, int group);
 	void createSniperProjectile(Vector2D position, int range, int speed, Vector2D velocity, int group);
+	void createHitAnimation(Vector2D position, int width);
 	void createPlayer();
 	void createEasyEnemy(int x, int y);
 	void createSniperEnemy(int x, int y);

@@ -80,10 +80,12 @@ public:
 		for (Entity* tile : tiles) {
 			ColliderComponent collider = tile->getComponent<ColliderComponent>();
 			if (Collision::AABB(enemyCollider, collider)) {
-			
+
 				Collision::CollisionType collision = Collision::yCollision(enemyCollider, collider);
 				if (collision == Collision::TOP) {
 					// 3 * stats->getSpeed() + 1
+					
+					//  collider.collider.y < position->position.y + (position->height * position->scale) - (16)
 					if (flying && collider.collider.y < position->position.y + (position->height * position->scale) - (16)) {
 						collision = Collision::xCollision(enemyCollider, collider);
 						if (collision == Collision::LEFT) {
@@ -110,7 +112,7 @@ public:
 				}
 
 				if (jumpHeight != -1) {
-					if (collider.collider.y < position->position.y + (position->height * position->scale) - (16) && !flying) {
+					if (!flying && collider.collider.y < position->position.y + (position->height * position->scale) - (16)) {
 
 						collision = Collision::xCollision(enemyCollider, collider);
 						Uint32 current = SDL_GetTicks();
@@ -196,6 +198,8 @@ public:
 			}
 			else {
 				position->velocity.x = 0;
+				enemyComponent->lastX = Game::camera.x;
+				enemyComponent->initialPosition.x = position->position.x;
 			}
 			// Enemy is falling down
 			if (position->velocity.y > 0 && ignoreCollision == false) {

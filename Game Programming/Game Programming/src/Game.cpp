@@ -171,6 +171,7 @@ void Game::addAssets() {
 	// Projectiles
 	assetManager->addTexture("projectile", "assets/projectile.png");
 	assetManager->addTexture("sniperProjectile", "assets/sniperProjectile.png");
+	assetManager->addTexture("bullet_hit", "assets/bullet_hit.png");
 
 	// HUD
 	assetManager->addTexture("heart", "assets/hud/heart.png");
@@ -263,6 +264,7 @@ void Game::update() {
 	// Tile collision
 	bool keyBoardCollision = false;
 	bool dontChange = false;
+	bool wasCrouching = false;
 	string newTag = "";
 	vector<Entity*> tiles = Game::manager.getGroup(Game::groupTileColliders);
 	int playerSpeed = player->getComponent<Stats>().getSpeed();
@@ -309,9 +311,15 @@ void Game::update() {
 					}
 				}
 			}
+
 			// player falls down
 			if (collision == Collision::BOTTOM && keyboard->flying) {
 				player->getComponent<TransformComponent>().velocity.y = 3;
+			}
+			// Doesnt work yet
+			if (collision == Collision::BOTTOM && keyboard->wasCrouching) {
+				keyboard->crouch();
+				wasCrouching = true;
 			}
 				
 			// x collision when player is not jumping
@@ -335,6 +343,7 @@ void Game::update() {
 		keyboard->tileTag = newTag;
 		keyboard->terrainChanged = true;
 	}
+	keyboard->wasCrouching = wasCrouching;
 	
 
 
@@ -347,6 +356,8 @@ void Game::update() {
 			ColliderComponent* enemyCollider = &enemy->getComponent<ColliderComponent>();
 			if (enemyCollider && projectile) {
 				if (Collision::AABB(*enemyCollider, projectile->getComponent<ColliderComponent>())) {
+					TransformComponent projectilePos = projectile->getComponent<TransformComponent>();
+					assetManager->createHitAnimation(projectilePos.position, projectilePos.width* projectilePos.scale * projectilePos.velocity.x);
 					projectile->destroy();
 					Stats* stats = &enemy->getComponent<Stats>();
 					stats->reduceHealth(1);
@@ -359,6 +370,8 @@ void Game::update() {
 
 	for (Entity* projectile : enemyProjectiles) {
 			if (Collision::AABB(playerCollider, projectile->getComponent<ColliderComponent>())) {
+				TransformComponent projectilePos = projectile->getComponent<TransformComponent>();
+				assetManager->createHitAnimation(projectilePos.position, projectilePos.width * projectilePos.scale* projectilePos.velocity.x);
 				projectile->destroy();
 				Stats* stats = &player->getComponent<Stats>();
 				stats->reduceHealth(1);
@@ -393,12 +406,10 @@ void Game::render() {
 	vector<Entity*> enemys = Game::manager.getGroup(Game::groupEnemy);
 	vector<Entity*> playerProjectiles = Game::manager.getGroup(Game::groupPlayerProjectiles);
 	vector<Entity*> enemyProjectiles = Game::manager.getGroup(Game::groupEnemyProjectiles);
+	vector<Entity*> effects = Game::manager.getGroup(Game::groupEffects);
 
 	for (size_t i = 0; i < tiles.size(); i++) {
 		tiles[i]->draw();
-	}
-	for (size_t i = 0; i < players.size(); i++) {
-		players[i]->draw();
 	}
 	for (size_t i = 0; i < enemys.size(); i++) {
 		enemys[i]->draw();
@@ -408,6 +419,12 @@ void Game::render() {
 	}
 	for (size_t i = 0; i < enemyProjectiles.size(); i++) {
 		enemyProjectiles[i]->draw();
+	}
+	for (size_t i = 0; i < players.size(); i++) {
+		players[i]->draw();
+	}
+	for (size_t i = 0; i < effects.size(); i++) {
+		effects[i]->draw();
 	}
 
 	SDL_RenderPresent(renderer);

@@ -113,5 +113,8 @@
     <ClInclude Include="include\Numbers.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\components\EffectComponent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

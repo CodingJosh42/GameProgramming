@@ -12,6 +12,7 @@
 #include "../include/components/Gravity.h"
 #include "../include/Numbers.h"
 #include <iostream>
+#include "../include/components/EffectComponent.h"
 
 
 int AssetManager::id = 0;
@@ -90,6 +91,22 @@ void AssetManager::createSniperProjectile(Vector2D position, int range, int spee
 	projectile->addGroup(group);
 }
 
+void AssetManager::createHitAnimation(Vector2D position, int width) {
+	Entity* effect = manager->addEntity();
+	effect->addComponent<TransformComponent>(position.x + width, position.y, TILESIZE, TILESIZE, 1);
+	// Animations
+	Animation bulletHit = Animation(0, 3, 75);
+
+	// Animation map
+	map<const char*, Animation> animations;
+	animations.emplace("bullet_hit", bulletHit);
+
+
+	effect->addComponent<SpriteComponent>("bullet_hit", true, animations, "bullet_hit");
+	effect->addComponent<EffectComponent>(bulletHit, TILESIZE);
+	effect->addGroup(Game::groupEffects);
+}
+
 /*
 * Creates the player entity
 */
@@ -123,7 +140,7 @@ void AssetManager::createEasyEnemy(int x, int y) {
 	animations.emplace("walking", walking);
 	animations.emplace("jumping", jumping);
 
-	enemy->addComponent<SpriteComponent>("easyEnemy", true, animations);
+	enemy->addComponent<SpriteComponent>("easyEnemy", true, animations, "standing");
 	enemy->addComponent<ColliderComponent>("Enemy", 2, 0, 16, 0);
 	enemy->addComponent<EnemyComponent>(EnemyComponent::EASY, id++);
 	enemy->addComponent<GravityComponent>();
@@ -149,7 +166,7 @@ void AssetManager::createSniperEnemy(int x, int y) {
 	animations.emplace("walking", walking);
 	animations.emplace("jumping", jumping);
 
-	enemy->addComponent<SpriteComponent>("sniper", true, animations);
+	enemy->addComponent<SpriteComponent>("sniper", true, animations, "standing");
 	enemy->addComponent<ColliderComponent>("Enemy", 2, 0, 16, 0);
 	enemy->addComponent<EnemyComponent>(EnemyComponent::SNIPER, id++);
 	enemy->addComponent<GravityComponent>();

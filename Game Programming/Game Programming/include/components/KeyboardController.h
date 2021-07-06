@@ -35,7 +35,7 @@ private:
 	Mix_Chunk* shieldingSound;
 
 	// For Walking sounds
-	int channel = 1;
+	int walkingChannel = 1;
 	int reloadChannel = 2;
 	int shieldingChannel = 3;
 	bool soundPlaying = false;
@@ -101,6 +101,54 @@ private:
 		}
 	}
 
+	/**
+	* Checks Key Up events
+	*
+	*/
+	void catch_KeyUp()
+	{
+		if (Game::event.type == SDL_KEYUP) {
+			switch (Game::event.key.keysym.sym) {
+			case SDLK_w:
+				if (position->position.y <= jumpHeight - 120 && !ignoreCollision) {
+					position->velocity.y = 3;
+					ignoreCollision = false;
+				}
+				break;
+			case SDLK_d:
+				// Make movement smooth
+				if (position->velocity.x != -1) {
+					position->velocity.x = 0;
+					lastDirection = 1;
+				}
+				break;
+			case SDLK_a:
+				// Make movement smooth
+				if (position->velocity.x != 1) {
+					position->velocity.x = 0;
+					lastDirection = -1;
+				}
+				break;
+			case SDLK_s:
+				// Mayby TODO
+				break;
+			case SDLK_l:
+				expireShield();
+			case SDLK_LCTRL:
+				position->speed = stats->getSpeed();
+				collider->height = initHeight;
+				collider->yOffset = 0;
+				crouching = false;
+				break;
+			case SDLK_ESCAPE:
+				Game::isRunning = false;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
 	/*
 	* Player shielding
 	*/
@@ -143,32 +191,7 @@ private:
 		}
 	}
 
-	/**
-	* Player is crouching if not in the air. Speed is reduced
-	*/
-	void crouch()
-	{
-		if (collision && !shielding) {
-			if (position->velocity.x == -1) {
-				sprite->flip = SDL_FLIP_HORIZONTAL;
-			}
-			else if (position->velocity.x == 1) {
-				sprite->flip = SDL_FLIP_NONE;
-			}
-			else {
-				if (lastDirection == 1) {
-					sprite->flip = SDL_FLIP_NONE;
-				}
-				else {
-					sprite->flip = SDL_FLIP_HORIZONTAL;
-				}
-			}
-			position->speed = stats->getCrouchSpeed();
-			collider->height = 22;
-			collider->yOffset = 10;
-			crouching = true;
-		}
-	}
+	
 
 	/*
 	* Player jumps if he is on a tile
@@ -245,53 +268,7 @@ private:
 	}
 
 
-	/**
-	* Checks Key Up events
-	*
-	*/
-	void catch_KeyUp()
-	{
-		if (Game::event.type == SDL_KEYUP) {
-			switch (Game::event.key.keysym.sym) {
-			case SDLK_w:
-				if (position->position.y <= jumpHeight - 120 && !ignoreCollision) {
-					position->velocity.y = 3;
-					ignoreCollision = false;
-				}
-				break;
-			case SDLK_d:
-				// Make movement smooth
-				if (position->velocity.x != -1) {
-					position->velocity.x = 0;
-					lastDirection = 1;
-				}
-				break;
-			case SDLK_a:
-				// Make movement smooth
-				if (position->velocity.x != 1) {
-					position->velocity.x = 0;
-					lastDirection = -1;
-				}
-				break;
-			case SDLK_s:
-				// Mayby TODO
-				break;
-			case SDLK_l:
-				expireShield();
-			case SDLK_LCTRL:
-				position->speed = stats->getSpeed();
-				collider->height = initHeight;
-				collider->yOffset = 0;
-				crouching = false;
-				break;
-			case SDLK_ESCAPE:
-				Game::isRunning = false;
-				break;
-			default:
-				break;
-			}
-		}
-	}
+	
 
 	/*
 	* End the shield
@@ -356,24 +333,24 @@ private:
 	void updateWalkingSound() {
 		if (soundPlaying) {
 			if (position->velocity.x == 0) {
-				Mix_FadeOutChannel(channel, 100);
+				Mix_FadeOutChannel(walkingChannel, 100);
 				soundPlaying = false;
 			}
 			if (flying) {
-				Mix_FadeOutChannel(channel, 100);
+				Mix_FadeOutChannel(walkingChannel, 100);
 				soundPlaying = false;
 			}
 			if (terrainChanged && position->velocity.x != 0) {
-				Mix_ExpireChannel(channel, 1);
+				Mix_ExpireChannel(walkingChannel, 1);
 				terrainChanged = false;
-				Mix_PlayChannel(channel, Game::assetManager->getSound(tileTag), -1);
+				Mix_PlayChannel(walkingChannel, Game::assetManager->getSound(tileTag), -1);
 			}
 		}
 		else {
 			if (!flying) {
 				if (position->velocity.x != 0) {
 					terrainChanged = false;
-					Mix_PlayChannel(channel, Game::assetManager->getSound(tileTag), -1);
+					Mix_PlayChannel(walkingChannel, Game::assetManager->getSound(tileTag), -1);
 					soundPlaying = true;
 				}
 			}
@@ -391,13 +368,42 @@ public:
 	string tileTag = "";
 	bool terrainChanged = false;
 	bool falling = false;
+	bool wasCrouching = false;
 
 	TransformComponent* position;
 	SpriteComponent* sprite;
 
 	~KeyboardController() {
 		if (soundPlaying) {
-			Mix_ExpireChannel(channel, 1);
+			Mix_ExpireChannel(walkingChannel, 1);
+		}
+	}
+
+	/**
+	* Player is crouching if not in the air. Speed is reduced
+	*/
+	void crouch()
+	{
+		if (collision && !shielding) {
+			if (position->velocity.x == -1) {
+				sprite->flip = SDL_FLIP_HORIZONTAL;
+			}
+			else if (position->velocity.x == 1) {
+				sprite->flip = SDL_FLIP_NONE;
+			}
+			else {
+				if (lastDirection == 1) {
+					sprite->flip = SDL_FLIP_NONE;
+				}
+				else {
+					sprite->flip = SDL_FLIP_HORIZONTAL;
+				}
+			}
+			position->speed = stats->getCrouchSpeed();
+			collider->height = 22;
+			collider->yOffset = 10;
+			crouching = true;
+			wasCrouching = true;
 		}
 	}
 

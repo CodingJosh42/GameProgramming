@@ -8,6 +8,7 @@
 #include <iostream>
 #include "../Animation.h"
 #include <map>
+#include <string>
 
 using namespace std;
 
@@ -78,12 +79,12 @@ public:
 	* @param id Id of texture
 	* @param animated If true texture is animated, if false texture is not animated
 	*/
-	SpriteComponent(string id, bool animated, map<const char*, Animation>& anims) : animated{ animated } {
+	SpriteComponent(string id, bool animated, map<const char*, Animation>& anims, const char* startAnimation) : animated{ animated } {
 		setTexture(id);
 
 		animations = anims;
 
-		setAnimation("standing");
+		setAnimation(startAnimation);
 	}
 
 	/*

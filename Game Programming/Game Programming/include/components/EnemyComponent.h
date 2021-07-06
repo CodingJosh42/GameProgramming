@@ -90,7 +90,6 @@ public:
 		Vector2D distance = pos - position->position;
 		if (stats->getCurrentHealth() <= 0) {
 			Mix_PlayChannel(-1, deathScream, 0);
-			cout << "Killed " << id << endl;
 			entity->destroy();
 		}
 		else {
@@ -113,10 +112,7 @@ public:
 				}
 				
 			}
-			
-			if (id == 10) {
-				//cout << "First: " << lastX << "pos: " << initialPosition.x << endl;
-			}
+
 			if (abs(distance.x) < range - 50 ) {
 				if (position->velocity.x != 0) {
 					position->velocity.x = 0;
@@ -129,9 +125,6 @@ public:
 				if (lastX != Game::camera.x) {
 					diff = lastX - Game::camera.x;
 					position->position.x = initialPosition.x + 0.5 * diff;
-					if (id == 10) {
-						cout << "Diff: " << diff << "pos: " << position->position.x << endl;
-					}
 				}
 			}
 
