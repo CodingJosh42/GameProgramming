@@ -78,7 +78,7 @@ Am 26.06. habe ich mich mit UILabels beschäftigt. Dazu habe ich die gleichnamig
  
   <img src="assets/hud.PNG" alt="HUD" width="800" height="640" />
   
- ## 27.06.2021
+## 27.06.2021
 Heute habe ich mich mit den Soundeffekten und der Hintergrundmusik meines Spiels beschäftigt. Dazu habe ich die SDL_mixer Libary in mein Projekt mit eingebunden. In der init Funktion der Game Klasse wird der Audio Mixer initialisiert. Als nächstes habe ich die Lautstärke für die Soundeffekte und für die Musik reduziert. Anschließend kann mit Mix_LoadMUS die Musik einer .wav Datei geladen und mit Mix_PlayMusic abgespielt werden. Der Funktion wird als zweiter Parameter -1 übergeben, damit die Musik in einer Endlosschleife abgespielt wird. Für die Soundeffekte habe ich mal wieder den AssetManager um eine soundList erweitert. Mit addSound können Soundeffekte der Map hinzugefügt und mit getSound können bestimmte Sounds abgerufen werden. Bisher habe ich nur zwei Soundeffekte. Das wären einmal ein Soundeffekt für das Nachladen der Waffe und der Sound eines Pistolenschusses. Diese beiden Soundeffekte habe ich schließlich in meinem KeyboardController benutzt. Wenn der Spieler nachlädt wird mit Mix_PlayChannelTimed solange der Nachlade Soundeffekt abgespielt, wie der Spieler zum Nachladen benötigt. Falls der Spieler schießt wird der Schuss Soundeffekt einmal abgespielt (pro Schuss).
  
 ## 30.06.2021
@@ -97,3 +97,8 @@ In den letzten beiden Tagen habe ich mich damit beschäftigt mehrere Gegner an v
 
 ## 06.07.2021
 Gestern abend habe ich auch noch eine neue Spielmechanik hinzugefügt, da das Spiel sonst etwas zu schwer war. Bei der Spielmechanik handelt es sich um ein Schild, welches der Spieler aktivieren kann. Wenn das Schild aktiv ist, kann der Spieler keinen Schaden mehr erhalten. Dazu habe ich zuerst neue Sprites erstellt. In dem KeyboardController habe ich anschließend die Funktionalität, die Sprites und den dazugehörigen Sound miteingebunden. Außerdem habe ich einen Death Scream miteingebaut, welcher abgespielt wird, wenn ein Gegner stirbt. Heute habe ich mich dann mit visuellen Effekten beschäfigt. Genauer gesagt mit kurzen Animation die auftreten, wenn ein Gegner oder Spieler z.B. von einem Projektil getroffen wurden. Dazu habe ich die Component EffectComponent erstellt, welche im Grunde nur dafür sorgt, dass die Animation einmal durchläuft und anschließend die Entity wieder destroyed wird. Offensichtlich musste auch hier wieder ein Spritesheet erstellt werden.
+
+## 07.07.2021
+Heute habe ich zum Abschluss des Projekts noch ein paar Kommentare eingefügt und Refactoring durchgeführt. Z.B. habe ich für das HUD nun eine eigene Component erstellt, anstatt es wie vorher über die Stats Component zu machen. Außerdem habe ich dem HUD eine neue Anzeige hinzugefügt, und zwar eine Anzeige wie viele Gegner noch übrig sind. In dem folgenden Bild kann man sehen wie mein Spiel jetzt abschließend aussieht.
+
+<img src="assets/abschlussBild.PNG" alt="HUD" width="1281" height="900" />
