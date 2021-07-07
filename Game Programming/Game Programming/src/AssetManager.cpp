@@ -13,6 +13,7 @@
 #include "../include/Numbers.h"
 #include <iostream>
 #include "../include/components/EffectComponent.h"
+#include "../include/components/HUDComponent.h"
 
 
 int AssetManager::id = 0;
@@ -261,4 +262,15 @@ void AssetManager::addMusic(string id, const char* path) {
 */
 Mix_Music* AssetManager::getMusic(string id) {
 	return musicList[id];
+}
+
+
+/*
+* Creates the HUD
+* @param enemys Pointer to list of enemys
+*/
+void AssetManager::createHUD(Entity* player) {
+	Entity* hud = manager->addEntity();
+	hud->addComponent<HUDComponent>(player);
+	hud->addGroup(Game::groupHUD);
 }

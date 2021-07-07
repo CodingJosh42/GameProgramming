@@ -116,5 +116,8 @@
     <ClInclude Include="include\components\EffectComponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="include\components\HUDComponent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

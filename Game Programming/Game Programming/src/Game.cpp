@@ -144,10 +144,9 @@ void Game::startGame() {
 			break;
 		}
 	}
-	SDL_Color red = { 255,0,0 };
-	enemysLeft = new UILabel(SCREENWIDTH / 2, 0, "Gegner: XX", "arial32bold", red);
-	SDL_Rect pos = enemysLeft->getPosition();
-	enemysLeft->setPosition(pos.x - pos.w / 2, pos.y);
+
+	assetManager->createHUD(player);
+
 }
 /**
 * Add all necassary assets to the assetManager
@@ -367,15 +366,6 @@ void Game::update() {
 		}
 	}
 
-	stringstream enemyDisplay;
-	int size = enemys.size();
-	enemyDisplay << "Gegner: ";
-	if (size < 10) {
-		enemyDisplay << "0";
-	}
-	enemyDisplay << size;
-	enemysLeft->setLabelText(enemyDisplay.str());
-
 	// Enemy projectiles hitting player
 	vector<Entity*> enemyProjectiles = Game::manager.getGroup(Game::groupEnemyProjectiles);
 
@@ -421,6 +411,7 @@ void Game::render() {
 	vector<Entity*> playerProjectiles = Game::manager.getGroup(Game::groupPlayerProjectiles);
 	vector<Entity*> enemyProjectiles = Game::manager.getGroup(Game::groupEnemyProjectiles);
 	vector<Entity*> effects = Game::manager.getGroup(Game::groupEffects);
+	vector<Entity*> hud = Game::manager.getGroup(Game::groupHUD);
 
 	for (size_t i = 0; i < tiles.size(); i++) {
 		tiles[i]->draw();
@@ -437,9 +428,11 @@ void Game::render() {
 	for (size_t i = 0; i < players.size(); i++) {
 		players[i]->draw();
 	}
-	enemysLeft->draw();
 	for (size_t i = 0; i < effects.size(); i++) {
 		effects[i]->draw();
+	}
+	for (size_t i = 0; i < hud.size(); i++) {
+		hud[i]->draw();
 	}
 
 	SDL_RenderPresent(renderer);

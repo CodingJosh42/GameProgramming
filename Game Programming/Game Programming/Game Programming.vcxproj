@@ -162,6 +162,7 @@
     <ClInclude Include="include\components\EffectComponent.h" />
     <ClInclude Include="include\components\EnemyComponent.h" />
     <ClInclude Include="include\components\ESC.h" />
+    <ClInclude Include="include\components\HUDComponent.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\components\Gravity.h" />
     <ClInclude Include="include\components\KeyboardController.h" />

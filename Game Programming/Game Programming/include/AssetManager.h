@@ -9,6 +9,7 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
+
 using namespace std;
 
 class AssetManager {
@@ -22,6 +23,7 @@ public:
 	void createPlayer();
 	void createEasyEnemy(int x, int y);
 	void createSniperEnemy(int x, int y);
+	void createHUD(Entity* player);
 
 	static int id;
 

@@ -25,7 +25,8 @@ public:
 		groupTileColliders,
 		groupPlayerProjectiles,
 		groupEnemyProjectiles,
-		groupEffects
+		groupEffects,
+		groupHUD
 	};
 
 	Game();
