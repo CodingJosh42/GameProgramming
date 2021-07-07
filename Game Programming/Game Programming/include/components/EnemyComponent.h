@@ -119,7 +119,7 @@ public:
 				
 			}
 			// Stop running if in range
-			if (abs(distance.x) < range - 50 ) {
+			if (abs(realDist) < range - 50 ) {
 				if (position->velocity.x != 0) {
 					position->velocity.x = 0;
 					// Update camera vars
