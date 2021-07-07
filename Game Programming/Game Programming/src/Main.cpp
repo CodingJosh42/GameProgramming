@@ -41,7 +41,6 @@ int main(int argc, char* args[]) {
                 game->startGame();
             }
             else if (i == 2) {
-                game->cleanGame();
                 Game::gameOver = false;
                 Game::easyMode = true;
                 game->startGame();
@@ -54,9 +53,9 @@ int main(int argc, char* args[]) {
             Mix_ExpireChannel(-1, 1);
             Mix_HaltMusic();
             vector<string> labels = { "DU HAST GEWONNEN!", "Erneut spielen", "Karte erkunden", "Beenden" };
-            Menu gameOverMenu = Menu(labels);
-            gameOverMenu.setSound("gamewon");
-            int i = gameOverMenu.showMenu();
+            Menu gameWonMenu = Menu(labels);
+            gameWonMenu.setSound("gamewon");
+            int i = gameWonMenu.showMenu();
             if (i == 1) {
                 game->cleanGame();
                 Game::gameWon = false;
@@ -74,8 +73,8 @@ int main(int argc, char* args[]) {
         }
         else if (startMenu) {
             vector<string> labels = { "2D SHOOTING GAME", "Spiel starten", "Easy Mode", "Beenden" };
-            Menu gameOverMenu = Menu(labels);
-            int i = gameOverMenu.showMenu();
+            Menu mainMenu = Menu(labels);
+            int i = mainMenu.showMenu();
             if (i == 1) {
                 startMenu = false;
                 game->startGame();

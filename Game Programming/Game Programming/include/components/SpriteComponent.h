@@ -38,7 +38,7 @@ public:
 	* Constructor of SpriteComponent
 	* @param id Id of texture
 	*/
-	SpriteComponent(string id) {
+	SpriteComponent(const char* id) {
 		setTexture(id);
 	}
 
@@ -47,7 +47,7 @@ public:
 	* @param id Id of texture
 	* @param xOffset xOffset of src
 	*/
-	SpriteComponent(string id, int xOffset) : xOffset{ xOffset } {
+	SpriteComponent(const char* id, int xOffset) : xOffset{ xOffset } {
 		setTexture(id);
 	}
 
@@ -56,7 +56,7 @@ public:
 	* @param id Id of texture
 	* @param animated If true texture is animated, if false texture is not animated
 	*/
-	SpriteComponent(string id, bool animated) : animated{ animated } {
+	SpriteComponent(const char* id, bool animated) : animated{ animated } {
 		setTexture(id);
 
 		Animation standing = Animation(0, 2, 200);
@@ -80,7 +80,7 @@ public:
 	* @param animated If true texture is animated, if false texture is not animated
 	* @param startAnimation Id of the starting animation
 	*/
-	SpriteComponent(string id, bool animated, map<const char*, Animation>& anims, const char* startAnimation) : animated{ animated } {
+	SpriteComponent(const char* id, bool animated, map<const char*, Animation>& anims, const char* startAnimation) : animated{ animated } {
 		setTexture(id);
 
 		animations = anims;
@@ -92,7 +92,7 @@ public:
 	* Loads texture from assetManager
 	* @param id Id of requested texture
 	*/
-	void setTexture(string id) {
+	void setTexture(const char* id) {
 		texture = Game::assetManager->getTexture(id);
 	}
 

@@ -27,6 +27,14 @@ class Menu {
 
 public:
 
+	~Menu() {
+		labels.clear();
+		for (UILabel& label : uiLabels) {
+			label.destroyTex();
+		}
+		uiLabels.clear();
+		SDL_DestroyTexture(background);
+	}
 	/*
 	* Constructor
 	* @param labels List of options that should be displayed
@@ -45,7 +53,7 @@ public:
 			if (i > 1) {
 				y = halfHeight + 150 + (i-1) * 100;
 			}
-			uiLabels.push_back(UILabel(halfWidth, y, labels[i], font, red) );
+			uiLabels.push_back(UILabel(halfWidth, y, labels[i], font, red));
 			// Center options horizontal
 			SDL_Rect pos = uiLabels[i].getPosition();
 			uiLabels[i].setPosition(pos.x - pos.w / 2, pos.y);

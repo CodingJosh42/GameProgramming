@@ -150,7 +150,7 @@ public:
 	* @param range Range of the projectile
 	* @param speed Speed of the projectile
 	*/
-	void shoot(Weapon weapon)
+	void shoot(Weapon& weapon)
 	{
 		Uint32 currentTick = SDL_GetTicks();
 		if (stats->getWeapon().currentAmmo <= 0) {

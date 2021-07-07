@@ -14,7 +14,7 @@ private:
 	string labelText;
 	string fontId;
 	SDL_Color textColor;
-	SDL_Texture* texture;
+	SDL_Texture* texture = nullptr;
 
 public:
 
@@ -42,10 +42,18 @@ public:
 	void setLabelText(string labelText) {
 		this->labelText = labelText;
 		SDL_Surface* surface = TTF_RenderText_Blended(Game::assetManager->getFont(fontId), labelText.c_str(), textColor);
+		if (texture) {
+			SDL_DestroyTexture(texture);
+		}
 		texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
 		SDL_FreeSurface(surface);
-
 		SDL_QueryTexture(texture, nullptr, nullptr, &position.w, &position.h);
+	}
+
+	void destroyTex() {
+		if (texture) {
+			SDL_DestroyTexture(texture);
+		}
 	}
 
 	/*
@@ -55,6 +63,9 @@ public:
 	void setColor(SDL_Color color) {
 		textColor = color;
 		SDL_Surface* surface = TTF_RenderText_Blended(Game::assetManager->getFont(fontId), labelText.c_str(), textColor);
+		if (texture) {
+			SDL_DestroyTexture(texture);
+		}
 		texture = SDL_CreateTextureFromSurface(Game::renderer, surface);
 		SDL_FreeSurface(surface);
 	}

@@ -25,12 +25,17 @@ private:
 	SDL_Texture* ammoSymbol;
 
 	// Enemy display
-	vector<Entity*> enemys;
+	vector<Entity*>* enemys;
 	UILabel enemyDisplay;
 public:
 	HUDComponent() = default;
 
 	HUDComponent(Entity* player) : player{ player } {}
+
+	~HUDComponent() {
+		ammoDisplay.destroyTex();
+		enemyDisplay.destroyTex();
+	}
 
 	void init() {
 		// Set up HUD
@@ -80,9 +85,9 @@ public:
 		ammoDisplay.setLabelText(ammo.str());
 
 		// Update enemy UILabel
-		enemys = Game::manager.getGroup(Game::groupEnemy);
+		enemys = &Game::manager.getGroup(Game::groupEnemy);
 		stringstream currentEnemys;
-		int size = enemys.size();
+		int size = enemys->size();
 		currentEnemys << "Gegner: ";
 		if (size < 10) {
 			currentEnemys << "0";

@@ -26,7 +26,6 @@ bool Game::gameOver = false;
 bool Game::gameWon = false;
 bool Game::easyMode = false;
 bool Game::exploreMap = false;
-UILabel* enemysLeft;
 SDL_Surface* Game::screen = NULL;
 
 SDL_Rect Game::camera = { 0,0,SCREENWIDTH,(50 * 32 - SCREENHEIGHT) / 2};
@@ -62,8 +61,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		renderer = SDL_CreateRenderer(window, -1, 0);
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
 		screen = SDL_GetWindowSurface(window);
 
 		isRunning = true;
@@ -96,6 +93,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 void Game::cleanGame() {
 	SDL_RenderClear(renderer);
 	Game::manager.clear();
+	spawnPoints.clear();
 }
 
 /*
@@ -111,7 +109,8 @@ void Game::startGame() {
 
 	// Map and Spawn Points
 	Map::loadMap("assets/map/map100x50.map", 100, 50);
-	spawnPoints = Map::loadSpawnPoints("assets/map/spawn_points.map", 100, 50);
+	vector<tuple<int, int, EnemyComponent::EnemyType>> sp = Map::loadSpawnPoints("assets/map/spawn_points.map", 100, 50);
+	spawnPoints.insert(spawnPoints.begin(), sp.begin(), sp.end());
 
 	// Player
 	assetManager->createPlayer();
@@ -129,7 +128,7 @@ void Game::startGame() {
 	if (camera.y > camera.h)
 		camera.y = camera.h;
 	// Let Enemys spawn
-	for (tuple<int, int, EnemyComponent::EnemyType> spawnPoint : spawnPoints) {
+	for (tuple<int, int, EnemyComponent::EnemyType>& spawnPoint : spawnPoints) {
 		int x; int y;
 		EnemyComponent::EnemyType type;
 		tie(x, y, type) = spawnPoint;
@@ -442,7 +441,6 @@ void Game::render() {
 * Free resources
 */
 void Game::clean() {
-	delete enemysLeft;
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	TTF_Quit();
