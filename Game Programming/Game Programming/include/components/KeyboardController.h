@@ -173,6 +173,26 @@ private:
 	}
 
 	/*
+	* End the shield
+	*/
+	void expireShield() {
+		if (shielding) {
+			shielding = false;
+			stats->shielding = false;
+			if (weapon == 1) {
+				sprite->setTexture("playerPistol");
+			}
+			if (weapon == 2) {
+				sprite->setTexture("playerMachineGun");
+			}
+			lastShieldFrame = SDL_GetTicks();
+			shieldTime = lastShieldFrame - shieldFrame;
+			shieldDisabled = shieldTime / 2;
+			Mix_FadeOutChannel(shieldingChannel, 100);
+		}
+	}
+
+	/*
 	* Player is reloading his weapon. After reloading time weapon has maxAmmo again
 	*/
 	void reload() {
@@ -192,39 +212,6 @@ private:
 		}
 	}
 
-	
-
-	/*
-	* Player jumps if he is on a tile
-	*/
-	void jump()
-	{
-		// Only Jump if on the Ground
-		if (!flying && position->speed > stats->getCrouchSpeed() && position->velocity.y == 0 && !shielding) {
-			Mix_PlayChannel(-1, jumpSound, 0);
-			position->velocity.y = -3;
-			sprite->setAnimation("jumping");
-			flying = true;
-			ignoreCollision = true;
-			jumpHeight = position->position.y;
-
-			if (position->velocity.x == -1) {
-				sprite->flip = SDL_FLIP_HORIZONTAL;
-			}
-			else if (position->velocity.x == 1) {
-				sprite->flip = SDL_FLIP_NONE;
-			}
-			else {
-				if (lastDirection == 1) {
-					sprite->flip = SDL_FLIP_NONE;
-				}
-				else {
-					sprite->flip = SDL_FLIP_HORIZONTAL;
-				}
-			}
-		}
-	}
-
 	/**
 	* Player is shooting a projectile
 	* @param delay Delay between the single shots
@@ -233,7 +220,7 @@ private:
 	*/
 	void shoot(Weapon weapon)
 	{
-		if(!shielding) {
+		if (!shielding) {
 			Uint32 currentTick = SDL_GetTicks();
 			if (stats->getWeapon().currentAmmo <= 0) {
 				reload();
@@ -268,28 +255,37 @@ private:
 		}
 	}
 
-
-	
-
 	/*
-	* End the shield
+	* Player jumps if he is on a tile
 	*/
-	void expireShield() {
-		if (shielding) {
-			shielding = false;
-			stats->shielding = false;
-			if (weapon == 1) {
-				sprite->setTexture("playerPistol");
+	void jump()
+	{
+		// Only Jump if on the Ground
+		if (!flying && position->speed > stats->getCrouchSpeed() && position->velocity.y == 0 && !shielding) {
+			Mix_PlayChannel(-1, jumpSound, 0);
+			position->velocity.y = -3;
+			sprite->setAnimation("jumping");
+			flying = true;
+			ignoreCollision = true;
+			jumpHeight = position->position.y;
+
+			if (position->velocity.x == -1) {
+				sprite->flip = SDL_FLIP_HORIZONTAL;
 			}
-			if (weapon == 2) {
-				sprite->setTexture("playerMachineGun");
+			else if (position->velocity.x == 1) {
+				sprite->flip = SDL_FLIP_NONE;
 			}
-			lastShieldFrame = SDL_GetTicks();
-			shieldTime = lastShieldFrame - shieldFrame;
-			shieldDisabled = shieldTime / 3;
-			Mix_FadeOutChannel(shieldingChannel, 100);
+			else {
+				if (lastDirection == 1) {
+					sprite->flip = SDL_FLIP_NONE;
+				}
+				else {
+					sprite->flip = SDL_FLIP_HORIZONTAL;
+				}
+			}
 		}
 	}
+
 
 	/**
 	* Updates Textures depending on what buttons are still pressed
