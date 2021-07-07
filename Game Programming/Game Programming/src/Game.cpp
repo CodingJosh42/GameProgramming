@@ -152,28 +152,28 @@ void Game::startGame() {
 void Game::addAssets() {
 	// Textures
 	// Player and enemys
-	assetManager->addTexture("playerPistol", "assets/animation_player.png");
-	assetManager->addTexture("playerMachineGun", "assets/player_machinegun.png"); 
-	assetManager->addTexture("shielding_pistol", "assets/shielding_pistol.png");
-	assetManager->addTexture("shielding_machinegun", "assets/shielding_machinegun.png");
-	assetManager->addTexture("easyEnemy", "assets/easyEnemy.png");
-	assetManager->addTexture("sniper", "assets/sniper.png");
+	assetManager->addTexture("playerPistol", "assets/textures/animation_player.png");
+	assetManager->addTexture("playerMachineGun", "assets/textures/player_machinegun.png"); 
+	assetManager->addTexture("shielding_pistol", "assets/textures/shielding_pistol.png");
+	assetManager->addTexture("shielding_machinegun", "assets/textures/shielding_machinegun.png");
+	assetManager->addTexture("easyEnemy", "assets/textures/easyEnemy.png");
+	assetManager->addTexture("sniper", "assets/textures/sniper.png");
 	// Tiles
 	assetManager->addTexture("tiles", "assets/map/tiles.png");
 	// Projectiles
-	assetManager->addTexture("projectile", "assets/projectile.png");
-	assetManager->addTexture("sniperProjectile", "assets/sniperProjectile.png");
-	assetManager->addTexture("bullet_hit", "assets/bullet_hit.png");
+	assetManager->addTexture("projectile", "assets/textures/projectile.png");
+	assetManager->addTexture("sniperProjectile", "assets/textures/sniperProjectile.png");
+	assetManager->addTexture("bullet_hit", "assets/textures/bullet_hit.png");
 	// HUD
 	assetManager->addTexture("heart", "assets/hud/heart.png");
 	assetManager->addTexture("ammo", "assets/hud/ammo.png");
 
 	// Fonts
-	assetManager->addFont("arial", "assets/arial.ttf", 32, TTF_STYLE_NORMAL);
-	assetManager->addFont("arial32bold", "assets/arial.ttf", 32, TTF_STYLE_BOLD);
-	assetManager->addFont("arial48", "assets/arial.ttf", 48, TTF_STYLE_NORMAL);
-	assetManager->addFont("menu48", "assets/COLONNA.TTF", 48, TTF_STYLE_NORMAL);
-	assetManager->addFont("menu32", "assets/COLONNA.TTF", 32, TTF_STYLE_NORMAL);
+	assetManager->addFont("arial", "assets/fonts/arial.ttf", 32, TTF_STYLE_NORMAL);
+	assetManager->addFont("arial32bold", "assets/fonts/arial.ttf", 32, TTF_STYLE_BOLD);
+	assetManager->addFont("arial48", "assets/fonts/arial.ttf", 48, TTF_STYLE_NORMAL);
+	assetManager->addFont("menu48", "assets/fonts/COLONNA.TTF", 48, TTF_STYLE_NORMAL);
+	assetManager->addFont("menu32", "assets/fonts/COLONNA.TTF", 32, TTF_STYLE_NORMAL);
 
 	// Sound
 	// Gun Sounds
