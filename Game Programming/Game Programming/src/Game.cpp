@@ -10,6 +10,7 @@
 #include "../include/components/ColliderComponent.h"
 #include "../include/components/TileComponent.h"
 #include "../include/components/EnemyComponent.h"
+#include "../include/UILabel.h"
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 #include "../include/Numbers.h"
@@ -25,6 +26,7 @@ bool Game::gameOver = false;
 bool Game::gameWon = false;
 bool Game::easyMode = false;
 bool Game::exploreMap = false;
+UILabel* enemysLeft;
 SDL_Surface* Game::screen = NULL;
 
 SDL_Rect Game::camera = { 0,0,SCREENWIDTH,(50 * 32 - SCREENHEIGHT) / 2};
@@ -142,9 +144,10 @@ void Game::startGame() {
 			break;
 		}
 	}
-
-	
-
+	SDL_Color red = { 255,0,0 };
+	enemysLeft = new UILabel(SCREENWIDTH / 2, 0, "Gegner: XX", "arial32bold", red);
+	SDL_Rect pos = enemysLeft->getPosition();
+	enemysLeft->setPosition(pos.x - pos.w / 2, pos.y);
 }
 /**
 * Add all necassary assets to the assetManager
@@ -364,6 +367,15 @@ void Game::update() {
 		}
 	}
 
+	stringstream enemyDisplay;
+	int size = enemys.size();
+	enemyDisplay << "Gegner: ";
+	if (size < 10) {
+		enemyDisplay << "0";
+	}
+	enemyDisplay << size;
+	enemysLeft->setLabelText(enemyDisplay.str());
+
 	// Enemy projectiles hitting player
 	vector<Entity*> enemyProjectiles = Game::manager.getGroup(Game::groupEnemyProjectiles);
 
@@ -425,6 +437,7 @@ void Game::render() {
 	for (size_t i = 0; i < players.size(); i++) {
 		players[i]->draw();
 	}
+	enemysLeft->draw();
 	for (size_t i = 0; i < effects.size(); i++) {
 		effects[i]->draw();
 	}
@@ -436,6 +449,7 @@ void Game::render() {
 * Free resources
 */
 void Game::clean() {
+	delete enemysLeft;
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	TTF_Quit();
