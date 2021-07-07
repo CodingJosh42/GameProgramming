@@ -34,6 +34,7 @@ public:
 
 	void init() {
 		// Set up HUD
+		// Health
 		healthSrc.x = 0;
 		healthSrc.y = 0;
 		healthSrc.w = 3 * TILESIZE;
@@ -44,6 +45,7 @@ public:
 		healthDest.w = 3 * TILESIZE;
 		healthDest.h = TILESIZE;
 
+		// Ammo
 		ammoSrc.x = 0;
 		ammoSrc.y = 0;
 		ammoSrc.w = TILESIZE;

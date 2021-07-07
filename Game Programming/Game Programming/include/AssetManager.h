@@ -25,8 +25,6 @@ public:
 	void createSniperEnemy(int x, int y);
 	void createHUD(Entity* player);
 
-	static int id;
-
 	void addTexture(string id, const char* path);
 	SDL_Texture* getTexture(string id);
 
@@ -39,6 +37,7 @@ public:
 	void addMusic(string id, const char* path);
 	Mix_Music* getMusic(string id);
 private:
+	static int id;
 	Manager* manager;
 	map<string, SDL_Texture*> textureList;
 	map<string, TTF_Font*> fontList;
