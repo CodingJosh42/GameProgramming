@@ -101,4 +101,4 @@ Gestern abend habe ich auch noch eine neue Spielmechanik hinzugefügt, da das Sp
 ## 07.07.2021
 Heute habe ich zum Abschluss des Projekts noch ein paar Kommentare eingefügt und Refactoring durchgeführt. Z.B. habe ich für das HUD nun eine eigene Component erstellt, anstatt es wie vorher über die Stats Component zu machen. Außerdem habe ich dem HUD eine neue Anzeige hinzugefügt, und zwar eine Anzeige wie viele Gegner noch übrig sind. In dem folgenden Bild kann man sehen wie mein Spiel jetzt abschließend aussieht.
 
-<img src="assets/abschlussBild.PNG" alt="HUD" width="1281" height="900" />
+<img src="assets/abschlussBild.PNG" alt="HUD" />
