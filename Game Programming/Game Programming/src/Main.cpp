@@ -31,9 +31,9 @@ int main(int argc, char* args[]) {
         }
         else if(Game::gameOver) {
             Mix_HaltMusic();
+            game->cleanGame();
             vector<string> labels = { "GAME OVER", "Erneut spielen", "Easy Mode", "Beenden" };
             Menu gameOverMenu = Menu(labels);
-            game->cleanGame();
             gameOverMenu.setSound("gameover");
             int i = gameOverMenu.showMenu();
             if (i == 1) {
@@ -51,20 +51,22 @@ int main(int argc, char* args[]) {
             }
         }
         else if (Game::gameWon) {
+            Mix_ExpireChannel(-1, 1);
             Mix_HaltMusic();
             vector<string> labels = { "DU HAST GEWONNEN!", "Erneut spielen", "Karte erkunden", "Beenden" };
             Menu gameOverMenu = Menu(labels);
-            Mix_ExpireChannel(-1, 1);
             gameOverMenu.setSound("gamewon");
             int i = gameOverMenu.showMenu();
             if (i == 1) {
                 game->cleanGame();
                 Game::gameWon = false;
+                Game::easyMode = false;
                 game->startGame();
             }
             else if (i == 2) {
                 Game::gameWon = false;
                 Game::exploreMap = true;
+                game->playMusic();
             }
             else if (i == 3) {
                 Game::isRunning = false;

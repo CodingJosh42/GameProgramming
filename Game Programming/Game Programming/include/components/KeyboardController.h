@@ -144,9 +144,6 @@ private:
 				collider->yOffset = 0;
 				crouching = false;
 				break;
-			case SDLK_ESCAPE:
-				Game::isRunning = false;
-				break;
 			default:
 				break;
 			}
@@ -387,6 +384,12 @@ public:
 	~KeyboardController() {
 		if (soundPlaying) {
 			Mix_ExpireChannel(walkingChannel, 1);
+		}
+		if (shielding) {
+			Mix_ExpireChannel(shieldingChannel, 1);
+		}
+		if (reloading) {
+			Mix_ExpireChannel(reloadChannel, 1);
 		}
 	}
 

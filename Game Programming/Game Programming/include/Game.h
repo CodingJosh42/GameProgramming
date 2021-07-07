@@ -40,6 +40,7 @@ public:
 	bool checkIfWon();
 	void startGame();
 	void cleanGame();
+	void playMusic();
 
 	static SDL_Surface* screen;
 	static Manager manager;

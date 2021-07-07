@@ -33,11 +33,15 @@ public:
 
 	void addSound(string id, const char* path);
 	Mix_Chunk* getSound(string id);
+
+	void addMusic(string id, const char* path);
+	Mix_Music* getMusic(string id);
 private:
 	Manager* manager;
 	map<string, SDL_Texture*> textureList;
 	map<string, TTF_Font*> fontList;
 	map<string, Mix_Chunk*> soundList;
+	map<string, Mix_Music*> musicList;
 };
 
 #endif

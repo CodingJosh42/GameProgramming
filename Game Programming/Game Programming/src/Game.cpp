@@ -96,10 +96,16 @@ void Game::cleanGame() {
 	Game::manager.clear();
 }
 
+/*
+* Let the background music start playing
+*/
+void Game::playMusic() {
+	Mix_PlayMusic(assetManager->getMusic("background_music"), -1);
+}
+
 void Game::startGame() {
 	// Background music
-	Mix_Music* music = Mix_LoadMUS("assets/audio/jamesbond.wav");
-	Mix_PlayMusic(music, -1);
+	playMusic();
 
 	// Map and Spawn Points
 	Map::loadMap("assets/map/map100x50.map", 100, 50);
@@ -166,6 +172,8 @@ void Game::addAssets() {
 	assetManager->addFont("arial", "assets/arial.ttf", 32, TTF_STYLE_NORMAL);
 	assetManager->addFont("arial32bold", "assets/arial.ttf", 32, TTF_STYLE_BOLD);
 	assetManager->addFont("arial48", "assets/arial.ttf", 48, TTF_STYLE_NORMAL);
+	assetManager->addFont("menu48", "assets/COLONNA.TTF", 48, TTF_STYLE_NORMAL);
+	assetManager->addFont("menu32", "assets/COLONNA.TTF", 32, TTF_STYLE_NORMAL);
 
 	// Sound
 	// Gun Sounds
@@ -196,6 +204,8 @@ void Game::addAssets() {
 	assetManager->addSound("fallen_grass", "assets/audio/fallen_grass.wav");
 	assetManager->addSound("fallen_water", "assets/audio/fallen_water.wav");
 	assetManager->addSound("fallen_metal", "assets/audio/fallen_metal.wav");
+	// Music
+	assetManager->addMusic("background_music", "assets/audio/jamesbond.wav");
 }
 
 /*
@@ -443,6 +453,10 @@ void Game::handleEvents() {
 		case SDL_QUIT:
 			isRunning = false;
 			break;
+		case SDL_KEYDOWN:
+			if (event.key.keysym.sym == SDLK_ESCAPE) {
+				isRunning = false;
+			}
 		default:
 			break;
 	}

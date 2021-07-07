@@ -240,3 +240,25 @@ void AssetManager::addSound(string id, const char* path){
 Mix_Chunk* AssetManager::getSound(string id) {
 	return soundList[id];
 }
+
+/*
+* Loads music and adds it to the list of music
+* @param id Id of music
+* @param path Path of .wav file
+*/
+void AssetManager::addMusic(string id, const char* path) {
+	Mix_Music* music = Mix_LoadMUS(path);
+	if (music == nullptr) {
+		cout << "Something went wrong with loading music:  " << id << " | " << path << "\nError: " << Mix_GetError() << endl;;
+	}
+	musicList.emplace(id, music);
+}
+
+/*
+* Returns a specific music from the list
+* @param id Id of music that should be returned
+* @return Returns the requested music
+*/
+Mix_Music* AssetManager::getMusic(string id) {
+	return musicList[id];
+}

@@ -36,10 +36,10 @@ public:
 		this->labels = labels;
 		int halfWidth = SCREENWIDTH / 2;
 		int halfHeight = SCREENHEIGHT / 2 - 200;
-		string font = "arial48";
+		string font = "menu48";
 		for (int i = 0; i < labels.size(); i++) {
 			if (i != 0) {
-				font = "arial";
+				font = "menu32";
 			}
 			int y = halfHeight + i * 150;
 			if (i > 1) {
@@ -95,7 +95,7 @@ public:
 		background = SDL_CreateTextureFromSurface(Game::renderer, Game::screen);
 
 		if (sound) {
-			Mix_PlayChannel(-1, sound, 0);
+			Mix_PlayChannel(4, sound, 0);
 		}
 		SDL_Event event;
 		while (true) {
